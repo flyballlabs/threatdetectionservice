@@ -6,6 +6,6 @@ We are focued on schools because they need to have efficent networks with the in
 
 In Detroit Neighborhoods we are not focused on detecting cyberattacks, but we are focused on dectecting suspensious behaviour that may threaten the safty of Detroit residents.
 
-Our Threat Detection Service is using Apache Metron[http://metron.incubator.apache.org/] as the core engine
+Our Threat Detection Service is using [Apache Metron](http://metron.incubator.apache.org/) as the core engine
 
 
