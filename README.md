@@ -8,4 +8,8 @@ In Detroit neighborhoods we are not focused on detecting cyberattacks, but we ar
 
 Our Threat Detection Service is using [Apache Metron](http://metron.incubator.apache.org/) as the core engine.  For Detroit neighborhoods we will use the facial recognition software provided by [Kairos](https://www.kairos.com/)
 
+## Repo Structure
+
+agents - Contains the software for the agents that are deployed at the Detroit Schools. The agents are deployed on [Raspberry Pi Model 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
+
 
