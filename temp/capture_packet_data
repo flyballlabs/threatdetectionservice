@@ -1,0 +1,15 @@
+#listener
+sudo tcpdump -w dump.pcap -i wlp4s0
+
+#dump data
+sudo tcpdump -w dump.pcap -i wlp4s0
+sudo tcprewrite --infile=dump.pcap --outfile=temp1.pcap --dstipmap=0.0.0.0/0:192.168.1.20 --enet-dmac=E0:DB:55:CC:13:F1
+sudo tcprewrite --infile=temp1.pcap --outfile=temp2.pcap --srcipmap=0.0.0.0/0:192.168.1.10 --enet-smac=84:A5:C8:BB:58:1A
+sudo tcprewrite --infile=temp2.pcap --outfile=final.pcap --fixcsum 
+
+#replay data
+sudo tcpreplay --intf1=wlp4s0 final.pcap 
+sudo tcpreplay --topspeed --intf1=wlp4s0 final.pcap
+
+#capture and send to kafka
+pycapa --producer --kafka node1:6667 --topic pcap -i wlp4s0
