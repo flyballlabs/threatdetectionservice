@@ -15,6 +15,7 @@ agents - Contains the software for the agents that are deployed at the Detroit S
 
 
 # Installation Documentation
+This install documentation is for ubuntu 16.04
 
 ## Installing uwsgi
 apt install build-essential python-dev
@@ -56,9 +57,27 @@ def index():
     return "<span style='color:red'>I am app 1</span>"
 ```
 
-./uwsgi --http :9090 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2
+./uwsgi --http :668 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2
 
 You can now browse to <ip>:9090 to confirm flask is working. 
 
 It should say 
 I am app 1
+
+
+
+
+
+
+## notes
+
+capturing is happening on port 6667
+
+port 6668 is the control port
+	pi is periodically calling the ubuntu server on this port for configuration.
+	pi also receives commands on this port
+
+can't rely on port forwarding to get access to the pi, so pi needs to call out to this server on a public ip. 
+		 
+		
+		
