@@ -13,3 +13,52 @@ Our Threat Detection Service is using [Apache Metron](http://metron.incubator.ap
 agents - Contains the software for the agents that are deployed at the Detroit Schools. The agents are deployed on [Raspberry Pi Model 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
 
 
+
+# Installation Documentation
+
+## Installing uwsgi
+apt install build-essential python-dev
+wget http://projects.unbit.it/downloads/uwsgi-latest.tar.gz
+tar -xzf uwsgi-latest.tar.gz
+cd uwsgi-2.0.14/
+make
+
+
+
+vim foobar.py
+
+```
+def application(env, start_response):
+        start_response('200 OK', [('Content-Type','text/html')])
+        return [b"Hello World"]
+```
+
+./uwsgi --http :9090 --wsgi-file foobar.py
+
+
+You can now browse to 10.10.10.154:9090 and you should se hello world printed. 
+
+
+## Installing flask
+apt-get install python-pip python3-pip
+/usr/bin/pip3 install Flask
+
+
+vim myflaskapp.py
+```
+#!/usr/bin/python3
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "<span style='color:red'>I am app 1</span>"
+```
+
+./uwsgi --http :9090 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2
+
+You can now browse to <ip>:9090 to confirm flask is working. 
+
+It should say 
+I am app 1
