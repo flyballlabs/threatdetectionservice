@@ -32,7 +32,7 @@ end
 # unset irrelavent variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/anon/Desktop/eclipse-files/workspace/opsec-api/flask"
+set -gx VIRTUAL_ENV "/usr/local/src/threatdetectionservice/api/flask"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

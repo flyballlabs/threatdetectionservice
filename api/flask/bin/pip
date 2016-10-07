@@ -1,4 +1,4 @@
-#!/home/anon/Desktop/eclipse-files/workspace/opsec-api/flask/bin/python3
+#!/usr/local/src/threatdetectionservice/api/flask/bin/python3
 
 # -*- coding: utf-8 -*-
 import re

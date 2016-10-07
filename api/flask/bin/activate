@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/anon/Desktop/eclipse-files/workspace/opsec-api/flask"
+VIRTUAL_ENV="/usr/local/src/threatdetectionservice/api/flask"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
