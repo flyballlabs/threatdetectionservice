@@ -29,29 +29,6 @@ cd uwsgi-2.0.14/
 make
 ```
 
-
-Create a simple test python script
-
-```
-vim foobar.py
-```
-
-```
-def application(env, start_response):
-        start_response('200 OK', [('Content-Type','text/html')])
-        return [b"Hello World"]
-```
-
-Now run this test script with uwsgi
-
-```
-./uwsgi --http :6668 --wsgi-file foobar.py
-```
-
-
-You can now browse to <ip>:6668 and you should se hello world printed. 
-
-
 ## Installing flask
 apt-get install python-pip python3-pip
 /usr/bin/pip3 install Flask
@@ -68,7 +45,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "<span style='color:red'>I am app 1</span>"
+    return "<span style='color:red'>open source is great</span>"
 ```
 
 Now run the flask test app
@@ -82,13 +59,8 @@ You can now browse to `<ip>:6668` to confirm flask is working.
 It should say 
 
 ```
-I am app 1
+open source is great
 ```
-
-
-
-
-
 
 ## notes
 
@@ -101,50 +73,50 @@ port 6668 is the control port
 can't rely on port forwarding to get access to the pi, so pi needs to call out to this server on a public ip. 
 		 
 		
-		
-## Install setup.sh
-Run setup.sh, this will install the python dependencies via pip. The depencies are listed `requirements.txt` 
-
-
 ## Install the python application
 
 ###This next secction needs some work, setup.sh is not setup yet. 
-###We currently need to point to the python3 and pip3 binaries, in /usr/bin/python3 and /usr/bin/pip3
+###We currently need to point to the python3 and pip3 binaries, in /usr/bin/python3 and /usr/bin/pip3. This shouldn't be a problem when we install on a clean ubuntu 16.04 system
 run `setup.sh`, which will install all the dependencies and setup the virtual environment.
 
-
+```
 apt-get install python3-venv
 apt-get install python3-virtualenv
 python3 -m venv flask
-
+```
 
 I created a requirements.txt with the following
 
- flask
- flask-login
- flask-openid
- flask-mail
- flask-sqlalchemy
- sqlalchemy-migrate
- flask-whooshalchemy
- flask-wtf
- flask-babel
- guess_language
- flipflop
- coverage
+```
+flask
+flask-login
+flask-openid
+flask-mail
+flask-sqlalchemy
+sqlalchemy-migrate
+flask-whooshalchemy
+flask-wtf
+flask-babel
+guess_language
+flipflop
+coverage
 itsdangerous
 Werkzeug
 Jinja2
-
+```
 
 We ran into some problems getting the virtualenv.py script to run, not sure if we actually need this. 
 
+```
 /usr/bin/python3 virtualenv.py flask
+```
 
 
 We are able to run the script with just python, and I assume it is using some python http server instead of uwsgi.
 
+```
 /usr/bin/python3 rest-server.py
+```
 
 
 When running with uwsgi, we get the following. 
@@ -154,4 +126,20 @@ unable to load configuration from rest-server.py
 
 
 ## To run the rest-server without uswgi, run the following from /usr/local/src/threatdetectionservice/api
+
+```
 /usr/bin/python3 rest-server.py
+```
+
+You should then be able to test with
+
+```
+curl <ip>:6668/api/picontroller/time
+```
+
+The bind information is set in rest-server.py, which we are currently using instead of uwsgi with the following. 
+
+```
+if __name__ == '__main__':
+    app.run(host='10.10.10.154', port=6668, debug=False)
+```
