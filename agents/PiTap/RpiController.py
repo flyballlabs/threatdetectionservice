@@ -22,11 +22,12 @@ class Controller(object):
     
     apiInput = "someinput"
     
-    if apiInput == "enablecapture":
+    if apiInput == "kafkaCapture":
         rpi.EnableCapture.enableCapture()
     elif apiInput == "disablecapture":
         rpi.DisableCapture.disableCapture()
     elif apiInput == "restartpi":
         rpi.RestartPi.restartPi()
     else:
+        return print('something went wrong')
         

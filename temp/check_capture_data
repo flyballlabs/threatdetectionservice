@@ -1,0 +1,16 @@
+#terminal1
+sudo openvpn --config ~/Downloads/client.ovpn
+
+#terminal2
+sudo ssh anon@10.10.10.154
+cd incubator-metron/metron-deployment/vagrant/codelab-platform
+sudo ./run.sh
+sudo pycapa --producer --kafka node1:6667 --topic pcap -i eno1
+
+#terminal3
+sudo ssh anon@10.10.10.154
+cd incubator-metron/metron-deployment/vagrant/codelab-platform
+sudo vagrant ssh
+sudo -i
+cd /usr/bin/hdfs
+hdfs dfs -ls /apps/metron/pcap

@@ -1,0 +1,24 @@
+
+
+# flask arg parsing 
+
+parser = reqparse.RequestParser()
+parser.add_argument('task')
+args = parser.parse_args()
+task = {'task': args['task']}
+TODOS[todo_id] = task
+    def post(self):
+        args = parser.parse_args()
+        todo_id = int(max(TODOS.keys()).lstrip('todo')) + 1
+        todo_id = 'todo%i' % todo_id
+        TODOS[todo_id] = {'task': args['task']}
+        return TODOS[todo_id], 201
+
+#requests to the api
+
+http://10.10.10.184:6668/api/picontroller/glacier
+
+import requests
+r = requests.get("<insert ip & port here>")
+r = requests.get("<insert ip & port here>")
+print(r.text)

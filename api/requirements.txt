@@ -1,8 +1,15 @@
-Flask==0.10.1
-Flask-HTTPAuth==2.3.0
-Flask-RESTful==0.3.1
-Jinja2==2.7.3
-MarkupSafe==0.23
-Werkzeug==0.9.6
-itsdangerous==0.24
-six==1.9.0
+ flask
+ flask-login
+ flask-openid
+ flask-mail
+ flask-sqlalchemy
+ sqlalchemy-migrate
+ flask-whooshalchemy
+ flask-wtf
+ flask-babel
+ guess_language
+ flipflop
+ coverage
+itsdangerous
+Werkzeug
+Jinja2
