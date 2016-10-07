@@ -45,14 +45,14 @@ def application(env, start_response):
 Now run this test script with uwsgi
 
 ```
-./uwsgi --http :6665 --wsgi-file foobar.py
+./uwsgi --http :6668 --wsgi-file foobar.py
 ```
 
 
-You can now browse to 10.10.10.154:6668 and you should se hello world printed. 
+You can now browse to <ip>:6668 and you should se hello world printed. 
 
 
-## Installing fetask
+## Installing flask
 apt-get install python-pip python3-pip
 /usr/bin/pip3 install Flask
 
