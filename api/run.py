@@ -16,5 +16,5 @@ def get_picontroller():
         return jsonify({'device': device})  
          
 
-if __name__ == '__main__':  # Script executed directly?
+if __name__ == '__main__':  # Script executed directly
     app.run()  # Launch built-in web server and run this Flask webapp

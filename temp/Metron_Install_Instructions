@@ -1,0 +1,28 @@
+-Uninstall any version of openJDK
+
+-Install Oracle JDK & JRE and set paths for vars
+
+-Install all dependencies (version matters) https://github.com/apache/incubator-metron/tree/master/metron-deployment/vagrant/quick-dev-platform
+
+-For ansible install using: http://docs.ansible.com/ansible/intro_installation.html
+
+-Then downgrade Ansible: https://cwiki.apache.org/confluence/display/METRON/Downgrade+Ansible
+
+-For Maven need to set oracle java path and add maven path http://maven.apache.org/install.html
+
+-Clone incubator-metron https://github.com/apache/incubator-metron in same dir as dependencies
+
+-Follow instructions on git to deploy QUICK-DEV-PLATFORM <or> codelab-platform
+
+*If receiving "error occurred while installing ffi (1.9.14)" during vagrant host-manager install" then:
+1) curl -sSL https://get.rvm.io | bash -s stable --ruby
+2) gem install compass
+3) gem install ffi -v '1.9.14'
+
+Install Packet-Capture Tools
+-install wireshark using your software/package manager
+-install python-dev & python3-dev & libpython-dev & libpython3-dev & libpacp0.8 & libpcap-dev & libpcap0.8dev using package manager
+-install python-pcapy and python-libpcap using your package manager
+-install pcapy using instructions here: https://github.com/CoreSecurity/pcapy
+-install kafka-python using instructions here: https://github.com/dpkp/kafka-python
+-cd incubator-metron/metron-sensors/pycapa, install pycapa using instrcutions here: https://github.com/apache/incubator-metron/tree/master/metron-sensors/pycapa

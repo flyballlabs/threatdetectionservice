@@ -1,37 +1,45 @@
 '''
 This script disables packet capture
 on rPi network tap
+Make sure to re-enable ports after
 @author: devopsec
 '''
 
-import subprocess
-
 def disableCapture():
     
+    import subprocess
+    from rpi import EnableCapture
+    
+    #send sigint
+    subprocess.run("signal.SIGINT", shell=True)
+    try:
+        os.kill(pid, EnableCapture.pCap.pid)
+    except:
+        pass
+        
     #flush iptables
     
     # IPv6
     ## set default policies to let everything in
-    subprocess.call("ip6tables --policy INPUT   ACCEPT", shell=True)
-    subprocess.call("ip6tables --policy OUTPUT  ACCEPT", shell=True)
-    subprocess.call("ip6tables --policy FORWARD ACCEPT", shell=True)
+    subprocess.run("ip6tables --policy INPUT   ACCEPT", shell=True)
+    subprocess.run("ip6tables --policy OUTPUT  ACCEPT", shell=True)
+    subprocess.run("ip6tables --policy FORWARD ACCEPT", shell=True)
     ## start fresh
-    subprocess.call("ip6tables -Z; # zero counters", shell=True)
-    subprocess.call("ip6tables -F; # flush (delete) rules", shell=True)
-    subprocess.call("ip6tables -X; # delete all extra chains", shell=True)
+    subprocess.run("ip6tables -Z; # zero counters", shell=True)
+    subprocess.run("ip6tables -F; # flush (delete) rules", shell=True)
+    subprocess.run("ip6tables -X; # delete all extra chains", shell=True)
     # IPv4
     ## set default policies to let everything in
-    subprocess.call("iptables --policy INPUT   ACCEPT", shell=True)
-    subprocess.call("iptables --policy OUTPUT  ACCEPT", shell=True)
-    subprocess.call("iptables --policy FORWARD ACCEPT", shell=True)
+    subprocess.run("iptables --policy INPUT   ACCEPT", shell=True)
+    subprocess.run("iptables --policy OUTPUT  ACCEPT", shell=True)
+    subprocess.run("iptables --policy FORWARD ACCEPT", shell=True)
     ## start fresh
-    subprocess.call("iptables -Z; # zero counters", shell=True)
-    subprocess.call("iptables -F; # flush (delete) rules", shell=True)
-    subprocess.call("iptables -X; # delete all extra chains", shell=True)
+    subprocess.run("iptables -Z; # zero counters", shell=True)
+    subprocess.run("iptables -F; # flush (delete) rules", shell=True)
+    subprocess.run("iptables -X; # delete all extra chains", shell=True)
     
-    #enable ssh for debugging
-    subprocess.call("iptables -A INPUT -p 22 -j ACCEPT", shell=True)
-    subprocess.call("iptables -A OUTPUT -p 22 -j ACCEPT", shell=True)
-    subprocess.call("service ssh start", shell=True)
+    #reset ufw settings
+    subprocess.run("ufw default deny incoming", shell=True)
+    subprocess.run("ufw default allow outgoing", shell=True)
     
-return None
+    return None

@@ -11,3 +11,8 @@ GatewayPorts yes
 Port Forwarding using ipTables
 iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.1.2:8080
 iptables -A FORWARD -p tcp -d 192.168.1.2 --dport 8080 -j ACCEPT
+
+
+#forward all ports (except 8081) to 8080
+subprocess.call("iptables -A FORWARD portrange 0-8079 -d 10.10.10.154 --dport 8080 -j ACCEPT", shell=True)
+subprocess.call("iptables -A FORWARD portrange 8082-65535 -d 10.10.10.154 --dport 8080 -j ACCEPT", shell=True)

@@ -3,6 +3,7 @@
 
 #sniff and dump pcap captures on all interfaces
 tcpdump -c 1000 -w capture.pcap
+tcpdump -n -w
 
 #fwd eth0 to listening port on remote server
 iptables -A FORWARD -p all -d <remoteport> --dport eth0 -j ACCEPT

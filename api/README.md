@@ -11,9 +11,8 @@ Description
 Setup
 -----
 
-- Install Python 2.7 and git.
+- Install Python 3.0-3.5 and git.
 - Run `setup.sh` (Linux, OS X, Cygwin) or `setup.bat` (Windows)
-- Run `./rest-server.py` to start the server (on Windows use `flask\Scripts\python rest-server.py` instead)
-- Alternatively, run `./rest-server-v2.py` to start the Flask-RESTful version of the server.
+- Run `./rest-server.py to start the server (on Windows use `flask\Scripts\python rest-server.py` instead)
 - Open `http://localhost:5000/index.html` on your web browser to run the client
 

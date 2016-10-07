@@ -12,4 +12,8 @@ sudo tcpreplay --intf1=wlp4s0 final.pcap
 sudo tcpreplay --topspeed --intf1=wlp4s0 final.pcap
 
 #capture and send to kafka
+
 pycapa --producer --kafka node1:6667 --topic pcap -i wlp4s0
+
+#allow traffic on port 6667
+subprocess.call("ufw allow 6667", shell=True)
