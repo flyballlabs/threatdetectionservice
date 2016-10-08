@@ -7,7 +7,8 @@ Make sure to re-enable ports after
 
 def disableCapture():
     
-    import subprocess
+    import subprocess, sys
+    sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
     from rpi import EnableCapture
     
     #send sigint

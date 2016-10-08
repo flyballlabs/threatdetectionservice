@@ -5,6 +5,7 @@ and syncs clock with host server
 '''
 
 import subprocess, requests, sys
+sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
 import datetime, socket
 from rpi import EnableCapture
 

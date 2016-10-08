@@ -4,6 +4,8 @@ enable controlling rPi network tap
 @author: devopsec
 '''
 
+import sys
+sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
 import rpi
 
 class Controller(object):

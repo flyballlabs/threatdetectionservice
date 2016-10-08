@@ -6,8 +6,9 @@ on rPi network tap
 
 def enableCapture():
     
+    import subprocess, time, sys
+    sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
     from rpi import EnablePorts
-    import subprocess, time
     from datetime import datetime
     
     pCap = None
