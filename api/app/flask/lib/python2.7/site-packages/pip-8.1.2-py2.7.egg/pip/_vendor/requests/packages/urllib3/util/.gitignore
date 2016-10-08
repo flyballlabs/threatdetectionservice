@@ -1,0 +1,8 @@
+/__init__.pyc
+/connection.pyc
+/request.pyc
+/response.pyc
+/retry.pyc
+/ssl_.pyc
+/timeout.pyc
+/url.pyc

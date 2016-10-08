@@ -5,7 +5,7 @@ and syncs clock with host server
 '''
 
 import subprocess, requests, sys
-import datetime
+import datetime, socket
 from rpi import EnableCapture
 
 start, end, cmd = ""
@@ -14,12 +14,8 @@ r1 = requests.get("http://10.10.10.154:6668/api/picontroller/time")
 t = r1.text
 subprocess.Popen('timedatectl', 'set-time', t)
 
-#dtLOC = datetime.now()
-#dt = datetime.strftime(dtLOC, '%Y-%m-%d_%H:%M:%S')
-#t1 = dtLOC + datetime.timedelta(minutes = 1)
-#t2 = dtLOC + datetime.timedelta(minutes = 1)
-
-r2 = requests.get("http://10.10.10.154:6668/api/picontroller/glazer")
+#variable hostname, ensure hostname is set correctly on device
+r2 = requests.get("http://10.10.10.154:6668/api/picontroller/" + socket.gethostname())
 cmds = r2.text
 if cmds['start'] != "":
     start = cmds['start']
