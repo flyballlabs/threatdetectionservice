@@ -18,7 +18,12 @@ def convTime(tStr):
 start=end=cmd=""
 r1 = requests.get("http://10.10.10.154:6668/api/picontroller/time")
 t = json.loads(r1.text)
+
+#time sync
+subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0)
 subprocess.Popen(['timedatectl', 'set-time', t], bufsize=0)
+subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0)
+
 temp = t.split(' ')
 t = temp[1]
 
