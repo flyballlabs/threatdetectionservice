@@ -21,9 +21,9 @@ The signature of the API, parameters and response are below
 #### /api/picontrollers/\<device\>
 ---
 
-- **start time:** Specifies when the agent should start capturing packet data 
-- **end time:** Specifies when the agent should stop recording package captue data 
-- **command:** A command will tell the agent which action to perform.  We only support the stop and end action.  A command overrides the start and end times.  For example, if the current time is 7am, the start time is 8am, but the client invokes the server API and gets an action of "start" then the agent will start capturing packet data immediately - event if it's before the start time 
+- **start time:** Specifies when the agent should **start** capturing packet data 
+- **end time:** Specifies when the agent should **stop** capturing packet data 
+- **command:** A command will tell the agent which action to perform.  We only support the stop and end action as of right now.  A command overrides the start and end times.  For example, if the current time is 7am, the start time is 8am, but the client invokes the server API and gets an action of "start" then the agent will start capturing packet data immediately - even if it's before the start time 
 
 Setup
 -----
@@ -31,5 +31,5 @@ Setup
 - Install Python 3.0-3.5 and git.
 - Run `setup.sh` (Linux, OS X, Cygwin) or `setup.bat` (Windows)
 - Run `./rest-server.py to start the server (on Windows use `flask\Scripts\python rest-server.py` instead)
-- Open `http://localhost:5000/index.html` on your web browser to run the client
+- Open `http://\<server ip address\>:6668/index.html` on your web browser to run the client
 
