@@ -1,12 +1,19 @@
-API:
-=============
+# Threat Management Server API (Server API):
+---
 
-Description
------------
+## Description
+---
 
-- This API allows communication between a network tap (raspberry pi) and a host server.
-- The scripts for capturing data on the network tap are all run locally on the client.
-- The API therefore only needs to provide time synchronization and routing to additonal files.
+- This Server API provides a mechanism for threat management agents to obtain control information that specifies when and how data should be captured.  We assume that agents
+are calling this API at least every 5 minutes.  This way we know that we can change the behavior of the agent within a 5 minute span.  
+- The Threat Management Client scripts are in the /agent directory of this repo
+
+## Functionality
+
+The signature of the API, parameters and response are below
+
+| URL | Request | Response
+| /api/picontrollers/<device> | Where device is the name of the deployed agent | { start: <start time>, end: <end time>, cmd: <command> } |
 
 Setup
 -----
