@@ -14,7 +14,7 @@ The signature of the API, parameters and response are below
 
 | URL | Request | Response |
 | --- | ------- | -------- |
-| /api/picontrollers/\<device\> | Where device is the name of the deployed agent | { start: \<start time\>, end: \<end time\>, cmd: \<command\> } |
+| /api/picontrollers/\<device\> | Where device is the name of the deployed agent | ``` json { start: \<start time\>, end: \<end time\>, cmd: \<command\> } ``` |
 
 Setup
 -----
