@@ -1,8 +1,4 @@
 # Threat Management Server API (Server API):
----
-
-## Description
----
 
 - This Server API provides a mechanism for threat management agents to obtain control information that specifies when and how data should be captured.  We assume that agents
 are calling this API at least every 5 minutes.  This way we know that we can change the behavior of the agent within a 5 minute span.  
@@ -17,6 +13,8 @@ The signature of the API, parameters and response are below
 | /api/picontrollers/\<device\> | Where device is the name of the deployed agent | ``` { start: <start time>, end: <end time>, cmd: <command> } ``` |
 
 ### Response(s) Explained
+
+This section contains detailed information on what the elements of the JSON response that's received from the API.
 
 #### /api/picontrollers/\<device\>
 ---
