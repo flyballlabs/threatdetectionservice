@@ -1,11 +1,13 @@
-#!/flask/bin/python
+#!./flask/bin/python
 
 from flask import Flask, request, jsonify#, abort, make_response, render_template
 from flask_restful import Api, Resource, reqparse, fields#, marshal
 from _ast import Str
 from array import array
-from datetime import datetime, timezone, timedelta
+#from datetime import datetime, timezone, timedelta
 import os
+import time
+import datetime
 #from flask_httpauth import HTTPBasicAuth
 
 #auth = HTTPBasicAuth()
@@ -118,4 +120,4 @@ api.add_resource(update, '/api/picontroller/<string:id>/<string:start>/<string:e
 
 
 if __name__ == '__main__':
-    app.run(host='10.10.10.154', port=6668, debug=False)
+    app.run(host='0.0.0.0', port=6668, debug=False)

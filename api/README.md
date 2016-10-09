@@ -26,8 +26,8 @@ This section contains detailed information on what the elements of the JSON resp
 Setup
 -----
 
-- Install Python 3.0-3.5 and git.
+- Install Python 2.6.6-3.5 and git (Was tested on 2.6.6)
 - Run `setup.sh` (Linux, OS X, Cygwin) or `setup.bat` (Windows)
-- Run `./rest-server.py to start the server (on Windows use `flask\Scripts\python rest-server.py` instead)
+- Run `**nohup ./rest-server.py** & to start the server (on Windows use `flask\Scripts\python rest-server.py` instead) TODO: Get this to run under uwsgi
 - Open `http://<server ip address>:6668/index.html` on your web browser to run the client
 
