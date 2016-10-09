@@ -4,20 +4,27 @@ and syncs clock with host server
 @author: devopsec
 '''
 
-import subprocess, requests, sys
 sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
+import subprocess, requests, sys, json
 import datetime, socket
 from rpi import EnableCapture
 
-start, end, cmd = ""
-#chk = False
+#define convtime func
+def convTime(tStr):
+    t0 = tStr.split(':')
+    time0 = datetime.timedelta(hours=int(t0[0]), minutes=int(t0[1]), seconds=int(t0[2]))
+    return time0
+
+start=end=cmd=""
 r1 = requests.get("http://10.10.10.154:6668/api/picontroller/time")
-t = r1.text
-subprocess.Popen('timedatectl', 'set-time', t)
+t = json.loads(r1.text)
+subprocess.Popen(['timedatectl', 'set-time', t], bufsize=0)
+temp = t.split(' ')
+t = temp[1]
 
 #variable hostname, ensure hostname is set correctly on device
 r2 = requests.get("http://10.10.10.154:6668/api/picontroller/" + socket.gethostname())
-cmds = r2.text
+cmds = json.loads(r2.text)
 if cmds['start'] != "":
     start = cmds['start']
 if cmds['end'] != "":
@@ -51,19 +58,5 @@ if cmds['cmd'] != "":
         from rpi import RestartPi
         RestartPi()
 
-#define convtime func
-def convTime(tStr):
-    t0 = tStr
-    t0 = t0.split(' ')
-    t0 = t0[1].split(':')
-    time0 = datetime.timedelta(hours=int(t0[0]), minutes=int(t0[1]), seconds=int(t0[2]))
-    return time0  
-
 sys.exit(0)
 
-        
-
-
-        
-        
-    
