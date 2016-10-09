@@ -16,13 +16,14 @@ The signature of the API, parameters and response are below
 | --- | ------- | -------- |
 | /api/picontrollers/\<device\> | Where device is the name of the deployed agent | ``` { start: <start time>, end: <end time>, cmd: <command> } ``` |
 
-## Response(s) Explained
+### Response(s) Explained
 
-| URL | Response Details |
-| --- | ---------------- |
-|  /api/picontrollers/\<device\>  | start time: Specifies when the agent should start capturing packet data
-end time: Specifies when the agent should stop recording package captue data 
-command: A command will tell the agent which action to perform.  We only support the stop and start action.  A command overrides the start and stop times.  For example, if the current time is 7am, the start time is 8am, but the client invokes the server API and gets an action of "start" then the agent will start capturing packet data immediately. |
+#### /api/picontrollers/\<device\>
+---
+
+- **start time:** Specifies when the agent should start capturing packet data 
+- **end time:** Specifies when the agent should stop recording package captue data 
+- **command:** A command will tell the agent which action to perform.  We only support the stop and end action.  A command overrides the start and end times.  For example, if the current time is 7am, the start time is 8am, but the client invokes the server API and gets an action of "start" then the agent will start capturing packet data immediately - event if it's before the start time 
 
 Setup
 -----
