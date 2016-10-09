@@ -1,0 +1,16 @@
+/__init__.pyc
+/appctx.pyc
+/basic.pyc
+/blueprints.pyc
+/config.pyc
+/deprecations.pyc
+/examples.pyc
+/ext.pyc
+/helpers.pyc
+/regression.pyc
+/reqctx.pyc
+/signals.pyc
+/subclassing.pyc
+/templating.pyc
+/testing.pyc
+/views.pyc

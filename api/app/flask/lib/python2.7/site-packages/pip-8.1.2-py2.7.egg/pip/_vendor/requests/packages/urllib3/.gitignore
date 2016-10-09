@@ -1,0 +1,10 @@
+/__init__.pyc
+/_collections.pyc
+/connection.pyc
+/connectionpool.pyc
+/exceptions.pyc
+/fields.pyc
+/filepost.pyc
+/poolmanager.pyc
+/request.pyc
+/response.pyc
