@@ -4,8 +4,8 @@ and syncs clock with host server
 @author: devopsec
 '''
 
-sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
 import subprocess, requests, sys, json
+sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
 import datetime, socket
 from rpi import EnableCapture
 
