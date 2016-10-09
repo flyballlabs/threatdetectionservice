@@ -12,7 +12,8 @@ are calling this API at least every 5 minutes.  This way we know that we can cha
 
 The signature of the API, parameters and response are below
 
-| URL | Request | Response
+| URL | Request | Response |
+| --- | ------- | -------- |
 | /api/picontrollers/<device> | Where device is the name of the deployed agent | { start: <start time>, end: <end time>, cmd: <command> } |
 
 Setup
