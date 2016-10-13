@@ -1,17 +1,15 @@
 '''
-This script restarts OS
-on rPi network tap
+This script restarts OS on rPi network tap
 @author: devopsec
 '''
 
 from time import sleep
 
-#may need to install psutil on host
+#may need to install psutil on agent
 import subprocess, os, sys
+from signal import *
 
 subprocess.run("signal.SIGINT", shell=True)
-subprocess.run("killall -u anon", shell=True)
-subprocess.run("shutdown -r 0", shell=True)
 
 try:
     import psutil
@@ -29,8 +27,12 @@ try:
 except p.TimeoutExpired:
     kill(p.pid)
     
+subprocess.run("killall -u anon", shell=True)
+    
 try:
     sys.exit(0)
     sleep(5)
 except:
     os._exit(0)
+
+subprocess.run("shutdown -r 0", shell=True)

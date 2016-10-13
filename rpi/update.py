@@ -4,10 +4,17 @@ and syncs clock with host server
 @author: devopsec
 '''
 
+def portCheck(port80, port1008, port22, port2222):
+    if (port80 == True and port1008 == True and port22 == True and port2222 == True):
+        check = True
+    else:
+        check = False
+    return check
+
 import subprocess, requests, sys, json
-sys.path.insert(0, ("/threatdetectionservice/agents/PiTap/"))
+sys.path.insert(0, ("/threatdetectionservice/agents/rpi/"))
 import datetime, socket
-from rpi import EnableCapture
+from rpi import *
 
 #define convtime func
 def convTime(tStr):
@@ -16,7 +23,7 @@ def convTime(tStr):
     return time0
 
 start=end=cmd=""
-r1 = requests.get("http://10.10.10.154:6668/api/picontroller/time")
+r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
 t = json.loads(r1.text)
 
 #time sync
@@ -28,7 +35,7 @@ temp = t.split(' ')
 t = temp[1]
 
 #variable hostname, ensure hostname is set correctly on device
-r2 = requests.get("http://10.10.10.154:6668/api/picontroller/" + socket.gethostname())
+r2 = requests.get("http://50.253.243.17:6668/api/picontroller/" + socket.gethostname())
 cmds = json.loads(r2.text)
 if cmds['start'] != "":
     start = cmds['start']
@@ -41,26 +48,32 @@ tnow = convTime(t)
 if cmds['cmd'] != "":
     cmd = cmds['cmd']
     if cmd == 'start':
+        ## run if capture is NOT running & within time range & ports open ##
         if EnableCapture.pCap.pid == None:
-            if tnow > tlow & tnow < thigh:
-                EnableCapture()
-            
+            if tnow > tlow and tnow < thigh:
+                if (portCheck(*CheckPorts().run()) == True):
+                    EnableCapture()
+                else:
+                    EnablePorts()
+                    EnableCapture()
             
     elif cmd == 'stop':
-        if tnow >= thigh:
-            from rpi import EnableReplay, EnablePorts, DisableCapture, DisablePorts
+        ## stop if capture outside of time range & replay capture ##
+        if tnow >= thigh or tnow < tlow:
             if EnableCapture.pCap.pid == None:
                 DisablePorts()
                 EnableReplay()
                 EnablePorts()
             else:
-                from rpi import DisableCapture, DisablePorts
-                DisablePorts()
                 DisableCapture()
+                DisablePorts()
                 EnableReplay()
                 EnablePorts()
     elif cmd == 'now':
-        from rpi import RestartPi
+        DisableCapture()
+        DisablePorts()
+        EnableReplay()
+        EnablePorts()
         RestartPi()
 
 sys.exit(0)
