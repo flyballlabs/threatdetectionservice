@@ -24,7 +24,7 @@ def convTime(tStr):
 ## end convtime function ##
 
 if (portCheck(*Ports.func.check()) == False):
-    Ports.enable()
+    Ports.func.enable()
     
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
