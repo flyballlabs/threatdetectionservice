@@ -2,12 +2,13 @@
 This script restarts OS on rPi network tap
 @author: devopsec
 '''
-import subprocess, os, sys
+import subprocess, os, sys, psutil
 sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
 from time import sleep
+from signal import *
+import Capture
 
 def run():
-    from signal import *
     
     subprocess.run("signal.SIGINT", shell=True)
     
@@ -18,9 +19,7 @@ def run():
                 process.kill()
     ## end kill function ##
     
-    try:
-        import Capture
-        import psutil
+    try:  
         kill(Capture.func.pcap.pid)
     except:
         pass

@@ -6,7 +6,7 @@ and syncs clock with host server
 
 import subprocess, requests, sys, json, datetime, socket
 sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
-import Ports, Capture, EnableReplay, RestartPi
+import Ports, Capture, EnableReplay #, RestartPi
 
 ## gets args from Ports.check and outputs overall status ##
 def portCheck(port80, port1008, port22, port2222):
@@ -23,6 +23,9 @@ def convTime(tStr):
     return time0
 ## end convtime function ##
 
+if (portCheck(*Ports.func.check()) == False):
+    Ports.enable()
+    
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
 t = json.loads(r1.text)
@@ -52,7 +55,7 @@ if cmds['cmd'] != "":
         ## run if capture is NOT running & within time range & ports open ##
         if Capture.func.pcap.pid == None:
             if tnow > tlow and tnow < thigh:
-                if (portCheck(*CheckPorts().run()) == True):
+                if (portCheck(*Ports.func.check()) == True):
                     Capture.func.enable()
                 else:
                     Ports.func.enable()
@@ -75,7 +78,7 @@ if cmds['cmd'] != "":
         Ports.func.disable()
         EnableReplay.run()
         Ports.func.enable()
-        RestartPi.run()
+        #RestartPi.run()
         
 sys.exit(0)
 
