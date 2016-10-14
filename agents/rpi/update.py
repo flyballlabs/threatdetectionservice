@@ -23,8 +23,8 @@ def convTime(tStr):
     return time0
 ## end convtime function ##
 
-if (portCheck(*Ports.func.check()) == False):
-    Ports.func.enable()
+#if (portCheck(*Ports.func.check()) == False):
+#    Ports.func.enable()
     
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
@@ -79,6 +79,13 @@ if cmds['cmd'] != "":
         EnableReplay.run()
         Ports.func.enable()
         #RestartPi.run()
-        
+else:
+	## If no commands are sent then we should fall back to default behavior
+        ## which is running a captures between the start and stop time
+	if tnow > tlow and tnow < thigh:
+		if Capture.func.isRunning()  == False:
+			Capture.func.enable()
+        #else:
+        #    Capture.func.disable()
 sys.exit(0)
 
