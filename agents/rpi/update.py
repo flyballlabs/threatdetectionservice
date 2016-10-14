@@ -4,23 +4,24 @@ and syncs clock with host server
 @author: devopsec
 '''
 
-import subprocess, requests, sys, json
-sys.path.insert(0, ("/threatdetectionservice/agents/rpi/"))
-import datetime, socket
-from rpi import *
+import subprocess, requests, sys, json, datetime, socket
+sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
+import Ports, Capture, EnableReplay, RestartPi
 
+## gets args from Ports.check and outputs overall status ##
 def portCheck(port80, port1008, port22, port2222):
     if (port80 == True and port1008 == True and port22 == True and port2222 == True):
         check = True
     else:
         check = False
     return check
+## end portCheck function
 
-#define convtime func
 def convTime(tStr):
     t0 = tStr.split(':')
     time0 = datetime.timedelta(hours=int(t0[0]), minutes=int(t0[1]), seconds=int(t0[2]))
     return time0
+## end convtime function ##
 
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
@@ -54,27 +55,27 @@ if cmds['cmd'] != "":
                 if (portCheck(*CheckPorts().run()) == True):
                     Capture.func.enable()
                 else:
-                    EnablePorts()
+                    Ports.func.enable()
                     Capture.func.enable()
             
     elif cmd == 'stop':
         ## stop if capture outside of time range & replay capture ##
         if tnow >= thigh or tnow < tlow:
             if Capture.func.pcap.pid == None:
-                DisablePorts()
-                EnableReplay()
-                EnablePorts()
+                Ports.func.disable()
+                EnableReplay.run()
+                Ports.func.enable()
             else:
                 Capture.func.kill()
-                DisablePorts()
-                EnableReplay()
-                EnablePorts()
+                Ports.func.disable()
+                EnableReplay.run()
+                Ports.func.enable()
     elif cmd == 'now':
         Capture.func.kill()
-        DisablePorts()
-        EnableReplay()
-        EnablePorts()
-        RestartPi()
+        Ports.func.disable()
+        EnableReplay.run()
+        Ports.func.enable()
+        RestartPi.run()
         
 sys.exit(0)
 
