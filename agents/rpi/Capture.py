@@ -4,6 +4,7 @@ This script allows control of capture on rpi network tap
 '''
 
 import subprocess, time, os, re
+#sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
 from datetime import datetime
 
 '''
@@ -23,20 +24,19 @@ class func:
         t = time.time()
         
         #dump until killed
-        func.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True,
-                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        Capture.func.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True, stdout=subprocess.PIPE)
         while t != 0:
-            func.pcap
+            Capture.func.pcap
     
         return False
     ## end enable function
     
     def kill():
         try:
-            func.pcap.terminate()
+            Capture.func.pcap.terminate()
             return True
         except:
-            func.pcap.kill()
+            Capture.func.pcap.kill()
             return True
         else:
             return False
@@ -44,8 +44,7 @@ class func:
     ## end killPcap function
 
     def isRunning():
-        ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True,
-                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True, stdout=subprocess.PIPE)
         output = ps.stdout.readline().decode('ascii')
         print (output)
         try:

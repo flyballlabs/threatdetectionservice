@@ -31,12 +31,9 @@ r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
 t = json.loads(r1.text)
 
 #time sync
-subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0,
-                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-subprocess.Popen(['timedatectl', 'set-time', t], bufsize=0,
-                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0,
-                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0, stdout=subprocess.PIPE)
+subprocess.Popen(['timedatectl', 'set-time', t], bufsize=0, stdout=subprocess.PIPE)
+subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0, stdout=subprocess.PIPE)
 
 temp = t.split(' ')
 t = temp[1]

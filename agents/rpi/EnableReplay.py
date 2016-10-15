@@ -7,7 +7,6 @@ import subprocess, sys
 from datetime import datetime
 
 def run():
-    repcap = None
     
     def iptablesFLUSH():
         subprocess.run("iptables -Z", shell=True)# zero counters
@@ -41,15 +40,9 @@ def run():
     date = datetime.strftime(dt, '%Y-%m-%d')
     fileIn = "/capture-data/" + date + ".pcap"
     
-    #replay packet captures
-    def replay():
-        run.repcap = subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], 
+    ## replay packet capture ##
+    subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], 
                      shell=True, stdout=subprocess.PIPE)
-        run.repcap
-    ## end replay function ##
-    
-    replay()
-    
     
     #delete ufw rules
     subprocess.run("ufw delete allow from any", shell=True)
@@ -58,9 +51,4 @@ def run():
     #delete added iptables rules
     iptablesFLUSH()
     
-    if(run.repcap.poll() == None):
-        try:
-            run.repcap.terminate()
-        except:
-            run.repcap.kill()
 ## end run function ##
