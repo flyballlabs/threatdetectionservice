@@ -23,11 +23,10 @@ class func:
         t = time.time()
         
         #dump until killed
-        func.pcap = pcap
-        pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True,
+        func.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while t != 0:
-            pcap
+            func.pcap
     
         return False
     ## end enable function

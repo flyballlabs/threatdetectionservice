@@ -43,12 +43,13 @@ def run():
     
     #replay packet captures
     def replay():
-        run.repcap = repcap
-        repcap = subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], 
+        run.repcap = subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], 
                      shell=True, stdout=subprocess.PIPE)
+        run.repcap
     ## end replay function ##
     
     replay()
+    
     
     #delete ufw rules
     subprocess.run("ufw delete allow from any", shell=True)
