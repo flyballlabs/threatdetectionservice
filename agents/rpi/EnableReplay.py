@@ -27,12 +27,11 @@ def run():
     subprocess.run("ip6tables --policy FORWARD ACCEPT", shell=True)
     
     #enable all traffic in ufw
-    subprocess.run("ufw allow incoming", shell=True)
-    subprocess.run("ufw allow outgoing", shell=True)
-    subprocess.run("ufw allow 0:65535/tcp", shell=True)
+    subprocess.run("ufw allow from any", shell=True)
+    subprocess.run("ufw allow to any", shell=True)
     
     #forward all ports to remote host
-    subprocess.run("iptables -A FORWARD portrange 0-65535 -d 50.253.243.17 --dport 6667 -j ACCEPT", shell=True)
+    subprocess.run("iptables -A FORWARD -i enxb827ebcff441 portrange 0-65535 -d 50.253.243.17 --dport 6667 -j ACCEPT", shell=True)
     
     #get pcap file name
     dt = datetime.now()
@@ -40,12 +39,11 @@ def run():
     fileIn = "/capture-data/" + date + ".pcap"
     
     #replay packet captures
-    subprocess.Popen(["tcpreplay", "-q", "--topspeed", "--intf1=eno1", fileIn], shell=True)
+    subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], shell=True)
     
     #delete ufw rules
-    subprocess.run("ufw delete allow incoming", shell=True)
-    subprocess.run("ufw delete allow outgoing", shell=True)
-    subprocess.run("ufw delete allow 0:65535/tcp", shell=True)
+    subprocess.run("ufw delete allow from any", shell=True)
+    subprocess.run("ufw delete allow to any", shell=True)
     
     #delete added iptables rules
     iptablesFLUSH()
