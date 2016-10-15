@@ -23,7 +23,9 @@ class func:
         t = time.time()
         
         #dump until killed
-        pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True)
+        func.pcap = pcap
+        pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while t != 0:
             pcap
     
@@ -32,15 +34,19 @@ class func:
     
     def kill():
         try:
-            ps = subprocess.Popen("killall capture-data")
+            func.pcap.terminate()
             return True
         except:
+            func.pcap.kill()
+            return True
+        else:
             return False
     
     ## end killPcap function
 
     def isRunning():
-        ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True, stdout=subprocess.PIPE)
+        ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = ps.stdout.readline().decode('ascii')
         print (output)
         try:
