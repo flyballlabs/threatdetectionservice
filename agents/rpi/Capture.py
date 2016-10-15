@@ -9,10 +9,16 @@ from datetime import datetime
 
 '''
 @summary: 
+This class process info for functions to access
+'''
+class Ps:
+    pcap = None
+
+'''
+@summary: 
 This class holds functions for Capturing data
 '''
 class func:
-    pcap = None
     
     def enable():            
     ## get datetime for timestamp ##
@@ -24,19 +30,19 @@ class func:
         t = time.time()
         
         #dump until killed
-        Capture.func.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True, stdout=subprocess.PIPE)
+        Ps.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True, stdout=subprocess.PIPE)
         while t != 0:
-            Capture.func.pcap
+            PS.pcap
     
         return False
     ## end enable function
     
     def kill():
         try:
-            Capture.func.pcap.terminate()
+            Ps.pcap.terminate()
             return True
         except:
-            Capture.func.pcap.kill()
+            Ps.pcap.kill()
             return True
         else:
             return False
