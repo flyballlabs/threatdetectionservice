@@ -3,8 +3,7 @@ This script allows control of capture on rpi network tap
 @author: devopsec
 '''
 
-import subprocess, time, os, re
-#sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
+import subprocess, time, os, re, psutil
 from datetime import datetime
 
 '''
@@ -30,19 +29,20 @@ class func:
         t = time.time()
         
         #dump until killed
-        Ps.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True, stdout=subprocess.PIPE)
+        pcap = subprocess.Popen(['/usr/sbin/tcpdump', '-n', '-e', '-w', fileOut], stdout=subprocess.PIPE)
+        Ps.pcap = pcap.pid
         while t != 0:
-            Ps.pcap
+            pcap
     
         return False
     ## end enable function
     
     def kill():
         try:
-            Ps.pcap.terminate()
+            psutil.Process(Ps.pcap).terminate()
             return True
         except:
-            Ps.pcap.kill()
+            psutil.Process(Ps.pcap).kill()
             return True
         else:
             return False
