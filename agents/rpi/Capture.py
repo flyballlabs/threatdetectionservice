@@ -32,7 +32,7 @@ class func:
         #dump until killed
         Ps.pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True, stdout=subprocess.PIPE)
         while t != 0:
-            PS.pcap
+            Ps.pcap
     
         return False
     ## end enable function
