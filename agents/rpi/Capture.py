@@ -30,7 +30,7 @@ class func:
         return False
     ## end enable function
     
-    def kill():
+    def disable():
         try:
             ps = subprocess.Popen("killall capture-data")
             return True
@@ -42,7 +42,6 @@ class func:
     def isRunning():
         ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True, stdout=subprocess.PIPE)
         output = ps.stdout.readline().decode('ascii')
-        print (output)
         try:
             if re.search("pcap",output):
                 return True

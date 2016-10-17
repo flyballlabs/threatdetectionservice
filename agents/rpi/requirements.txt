@@ -1,1 +1,2 @@
-kafka
+kafka-python
+requests
