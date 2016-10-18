@@ -85,5 +85,5 @@ else:
         if Capture.func.isRunning() == False:
             Capture.func.enable()
         else:
-            Capture.func.disable()
+            Capture.func.kill()
 sys.exit(0)

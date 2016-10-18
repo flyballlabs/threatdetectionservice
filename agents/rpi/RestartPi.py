@@ -24,7 +24,7 @@ def run():
     except:
         pass
     
-    p = subprocess.Popen(['gnome-terminal -e bash'], shell=True)
+    p = subprocess.Popen(['gnome-terminal -e bash'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     try:
         p.wait(timeout=3)
     except p.TimeoutExpired:
