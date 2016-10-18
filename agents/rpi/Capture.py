@@ -32,7 +32,7 @@ class func:
     
     def disable():
         try:
-            ps = subprocess.Popen("killall capture-data")
+            ps = subprocess.Popen("killall tcpdump")
             return True
         except:
             return False
