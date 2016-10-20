@@ -32,7 +32,7 @@ class func:
     
     def disable():
         try:
-            ps = subprocess.Popen("killall tcpdump")
+            check_kill_process("tcpdump")
             return True
         except:
             return False
@@ -49,3 +49,9 @@ class func:
                 return False
         except:
             return False
+
+def check_kill_process(pstring):
+    for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        fields = line.split()
+        pid = fields[0]
+        os.kill(int(pid), signal.SIGKILL)
