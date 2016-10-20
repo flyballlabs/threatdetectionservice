@@ -81,33 +81,20 @@ tnow = convTime(t)
 if cmds['cmd'] != "":
     cmd = cmds['cmd']
     if cmd == 'start':
-        ## run if capture is NOT running & within time range & ports open ##
-        if Capture.func.pcap.pid == None:
-            if tnow > tlow and tnow < thigh:
-                if (portCheck(*Ports.func.check()) == True):
+        ## run if capture is NOT running & ports open ##
+        if Capture.func.isRunning() == False:
+                ## if (portCheck(*Ports.func.check()) == True):
                     Capture.func.enable()
-                else:
-                    Ports.func.enable()
-                    Capture.func.enable()
+                ##else:
+                ##    Ports.func.enable()
+                ##    Capture.func.enable()
             
     elif cmd == 'stop':
         ## stop if capture outside of time range & replay capture ##
-        if tnow >= thigh or tnow < tlow:
-            if Capture.func.pcap.pid == None:
-                Ports.func.disable()
-                EnableReplay.run()
-                Ports.func.enable()
-            else:
+        if Capture.func.isRunning() == True:
                 Capture.func.disable()
-                Ports.func.disable()
-                EnableReplay.run()
-                Ports.func.enable()
-    elif cmd == 'now':
-        Capture.func.disable()
-        Ports.func.disable()
-        EnableReplay.run()
-        Ports.func.enable()
-        #RestartPi.run()
+                ##Ports.func.disable()
+                ##Ports.func.enable()
 else:
 	## If no commands are sent then we should fall back to default behavior
         ## which is running a captures between the start and stop time
