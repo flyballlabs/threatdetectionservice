@@ -9,8 +9,8 @@ sys.path.insert(0, ("/threatdetectionservice/agents/rpi"))
 import Ports, Capture, EnableReplay #, RestartPi
 
 ## gets args from Ports.check and outputs overall status ##
-def portCheck(port80, port1008, port22, port2222):
-    if (port80 == True and port1008 == True and port22 == True and port2222 == True):
+def portCheck(port80, port22):
+    if (port80 == True and port22 == True):
         check = True
     else:
         check = False
@@ -23,8 +23,8 @@ def convTime(tStr):
     return time0
 ## end convtime function ##
 
-#if (portCheck(*Ports.func.check()) == False):
-#    Ports.func.enable()
+if (portCheck(*Ports.func.check()) == False):
+    Ports.func.enable()
     
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")

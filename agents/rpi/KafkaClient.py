@@ -1,9 +1,7 @@
-## kafka python ##
 import kafka
 from kafka import KafkaProducer
 from kafka import BrokerConnection
 from sys import api_version
-import time
 #dt = datetime.now()
 #date = datetime.strftime(dt, '%Y-%m-%d')
 
@@ -14,24 +12,18 @@ import time
 #else:
 #    print("not connected")
 
-producer = KafkaProducer(bootstrap_servers='10.10.10.154:6667', retries=5, client_id='kafka-python',
-                         value_serializer=lambda m: json.dumps(m).encode('ascii'), api_version=(0, 9))
-# produce asynchronously
+#producer = KafkaProducer(bootstrap_servers=['10.10.10.154:6667'],api_version=(0,9))
+#producer = KafkaProducer(bootstrap_servers='50.253.243.17:6667')
+producer = KafkaProducer(bootstrap_servers='50.253.243.17:6667', value_serializer=lambda m: json.dumps(m).encode('ascii'), api_version=(0, 9))
+
+for _ in range(100):
+    producer.send('pcap', {'key': 'value'})
+    producer.flush()
+    producer.send('asset', b'some_message_bytes')
 #while True:
-#    producer.send('pcap', {'key': 'value'})
-
-#i = 0
-#while i <= 10:
-#    producer.get()
-#    i += 1
-
-t = time.time()
-while t <= 10:
-    #producer.send('pcap', {'key': 'value'})
-    producer.send('pcap', b'test')
-    
-# block until all async messages are sent
-producer.flush()
+#t = time.time()
+#while t <= 100:   
+#producer.send('kafka-topic', key=b'foo', value=b'bar')
 #producer.close()
 
 '''

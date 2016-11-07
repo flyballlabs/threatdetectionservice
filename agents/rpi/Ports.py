@@ -14,34 +14,22 @@ class func:
     def check():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
-        ## check HTTP ports ##
+        ## check HTTP port ##
         check = sock.connect_ex(('10.113.145.149',80))
         if check == 0:
             port80 = True
         else:
             port80 = False
-            
-        check = sock.connect_ex(('10.113.145.149',1008))
-        if check == 0:
-            port1008 = True
-        else:
-            port1008 = False
         
-        ## check SSH ports ##
+        ## check SSH port ##
         check = sock.connect_ex(('10.113.145.149',22))
         if check == 0:
             port22 = True
         else:
             port22 = False
         
-        check = sock.connect_ex(('10.113.145.149',2222))
-        if check == 0:
-            port2222 = True
-        else:
-            port2222 = False
-        
         sock.close()
-        return (port80, port1008, port22, port2222)
+        return (port80, port22)
     ## end check function ##
     
     def enable():

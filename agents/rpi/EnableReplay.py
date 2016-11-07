@@ -32,7 +32,9 @@ def run():
     subprocess.run("ufw allow to any", shell=True)
     
     #forward all ports to remote host
-    subprocess.run("iptables -A FORWARD -i enxb827ebcff441 portrange 0-65535 -d 50.253.243.17 --dport 6667 -j ACCEPT", 
+    subprocess.run("iptables -A PREROUTING -t nat -i enxb827ebcff441 -p tcp --sport 1:65535 -j DNAT --to-destination 50.253.243.17:6667", 
+                   shell=True, stdout=subprocess.PIPE)
+    subprocess.run("iptables -A FORWARD -i enxb827ebcff441 -d 50.253.243.17:6667 -j ACCEPT", 
                    shell=True, stdout=subprocess.PIPE)
     
     #get pcap file name
@@ -41,8 +43,7 @@ def run():
     fileIn = "/capture-data/" + date + ".pcap"
     
     ## replay packet capture ##
-    subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], 
-                     shell=True, stdout=subprocess.PIPE)
+    subprocess.Popen(["tcpreplay", "-q", "--topspeed", "-i", "enxb827ebcff441", fileIn], stdout=subprocess.PIPE)
     
     #delete ufw rules
     subprocess.run("ufw delete allow from any", shell=True)
