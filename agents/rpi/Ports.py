@@ -10,31 +10,36 @@ import socket, subprocess
 This class holds functions for configuring ports
 '''
 class func:
+    def getIPAddress():
+        output = subprocess.check_output(['hostname', '-I'])
+        return output
+	
 
     def check():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        
+        ipAddress = func.getIPAddress() 
+
         ## check HTTP ports ##
-        check = sock.connect_ex(('10.113.145.149',80))
+        check = sock.connect_ex((ipAddress,80))
         if check == 0:
             port80 = True
         else:
             port80 = False
             
-        check = sock.connect_ex(('10.113.145.149',1008))
+        check = sock.connect_ex((ipAddress,1008))
         if check == 0:
             port1008 = True
         else:
             port1008 = False
         
         ## check SSH ports ##
-        check = sock.connect_ex(('10.113.145.149',22))
+        check = sock.connect_ex((ipAddress,22))
         if check == 0:
             port22 = True
         else:
             port22 = False
         
-        check = sock.connect_ex(('10.113.145.149',2222))
+        check = sock.connect_ex((ipAddress,2222))
         if check == 0:
             port2222 = True
         else:
