@@ -6,11 +6,12 @@ and sends aseet informatino to metron
 
 import subprocess, sys, io, re, csv
 from asyncio.tasks import wait
+from _ast import Str
 
 fileOut = "/asset-data/scanned.txt"
 
 print("starting scan")
-scan = subprocess.Popen(['nmap', '-v', '-O', '-T', '5', '--osscan-guess', '10.113.145.*'], universal_newlines=True, stdout=subprocess.PIPE)
+scan = subprocess.Popen(['nmap', '-v', '-O', '--osscan-guess', '-T', '4',  '10.113.145.*'], universal_newlines=True, stdout=subprocess.PIPE)
 try:
     scan.wait(timeout=3600) #1hr limit
 except subprocess.TimeoutExpired:
@@ -56,22 +57,22 @@ output.close()
 print("end writing data to file")
 
 
-print("start of filter")
+print("start of filter2")
 # filter out erroneous fields #
-filter = subprocess.Popen('grep -v "host down" /asset-data/filtered.txt', 
+filter2 = subprocess.Popen('grep -v "host down" /asset-data/filtered.txt', 
                           shell=True, stdout=subprocess.PIPE, universal_newlines=True)
 try:
-    filter.wait(timeout=900) #15min limit
+    filter2.wait(timeout=900) #15min limit
 except subprocess.TimeoutExpired:
     print("Exceeded 15min limit, terminating filter")
-    filter.terminate()
+    filter2.terminate()
 try:
-    data = filter.communicate(timeout=600)[0] #10 min limit
+    data = filter2.communicate(timeout=600)[0] #10 min limit
 except subprocess.TimeoutExpired:
     print("Exceeded 10min limit, killing and retrying communication")
-    filter.kill()
-    data = filter.communicate()[0]
-print("end of filter")
+    filter2.kill()
+    data = filter2.communicate()[0]
+print("end of filter2")
 
 
 print("start writing data to file")
@@ -84,49 +85,53 @@ print("end writing data to file")
 
 print("start parsing data")
 # filter out other strings from lines & format as csv #
-output = open(fileOut, "r+")
-data = output.read()
+output = open('/asset-data/filtered3.txt', 'w')
+input = open("/asset-data/filtered2.txt", "r")
+for line in input:
+    if re.search("Nmap", line) != None:
+        output.write(re.sub('[^0-9.]', '', line))
+        continue
+    if re.search("MAC", line) != None:
+        str = re.sub('MAC Address: ', '', line)
+        str = re.split(' ', str)
+        str = str[0]
+        output.write(str)
+        continue
+    else:
+        output.write(line.replace(line, line + '""' + "\n"))
+    if re.search("Device", line) != None:
+        output.write(re.sub('Device type: ', '', line))
+        continue
+    else:
+        output.write(line.replace(line, line + '""' + "\n"))
+    if re.search("Running", line) != None:
+        str = re.sub('Running: ', '', line)
+        str = re.sub(', ', '|', str)
+        output.write(str)
+        continue
+    else:
+        output.write(line.replace(line, line + '""' + "\n"))
+    if re.search("OS", line) != None:
+        str = re.sub('OS details: ', '', line)
+        str = re.sub('(, |, or |)', '/', str)
+        str = re.sub(' or ', '||', str)
+        output.write(str)
+        continue
+    else:
+        output.write(line.replace(line, line + '""' + "\n"))
+input.close()
+output.close()
 
-for line in data:
-    if re.match('Nmap', line) != None:
-        re.sub('[^0-9.]', '', line)
-    if re.match('MAC', line) != None:
-        re.sub('MAC Address: ', '', line)
-        re.split(' ', line)
-        str = line[0]
-        line.replace(line, str)
-    else:
-        line.replace(line, line + '""' + "\n")
-    if re.match('Device', line) != None:
-        re.sub('Device type: ', '', line)
-    else:
-        line.replace(line, line + '""' + "\n")
-    if re.match('Running', line) != None:
-        re.sub('Running: ', '', line)
-        re.sub(', ', '|', line)
-    else:
-        line.replace(line, line + '""' + "\n")
-    if re.match('OS', line) != None:
-        re.sub('OS details: ', '', line)
-        re.sub('(, |, or |)', '/', line)
-        re.sub(' or ', '||', line)
-    else:
-        line.replace(line, line + '""' + "\n")
-        
 # debug #
-file_loc = "/asset-data/debug.txt"
-file = open(file_loc, 'w')
-file.write(line)
-file.close()
+#with open('/asset-data/filtered3.txt', 'w') as file :
+#    file.write(data)
 # end debug #
 
 # parse text file to csv #
 csv_out = "/asset-data/filtered_data.csv"
-#in_txt = csv.reader(output, delimiter = '\n')
 with open(csv_out, "w") as csv_file:
         writer = csv.writer(csv_file, delimiter='\n')
-        writer.writerows(output)
-output.close()
+        writer.writerows(data)
 print("end parsing data")
 
 # send data via kafka #
