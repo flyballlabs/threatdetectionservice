@@ -17,14 +17,21 @@ class func:
 
     def check():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+<<<<<<< HEAD
         ipAddress = func.getIPAddress() 
 
         ## check HTTP ports ##
         check = sock.connect_ex((ipAddress,80))
+=======
+        
+        ## check HTTP port ##
+        check = sock.connect_ex(('10.113.145.149',80))
+>>>>>>> devopsec-master
         if check == 0:
             port80 = True
         else:
             port80 = False
+<<<<<<< HEAD
             
         check = sock.connect_ex((ipAddress,1008))
         if check == 0:
@@ -34,19 +41,27 @@ class func:
         
         ## check SSH ports ##
         check = sock.connect_ex((ipAddress,22))
+=======
+        
+        ## check SSH port ##
+        check = sock.connect_ex(('10.113.145.149',22))
+>>>>>>> devopsec-master
         if check == 0:
             port22 = True
         else:
             port22 = False
         
+<<<<<<< HEAD
         check = sock.connect_ex((ipAddress,2222))
         if check == 0:
             port2222 = True
         else:
             port2222 = False
         
+=======
+>>>>>>> devopsec-master
         sock.close()
-        return (port80, port1008, port22, port2222)
+        return (port80, port22)
     ## end check function ##
     
     def enable():
