@@ -4,9 +4,19 @@ and sends aseet informatino to metron
 @author: devopsec
 '''
 
-import subprocess, sys, io, re, csv
+import subprocess, sys, io, re
 from asyncio.tasks import wait
-from _ast import Str
+
+def replace_deficit():
+    if deficit_fields == 4:
+        output.write('"","","",""\n') 
+    elif deficit_fields == 3:
+        output.write('"","",""\n')
+    elif deficit_fields == 2:
+        output.write('"",""\n')
+    elif deficit_fields == 1:
+        output.write('""\n')
+### end replace_deficit function ###
 
 fileOut = "/asset-data/scanned.txt"
 
@@ -82,63 +92,62 @@ output.write(data)
 output.close()
 print("end writing data to file")
 
-
 print("start parsing data")
 # filter out other strings from lines & format as csv #
-output = open('/asset-data/filtered3.txt', 'w')
+output = open('/asset-data/filtered_data.csv', 'w')
 input = open("/asset-data/filtered2.txt", "r")
+deficit_fields = 0
 for line in input:
+    global deficit_fields
     if re.search("Nmap", line) != None:
-        output.write(re.sub('[^0-9.]', '', line))
-        continue
-    if re.search("MAC", line) != None:
+        if deficit_fields != 0:
+            replace_deficit()
+        str = re.sub(', ', ' ', line)
+        str = re.sub('[^0-9.]', '', str)
+        output.write(str + ',')
+        deficit_fields = 4
+    elif re.search("MAC", line) != None:
         str = re.sub('MAC Address: ', '', line)
         str = re.split(' ', str)
         str = str[0]
-        output.write(str)
-        continue
-    else:
-        output.write(line.replace(line, line + '""' + "\n"))
-    if re.search("Device", line) != None:
-        output.write(re.sub('Device type: ', '', line))
-        continue
-    else:
-        output.write(line.replace(line, line + '""' + "\n"))
-    if re.search("Running", line) != None:
+        output.write(str + ',')
+        deficit_fields = 3
+    elif re.search("Device", line) != None:
+        str = re.sub('Device type: ', '', line)
+        str = re.sub('\n', '', str)
+        output.write(str + ',')
+        deficit_fields = 2
+    elif re.search("Running", line) != None:
         str = re.sub('Running: ', '', line)
-        str = re.sub(', ', '|', str)
-        output.write(str)
-        continue
-    else:
-        output.write(line.replace(line, line + '""' + "\n"))
-    if re.search("OS", line) != None:
+        str = re.sub(', ', ' ', str)
+        str = re.sub('\n', '', str)
+        output.write(str + ',')
+        deficit_fields = 1
+    elif re.search("OS", line) != None:
         str = re.sub('OS details: ', '', line)
-        str = re.sub('(, |, or |)', '/', str)
-        str = re.sub(' or ', '||', str)
+        str = re.sub('( or |, or )', '|', str)
+        str = re.sub(', ', ' ', str)
         output.write(str)
-        continue
-    else:
-        output.write(line.replace(line, line + '""' + "\n"))
-input.close()
-output.close()
-
-# debug #
-#with open('/asset-data/filtered3.txt', 'w') as file :
-#    file.write(data)
-# end debug #
+        deficit_fields = 0
+else:
+    input.close()
+    output.close()
 
 # parse text file to csv #
-csv_out = "/asset-data/filtered_data.csv"
-with open(csv_out, "w") as csv_file:
-        writer = csv.writer(csv_file, delimiter='\n')
-        writer.writerows(data)
+#csv_out = "/asset-data/filtered_data.csv"
+#with open("/asset-data/filtered3.txt", "r") as input:
+#    in_txt = csv.reader(input, delimiter = ',')
+#    with open(csv_out, "w") as csv_file:
+#        writer = csv.writer(csv_file, lineterminator = '\n')
+#        for line in input:
+#            writer.writerow(line)
 print("end parsing data")
 
 # send data via kafka #
 send = subprocess.Popen("tail /asset-data/filtered_data.csv | /kafka/bin/kafka-console-producer.sh --broker-list 50.253.243.17:6667 --topic assets", 
                         shell=True, stdout=subprocess.PIPE)
 try:
-    send.wait(timeout=900) #15min limit
+     send.wait(timeout=900) #15min limit
 except subprocess.TimeoutExpired:
     print("Exceeded 10min limit, terminating filter")
     send.terminate()
