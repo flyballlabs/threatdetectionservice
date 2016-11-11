@@ -1,0 +1,97 @@
+##install virtual env & flask
+mkdir <project-name> 
+cd </path-to-project/project-name>
+sudo apt-get install python3-venv
+sudo apt-get install python3-virtualenv
+sudo python3 -m venv flask
+/usr/bin/pip3 install flask
+/usr/bin/pip3 install flask-login
+/usr/bin/pip3 install flask-openid
+/usr/bin/pip3 install flask-mail
+/usr/bin/pip3 install flask-sqlalchemy
+/usr/bin/pip3 install sqlalchemy-migrate
+/usr/bin/pip3 install flask-whooshalchemy
+/usr/bin/pip3 install flask-wtf
+/usr/bin/pip3 install flask-babel
+/usr/bin/pip3 install guess_language
+/usr/bin/pip3 install flipflop
+/usr/bin/pip3 install coverage
+##setup flask app
+mkdir app
+mkdir app/static
+mkdir app/templates
+mkdir tmp
+#create a python script in app folder named: __init__.py
+#######################
+from flask import Flask
+
+app = Flask(__name__)
+from app import views
+######################
+
+#create "views" handler to respond to requests on a URL
+###################create in app folder: views.py
+from app import app
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return "Hello, World!"
+###################
+#script to startup server, in <project name>, name: run.py
+##basic wsgi application
+def application(env, start_response):
+    start_response('200 OK', [('Content-Type','text/html')])
+    return [b"Hello World"]
+#make executable
+chmod a+x run.py
+#run project
+python run.py
+##end setup
+
+##add concurrency and monitoring ## telnet to the port 9191 to see stats
+uwsgi --http :9090 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
+
+##full server setup
+location / {
+    include uwsgi_params;
+    uwsgi_pass 127.0.0.1:3031;
+}
+
+##spawn uWSGI to natively speak the uwsgi protocol
+uwsgi --socket 127.0.0.1:3031 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
+
+##spawn uWSGI to natively speak the http protocol
+uwsgi --http-socket 127.0.0.1:3031 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
+
+##deploy a Django project (web framework)
+uwsgi --socket 127.0.0.1:3031 --chdir /home/foobar/myproject/ --wsgi-file myproject/wsgi.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
+##run it
+uwsgi yourfile.ini
+
+##deploying Flask (web microframework)
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "<span style='color:red'>I am app 1</span>"
+
+##run uwsgi
+uwsgi --http-socket 50.253.243.17:8888 --wsgi-file run.py --callable app --processes 4 --threads 2 --stats 50.253.243.17:8880
+
+##setup an API using virtualenv and flask
+mkdir somename-api
+cd somename-api
+virtualenv flask
+#New python executable in flask/bin/python
+#Installing setuptools............................done.
+#Installing pip...................done.
+flask/bin/pip install flask
+##create some web app - then exec to host
+chmod a+x app.py
+./app.py
+# * Running on http://127.0.0.1:5000/
+# * Restarting with reloader
+

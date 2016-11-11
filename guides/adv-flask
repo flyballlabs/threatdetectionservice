@@ -1,0 +1,198 @@
+#if request.method == 'POST':
+    #    #device = request.json({'device': device})
+    #   if device != None:
+     #       return "good request"
+     #   else:
+     #       return "Bad Request"
+    #else:
+     #   if device != None:
+      #      return "good request"
+        #else:
+       #     return "Bad Request
+
+
+@app.route('/signUpUser', methods=['POST'])
+def signUpUser():
+    user =  request.form['username'];
+    password = request.form['password'];
+    return json.dumps({'status':'OK','user':user,'pass':password});
+
+$(function() {
+    $('button').click(function() {
+        var user = $('#txtUsername').val();
+        var pass = $('#txtPassword').val();
+        $.ajax({
+            url: '/signUpUser',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+##################### 
+### http requests ###
+$.ajax({
+    type: "POST",
+    url: "~/pythoncode.py",
+    data: { param: text}
+}).done(function( o ) {
+   // do something
+});
+### get JSON ###
+$.getJSON('http://example.com/your/webservice?param1=x&param2=y', 
+    function(data, textStatus, jqXHR) {
+        alert(data);
+    }
+)
+### return JSON from POST request ###
+@app.route("/your/webservice")
+def my_webservice():
+    return jsonify(result=some_function(**request.args)) 
+######################
+### create a flask api class for resources ###
+class rpiAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('online', type=str, location='json')
+        self.reqparse.add_argument('time', type=bool, location='json')
+        self.reqparse.add_argument('rules', type=list, location='json')
+        super(rpiAPI, self).__init__()
+
+    def get(self):
+       getTime()
+        return {'data': marshal(data[0], data_fields)}
+
+    def put(self, id):
+       'data' = ['data' for data in data if data['id'] == id]
+        if len(data) == 0:
+            abort(404)
+        data = data[0]
+        args = self.reqparse.parse_args()
+        for k, v in args.items():
+            if v is not None:
+                'data'[k] = v
+        return {''data'': marshal('data', 'data'_fields)}
+
+    def delete(self, id):
+        data = [data for data in data if 'data'['id'] == id]
+        if len('data') == 0:
+            abort(404)
+        data.remove('data'[0])
+        return {'result': True}
+
+
+#api.add_resource(rpiAPI, '/todo/api/picontroller', endpoint='data')
+#api.add_resource(rpiAPI, '/todo/api/data/<int:id>', endpoint=''data'')
+
+### python iptables bindings ###
+sudo pip install --upgrade python-iptables
+### .py cmds - must be run as root ###
+import iptc
+### check rules using table ###
+table = iptc.Table(iptc.Table.FILTER)
+for chain in table.chains:
+    print ("=======================")
+    print ("Chain ", chain.name
+    for rule in chain.rules:
+        print ("Rule", "proto:", rule.protocol, "src:", rule.src, "dst:", \
+              rule.dst, "in:", rule.in_interface, "out:", rule.out_interface),
+        print ("Matches:"),
+        for match in rule.matches:
+            print (match.name),
+        print ("Target:"),
+        print (rule.target.name)
+print ("=======================")
+### monitor packets in realtime ###
+import time, sys
+import iptc
+table = iptc.Table(iptc.Table.FILTER)
+chain = iptc.Chain(table, 'OUTPUT')
+for rule in chain.rules:
+#to set match for spec rule#	
+#		for match in rule.matches:
+#			(packets, bytes) = rule.get_counters()
+#			print packets, bytes, match.name, match.sport
+		(packets, bytes) = rule.get_counters()
+        print packets, bytes
+print "Please send some traffic"
+sys.stdout.flush()
+time.sleep(3)
+table.refresh()  # Here: refresh table to update rule counters
+for rule in chain.rules:
+        (packets, bytes) = rule.get_counters()
+        print packets, bytes
+### add a rule ###
+import iptc
+rule = iptc.Rule()
+rule.protocol = "tcp"
+match = iptc.Match(rule, "tcp")
+match.dport = "22"
+rule.add_match(match)
+match = iptc.Match(rule, "iprange")
+match.src_range = "192.168.1.100-192.168.1.200"
+match.dst_range = "172.22.33.106"
+rule.add_match(match)
+rule.target = iptc.Target(rule, "DROP")
+chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+chain.insert_rule(rule)
+# the above is equivalent to the following bash cmd #
+# iptables -A INPUT -p tcp –destination-port 22 -m iprange –src-range 192.168.1.100-192.168.1.200 
+–dst-range 172.22.33.106 -j DROP#
+
+
+from flask import render_template
+ 
+@app.route('/signUp')
+def signUp():
+    return render_template('signUp.html')
+
+@app.route('/foo', methods=['GET', 'POST])
+def foo(x=None, y=None):
+    # do something to send email
+    pass
+
+<form action="/foo" method="post">
+    <button type="submit" value="Send Email" />
+</form>
+
+
+##backup ssh solution
+var SSH = require('simple-ssh');
+ 
+var ssh = new SSH({
+    host: 'localhost',
+    user: 'username',
+    pass: 'password'
+});
+ 
+ssh.exec('echo $PATH', {
+    out: function(stdout) {
+        console.log(stdout);
+    }
+}).start();
+
+
+
+
+#accepting traffing iptables / ufw
+#allow connections through ufw
+    subprocess.call("ufw default allow incoming", shell=True)
+    subprocess.call("ufw default allow outgoing", shell=True)
+    
+    #accept traffic on any port
+    subprocess.call("iptables --policy INPUT   ACCEPT", shell=True)
+    subprocess.call("iptables --policy OUTPUT  ACCEPT", shell=True)
+    subprocess.call("iptables --policy FORWARD ACCEP", shell=True)
+    subprocess.call("ip6tables --policy INPUT   ACCEPT", shell=True)
+    subprocess.call("ip6tables --policy OUTPUT  ACCEPT", shell=True)
+    subprocess.call("ip6tables --policy FORWARD ACCEPT", shell=True)
+    subprocess.call("iptables -I INPUT -j ACCEPT", shell=True)
+    subprocess.call("iptables -A INPUT -p any -j ACCEPT", shell=True)

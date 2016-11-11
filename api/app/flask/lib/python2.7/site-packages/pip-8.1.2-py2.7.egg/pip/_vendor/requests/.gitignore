@@ -1,0 +1,14 @@
+/__init__.pyc
+/adapters.pyc
+/api.pyc
+/auth.pyc
+/certs.pyc
+/compat.pyc
+/cookies.pyc
+/exceptions.pyc
+/hooks.pyc
+/models.pyc
+/sessions.pyc
+/status_codes.pyc
+/structures.pyc
+/utils.pyc
