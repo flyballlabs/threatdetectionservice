@@ -135,7 +135,7 @@ else:
 print("end parsing data")
 
 # send data via kafka #
-send = subprocess.Popen("tail /asset-data/filtered_data.csv | /kafka/bin/kafka-console-producer.sh --broker-list 50.253.243.17:6667 --topic assets --new-producer", 
+send = subprocess.Popen("tail /asset-data/filtered_data.csv | /kafka/bin/kafka-console-producer.sh --broker-list 50.253.243.17:6667 --topic assets", 
                         shell=True, stdout=subprocess.PIPE)
 try:
      send.wait(timeout=1800) #30min limit
