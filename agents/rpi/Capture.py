@@ -3,11 +3,7 @@ This script allows control of capture on rpi network tap
 @author: devopsec
 '''
 
-<<<<<<< HEAD
-import subprocess, time, os, re
-=======
 import subprocess, time, os, re, psutil
->>>>>>> devopsec-master
 from datetime import datetime
 
 '''
@@ -32,32 +28,16 @@ class func:
         #set timer
         t = time.time()
         
-        #dump until killed
-<<<<<<< HEAD
-        pcap = subprocess.Popen(["/usr/sbin/tcpdump -n -e -w "  + fileOut],shell=True)
-        while t != 0:
-            pcap
-	
-=======
         pcap = subprocess.Popen(['/usr/sbin/tcpdump', '-n', '-e', '-w', fileOut], stdout=subprocess.PIPE)
         Ps.pcap = pcap.pid
         while t != 0:
             pcap
     
->>>>>>> devopsec-master
         return False
     ## end enable function
     
     def disable():
         try:
-<<<<<<< HEAD
-            check_kill_process("tcpdump")
-            return True
-        except:
-            return False
-	
-## end killPcap function
-=======
             psutil.Process(Ps.pcap).terminate()
             return True
         except:
@@ -67,15 +47,10 @@ class func:
             return False
     
     ## end killPcap function
->>>>>>> devopsec-master
 
     def isRunning():
         ps = subprocess.Popen("ps -eaf | grep /capture-data", shell=True, stdout=subprocess.PIPE)
         output = ps.stdout.readline().decode('ascii')
-<<<<<<< HEAD
-=======
-        print (output)
->>>>>>> devopsec-master
         try:
             if re.search("pcap",output):
                 return True
@@ -83,13 +58,9 @@ class func:
                 return False
         except:
             return False
-<<<<<<< HEAD
 
 def check_kill_process(pstring):
     for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
         fields = line.split()
         pid = fields[0]
         os.kill(int(pid), signal.SIGKILL)
-=======
-    ## end isRunning function ##
->>>>>>> devopsec-master
