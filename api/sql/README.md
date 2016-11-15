@@ -5,11 +5,11 @@
 Command to create the database
 
 ```
-mysql -u <privilieged user> -p <password> < tmp.sql
+mysql -u <privilieged user> -p<password> < tmp.sql
 ```
 
 
 ```
 Sample Command
-mysql -u root -p rootpass  < tmp.sql
+mysql -u root -prootpass  < tmp.sql
 ```
