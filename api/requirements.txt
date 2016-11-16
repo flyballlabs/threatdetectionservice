@@ -1,15 +1,18 @@
- flask
- flask-login
- flask-openid
- flask-mail
- flask-sqlalchemy
- sqlalchemy-migrate
- flask-whooshalchemy
- flask-wtf
- flask-babel
- guess_language
- flipflop
- coverage
+flask
+flask-login
+flask-openid
+flask-mail
+flask-sqlalchemy
+sqlalchemy-migrate
+flask-whooshalchemy
+flask-wtf
+flask-babel
+guess_language
+flipflop
+coverage
 itsdangerous
 Werkzeug
 Jinja2
+psutil
+kafka-python
+flask-mysql
