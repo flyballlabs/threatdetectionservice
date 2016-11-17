@@ -23,12 +23,12 @@ fileOut = "/asset-data/scanned.txt"
 print("starting scan")
 scan = subprocess.Popen(['nmap', '-v', '-O', '--osscan-guess', '-T', '4',  '10.113.145.*'], universal_newlines=True, stdout=subprocess.PIPE)
 try:
-    scan.wait(timeout=3600) #1hr limit
+    scan.wait(timeout=14400) #4hr limit
 except subprocess.TimeoutExpired:
-    print("Exceeded 1hr limit, terminating scan")
+    print("Exceeded 4hr limit, terminating scan")
     scan.terminate()
 try:
-    data = scan.communicate(timeout=600)[0] #10 min limit
+    data = scan.communicate(timeout=1800)[0] #30 min limit
 except subprocess.TimeoutExpired:
     print("Exceeded 10min limit, killing and retrying communication")
     scan.kill()
@@ -132,22 +132,14 @@ for line in input:
 else:
     input.close()
     output.close()
-
-# parse text file to csv #
-#csv_out = "/asset-data/filtered_data.csv"
-#with open("/asset-data/filtered3.txt", "r") as input:
-#    in_txt = csv.reader(input, delimiter = ',')
-#    with open(csv_out, "w") as csv_file:
-#        writer = csv.writer(csv_file, lineterminator = '\n')
-#        for line in input:
-#            writer.writerow(line)
 print("end parsing data")
 
 # send data via kafka #
 send = subprocess.Popen("tail /asset-data/filtered_data.csv | /kafka/bin/kafka-console-producer.sh --broker-list 50.253.243.17:6667 --topic assets", 
                         shell=True, stdout=subprocess.PIPE)
 try:
-     send.wait(timeout=900) #15min limit
+     send.wait(timeout=1800) #30min limit
 except subprocess.TimeoutExpired:
-    print("Exceeded 10min limit, terminating filter")
+    print("Exceeded 30min limit, terminating kafka producer")
     send.terminate()
+sys.exit()
