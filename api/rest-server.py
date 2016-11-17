@@ -106,7 +106,7 @@ class update(Resource):
 
 class user_auth(Resource):
     def get(self, user_name, user_pw):
-        x = user.query.filter_by(username=user_name)
+        x = user.query.filter_by(username=user_name).first()
         if x != None:
             if x.password == user_pw:
                 return {'authentication': True}
@@ -121,4 +121,4 @@ api.add_resource(update, '/api/picontroller/<string:id>/<string:start>/<string:e
 api.add_resource(user_auth, '/api/auth/<string:user_name>/<string:user_pw>')
 
 if __name__ == '__main__':
-    app.run(host='10.10.10.142', port=6668, debug=False)
+    app.run(host='0.0.0.0', port=6668, debug=False)

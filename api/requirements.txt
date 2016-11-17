@@ -1,7 +1,10 @@
 flask
+configparser
+mysqlclient
 flask-login
 flask-openid
 flask-mail
+flask-restful
 flask-sqlalchemy
 sqlalchemy-migrate
 flask-whooshalchemy
