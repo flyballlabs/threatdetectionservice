@@ -81,7 +81,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789',{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}},["Site1","Site2","Site3","Site4"]),(1,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789',{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}},["Site1","Site2","Site3","Site4"]);
+INSERT INTO `company` VALUES (1,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]'),(2,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]');
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
