@@ -1,3 +1,4 @@
+
 '''
 #### sample code ####
 from app import app, db
@@ -26,3 +27,4 @@ class Post(db.Model):
   def __init__(self, title, body):
         self.title = title
         self.body = body
+'''

@@ -5,6 +5,7 @@ flask-login
 flask-openid
 flask-mail
 flask-restful
+SQLAlchemy
 flask-sqlalchemy
 sqlalchemy-migrate
 flask-whooshalchemy
