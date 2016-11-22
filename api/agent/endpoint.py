@@ -1,6 +1,7 @@
 from flask_restful import Resource
 import time, datetime
 
+## migrate to mysql database ##
 data = {
     'id': {
         'glazer': {
@@ -41,6 +42,7 @@ class update(Resource):
         data['id'][id]['cmd'] = cmd
         return 'UPDATED VALUES For:' + id + os.linesep + 'START:' + start + os.linesep + 'END:' + end + os.linesep + 'CMD:' + cmd
 
+## TODO ##
 class manageAgents(Resource):
     def post(self):
         try:

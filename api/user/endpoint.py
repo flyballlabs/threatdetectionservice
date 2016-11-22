@@ -147,4 +147,25 @@ class manageUsers(Resource):
                         'message':'User search failure'
                        }
         except Exception as e:
-            return {'error': str(e)}      
+            return {'error': str(e)}
+        
+    def delete(self, _username_):
+        try:
+            curr_session = db.session #open database session
+            x = user_data.query.filter_by(username=_username_).first()
+            try:
+                db.session.delete(x)
+                db.session.commit()
+                return  {
+                            'status': 200,
+                            'message':'User delete successful'
+                        }
+            except:
+                curr_session.rollback()
+                curr_session.flush() # for resetting non-commited .add()
+                return  {
+                            'status':400,
+                            'message':'User delete failure'
+                        }
+        except Exception as e:
+            return {'error': str(e)}

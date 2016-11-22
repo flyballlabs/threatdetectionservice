@@ -37,7 +37,7 @@ api.add_resource(piController, '/api/picontroller/<string:id>')
 api.add_resource(update, '/api/picontroller/<string:id>/<string:start>/<string:end>/<string:cmd>')
 api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
 api.add_resource(manageUsers, '/api/user', '/api/user/<string:_username_>')
-#api.add_resource(manageCompany, '/api/company')
+api.add_resource(manageCompany, '/api/company, /api/company/<string:_company_name_>')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6668, debug=False)
