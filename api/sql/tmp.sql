@@ -53,6 +53,38 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1',NULL),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `company`
+--
+
+DROP TABLE IF EXISTS `company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `company` (
+  `company_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `state` varchar(45) DEFAULT NULL,
+  `zip` varchar(45) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `authinfo` json DEFAULT NULL,
+  `sites` json DEFAULT NULL,
+  PRIMARY KEY (`company_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `company`
+--
+
+LOCK TABLES `company` WRITE;
+/*!40000 ALTER TABLE `company` DISABLE KEYS */;
+INSERT INTO `company` VALUES (1,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]'),(2,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]');
+/*!40000 ALTER TABLE `company` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
