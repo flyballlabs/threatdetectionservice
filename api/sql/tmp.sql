@@ -71,8 +71,8 @@ CREATE TABLE `company` (
   `state` varchar(45) DEFAULT NULL,
   `zip` varchar(45) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
-  `authinfo` json DEFAULT NULL,
-  `sites` json DEFAULT NULL,
+  `authinfo` varchar(100) DEFAULT NULL,
+  `sites` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`company_id`),
   UNIQUE KEY (`company_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -84,7 +84,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'Flyball Labs','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]'),(2,'Dopensource','1234 Fake St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]');
+INSERT INTO `company` VALUES (1,'Flyball-Labs','1234-Fake-St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]'),(2,'Dopensource','1234-Fake-St','Detroit','MI','12345','012-345-6789','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]');
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +104,7 @@ CREATE TABLE `agent` (
   `site` varchar(45) DEFAULT NULL,
   `mode` varchar(45) DEFAULT NULL,
   `cmd` varchar(45) DEFAULT NULL,
-  `time_setting` json DEFAULT NULL,
+  `time_setting` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`agent_id`),
   UNIQUE KEY (`mac_address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

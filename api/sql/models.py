@@ -1,12 +1,13 @@
 import database
 # MySQL specific imports #
-from sqlalchemy import null #, Column
+from sqlalchemy import null , Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
-from sqlalchemy.sql import sqltypes
-from wtforms.validators import mac_address
-from ipaddress import ip_address
-from alembic.util.messaging import status
-
+#from sqlalchemy.sql import sqltypes
+##### classes / methods we may need ############
+#  from wtforms.validators import mac_address  #
+#  from ipaddress import ip_address            #  
+#  from alembic.util.messaging import status   #
+################################################
 # Connect to the database and provide a handle #
 db = database.connect()
 # null constants #
@@ -53,18 +54,18 @@ class company_data(db.Model):
     }
     
     company_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
-    name = db.Column(VARCHAR(45), unique=True, nullable=False)
+    company_name = db.Column(VARCHAR(45), unique=True, nullable=False)
     address = db.Column(VARCHAR(45))
     city = db.Column(VARCHAR(45))
     state = db.Column(VARCHAR(45))
     zip = db.Column(VARCHAR(45))
     phone_number = db.Column(VARCHAR(45))
-    authinfo = db.Column(JSON(sqltypes.JSON))
-    sites = db.Column(JSON(sqltypes.JSON))
+    authinfo =  db.Column(JSON)#VARCHAR(100)
+    sites = db.Column(JSON)#(sqltypes.JSON)
     
-    def __init__(self, company_id, name, address, city, state, zip, phone_number, authinfo, sites):
+    def __init__(self, company_id, company_name, address, city, state, zip, phone_number, authinfo, sites):
         self.company_id = company_id
-        self.name = name
+        self.company_name = company_name
         self.address = address
         self.city = city
         self.state = state
@@ -91,7 +92,7 @@ class agent_data(db.Model):
     site = db.Column(VARCHAR(45))
     mode = db.Column(VARCHAR(45))
     cmd = db.Column(VARCHAR(45))
-    time_setting = db.Column(JSON(sqltypes.JSON))
+    time_setting = db.Column(JSON)#(sqltypes.JSON)
     
     def __init__(self, agent_id, mac_address, ip_address, status, company_id, site, mode, cmd, time_setting):
         self.agent_id = agent_id
