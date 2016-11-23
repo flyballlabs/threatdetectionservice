@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from sql.models import *  #import all of the models from models.py
-from app.parse_json import * #for json request parsing
+#from app.parse_json import * #for json request parsing
 
 class manageUsers(Resource):
     def post(self):
@@ -147,4 +147,25 @@ class manageUsers(Resource):
                         'message':'User search failure'
                        }
         except Exception as e:
-            return {'error': str(e)}      
+            return {'error': str(e)}
+        
+    def delete(self, _username_):
+        try:
+            curr_session = db.session #open database session
+            x = user_data.query.filter_by(username=_username_).first()
+            try:
+                db.session.delete(x)
+                db.session.commit()
+                return  {
+                            'status': 200,
+                            'message':'User delete successful'
+                        }
+            except:
+                curr_session.rollback()
+                curr_session.flush() # for resetting non-commited .add()
+                return  {
+                            'status':400,
+                            'message':'User delete failure'
+                        }
+        except Exception as e:
+            return {'error': str(e)}
