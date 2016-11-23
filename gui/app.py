@@ -3,6 +3,7 @@ import requests
 import json
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
 
 @app.route('/')
 def index():
@@ -23,6 +24,14 @@ def login():
             error = "Username or Password was not correct"
 
     return render_template('login.html',error=error)
+
+@app.route('/threats', methods=['GET'])
+def threats():
+    site = request.args.get('site')
+    if request.method == 'GET' and site != None:
+        return render_template('threatsbysite.html',site=site)
+    
+    return render_template('threatsbysite.html',site=site)
 
 
 if __name__=='__main__':
