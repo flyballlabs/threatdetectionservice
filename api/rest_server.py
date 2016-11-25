@@ -41,4 +41,4 @@ api.add_resource(manageCompany, '/api/company/<string:_company_name_>')
 api.add_resource(companyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6668, debug=False)
+    app.run(host='0.0.0.0', port=7777, debug=False)

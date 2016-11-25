@@ -192,7 +192,7 @@ class companyList(Resource):
             try: 
                 x = company_data.query.filter_by(company_name=_company_name_).first()
                 if x != None:
-                    return jsonify(x.sites)
+                    return jsonify(sites=x.sites)
                 else:
                     return {
                             'status': 400,
@@ -222,7 +222,7 @@ class companyList(Resource):
                 x = company_data.query.with_entities(company_data.company_name).all()
                
                 if x != None:
-                    return jsonify(x)
+                    return jsonify(companies=x)
                 else:
                     return {
                             'status': 400,
