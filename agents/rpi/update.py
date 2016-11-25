@@ -23,8 +23,9 @@ def convTime(tStr):
     return time0
 ## end convtime function ##
 
-#if (portCheck(*Ports.func.check()) == False):
-#    Ports.func.enable()
+## to ensure agent can connect for updating ##
+if (portCheck(*Ports.func.check()) == False):
+    Ports.func.enable()
     
 start=end=cmd=""
 r1 = requests.get("http://50.253.243.17:6668/api/picontroller/time")
@@ -38,7 +39,7 @@ subprocess.Popen(['timedatectl', 'set-ntp', '0'], bufsize=0, stdout=subprocess.P
 temp = t.split(' ')
 t = temp[1]
 
-#variable hostname, ensure hostname is set correctly on device
+# variable hostname, ensure hostname is set correctly on device #
 r2 = requests.get("http://50.253.243.17:6668/api/picontroller/" + socket.gethostname())
 cmds = json.loads(r2.text)
 if cmds['start'] != "":
