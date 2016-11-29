@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from sql.models import *  #import all of the models from models.py
+from api.sql.models import *  #import all of the models from models.py
 #from app.parse_json import * #for json request parsing
 
 class manageUsers(Resource):
@@ -14,7 +14,9 @@ class manageUsers(Resource):
             parser.add_argument('email', type=str, help='Email for account', location='json')
             parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
             parser.add_argument('status', type=str, help='Status for account', location='json')
+            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
             args = parser.parse_args()#strict=True
 
             _user_id = args['user_id']
@@ -25,11 +27,14 @@ class manageUsers(Resource):
             _email = args['email']
             _company_id = args['company_id']
             _status = args['status']
+            _phone_number = args['phone_number']
             _lastlogin = args['lastlogin']
+            _notification = args['notification']
             
             query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
                               lastname=_lastname, password=_password, email=_email, 
-                              company_id=_company_id, status=_status, lastlogin=_lastlogin)
+                              company_id=_company_id, status=_status, phone_number=_phone_number,
+                              lastlogin=_lastlogin, notification=_notification)
 
             curr_session = db.session #open database session
             try:
@@ -62,7 +67,9 @@ class manageUsers(Resource):
             parser.add_argument('email', type=str, help='Email for account', location='json')
             parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
             parser.add_argument('status', type=str, help='Status for account', location='json')
+            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
             
             args = parser.parse_args()#strict=True, require=True
             
@@ -85,8 +92,12 @@ class manageUsers(Resource):
                 _company_id = args['company_id']
             if args['status'] != None:
                 _status = args['status']
+            if args['phone_number'] != None:
+                _phone_number = args['phone_number']
             if args['lastlogin'] != None:
                 _lastlogin = args['lastlogin']
+            if args['notification'] != None:
+                _notification = args['notification']
             ###################################
             # would be faster in an array / loop
             
@@ -101,7 +112,9 @@ class manageUsers(Resource):
                 x.email = _email
                 x.company_id = _company_id
                 x.status = _status
+                x.phone_number = _phone_number
                 x.lastlogin = _lastlogin
+                x.notification = _notification
                 curr_session.commit() #commit changes
                 
                 return  {
@@ -127,7 +140,9 @@ class manageUsers(Resource):
             _email = x.email
             _company_id = x.company_id
             _status = x.status
+            _phone_number = x.phone_number
             _lastlogin = x.lastlogin
+            _notification = x.notification
             
             if x != None:
                 return {
@@ -138,7 +153,9 @@ class manageUsers(Resource):
                         'email' : _email,
                         'company_id' : _company_id,
                         'status' : _status,
+                        'phone_number' : _phone_number,
                         'lastlogin' : _lastlogin,
+                        'notification' : _notification,
                         'message':'User search success'
                        }
             else:

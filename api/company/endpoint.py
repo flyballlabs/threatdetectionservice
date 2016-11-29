@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
-from sql.models import *  #import all of the models from models.py
-from app.parse_json import * #for json arg parsing
+from api.sql.models import *  #import all of the models from models.py
+from api.app.parse_json import * #for json arg parsing
 
 class manageCompany(Resource):
     # update a company's info #
@@ -17,6 +17,7 @@ class manageCompany(Resource):
             parser.add_argument('state', type=str, help='State location for account', location='json')
             parser.add_argument('zip', type=str, help='Zip code for account', location='json')
             parser.add_argument('phone_number', type=str, help='Phone_number for account', location='json')
+            parser.add_argument('poc', type=str, help='Point Of Contact for account', location='json')
             parser.add_argument('authinfo', type=str, help='Authentication info for account', location='json')
             parser.add_argument('sites', type=str, help='List of divisions for account', location='json')
             
@@ -39,6 +40,8 @@ class manageCompany(Resource):
                 _zip = args['zip']
             if args['phone_number'] != None:
                 _phone_number = args['phone_number']
+            if args['poc'] != None:
+                _poc = args['poc']
             if args['authinfo'] != None:
                 _authinfo = args['authinfo']
             if args['sites'] != None:
@@ -56,6 +59,7 @@ class manageCompany(Resource):
                 x.state = _state
                 x.zip = _zip
                 x.phone_number = _phone_number
+                x.poc = _poc
                 x.authinfo = _authinfo #json_encode()
                 x.sites = _sites
                 curr_session.commit() #commit changes
@@ -85,6 +89,7 @@ class manageCompany(Resource):
             _state = x.state
             _zip = x.zip
             _phone_number = x.phone_number
+            _poc = x.poc
             _authinfo = x.authinfo #json_decode()
             _sites = x.sites
 
@@ -96,6 +101,7 @@ class manageCompany(Resource):
                         'city' : _city,
                         'zip' : _zip,
                         'phone_number' : _phone_number,
+                        'poc' : _poc,
                         'authinfo' : _authinfo, #json_encode() / jsonify()
                         'sites' : _sites
                        }
@@ -136,20 +142,21 @@ class companyList(Resource):
         try:
             args = request.get_json(force=True)
             
-#             parser = reqparse.RequestParser()
-#             parser.add_argument('company_id', type=int, help='Company_id for account', location='json')
-#             parser.add_argument('company_name', type=str, help='Company name for account', location='json')
-#             parser.add_argument('address', type=str, help='Address for account', location='json')
-#             parser.add_argument('city', type=str, help='City location for account', location='json')
-#             parser.add_argument('state', type=str, help='State location for account', location='json')
-#             parser.add_argument('zip', type=str, help='Zip code for account', location='json')
-#             parser.add_argument('phone_number', type=str, help='Company_id for account', location='json')
-#             parser.add_argument('authinfo', type=list, help='Authentication settings for account', location='json')
-#             parser.add_argument('sites', type=list, help='List of divisions for account', location='json')
-#             args = parser.parse_args()#strict=True
-#             #return jsonify(args)
-#             temp1 = json_decode(args['authinfo'])
-#             temp2 = json_encode(args['sites'])
+            parser = reqparse.RequestParser()
+            parser.add_argument('company_id', type=int, help='Company_id for account', location='json')
+            parser.add_argument('company_name', type=str, help='Company name for account', location='json')
+            parser.add_argument('address', type=str, help='Address for account', location='json')
+            parser.add_argument('city', type=str, help='City location for account', location='json')
+            parser.add_argument('state', type=str, help='State location for account', location='json')
+            parser.add_argument('zip', type=str, help='Zip code for account', location='json')
+            parser.add_argument('phone_number', type=str, help='Company_id for account', location='json')
+            parser.add_argument('poc', type=str, help='Point Of Contact for account', location='json')
+            parser.add_argument('authinfo', type=list, help='Authentication settings for account', location='json')
+            parser.add_argument('sites', type=list, help='List of divisions for account', location='json')
+            args = parser.parse_args()#strict=True
+            #return jsonify(args)
+            #temp1 = json_decode(args['authinfo'])
+            #temp2 = json_encode(args['sites'])
             
             _company_id = args['company_id']
             _company_name = args['company_name']
@@ -158,13 +165,14 @@ class companyList(Resource):
             _state = args['state']
             _zip = args['zip']
             _phone_number = args['phone_number']
+            _poc = args['poc']
             _authinfo = args['authinfo']
             _sites = args['sites']
             
             #query = jsonify(args.authinfo) jsonify(args.sites)
             query = company_data(company_id=_company_id, company_name=_company_name, address=_address, 
-                              city=_city, state=_state, zip=_zip, 
-                              phone_number=_phone_number, authinfo=_authinfo, sites=_sites)
+                              city=_city, state=_state, zip=_zip, phone_number=_phone_number, 
+                              poc=_poc, authinfo=_authinfo, sites=_sites)
             return query
             curr_session = db.session #open database session
             try:

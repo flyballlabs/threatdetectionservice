@@ -6,6 +6,53 @@ and sends aseet informatino to metron
 
 import subprocess, sys, io, re
 from asyncio.tasks import wait
+import requests, json, csv
+
+URL = '0.0.0.0:6668/api/metron_data/asset_discovery' #url of rest server
+CSV_FILE = '/asset-data/filtered_data.csv'
+JSON_FILE = '/asset-data/filtered_data.json'
+#csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
+
+def simplecount(filename):
+    lines = 0
+    for line in open(filename):
+        lines += 1
+    return lines
+
+def csv2json(numLines):
+    try:
+        csvfile = open(CSV_FILE, 'r')
+        jsonfile = open(JSON_FILE, 'w')
+        
+        fieldnames = ("ip","mac","type","os","os-info")
+        reader = csv.DictReader(csvfile, fieldnames)
+        jsonfile.write('[')
+        i = 0
+        for row in reader:
+            json.dump(row, jsonfile)
+            if (i < numLines - 1):
+                jsonfile.write(',')
+                jsonfile.write('\n')
+            i +=1
+        jsonfile.write(']')
+        csvfile.close()
+        jsonfile.close()
+    except Exception as e:
+        csvfile.close()
+        jsonfile.close()
+        return {'error': str(e)}
+
+def send2server(url):
+    try:
+        json_data = open(JSON_FILE, 'r')
+        payload = json.load(json_data)
+        headers = {'Accept': 'application/vnd.api+json','Content-Type': 'application/vnd.api+json'}
+        response = requests.post(url, data=json.dumps(payload), headers=headers)
+        json_data.close()
+    except Exception as e:
+        json_data.close()
+        return {'error': str(e)}
+    return response
 
 def replace_deficit():
     if deficit_fields == 4:
@@ -138,8 +185,18 @@ print("end parsing data")
 send = subprocess.Popen("tail /asset-data/filtered_data.csv | /kafka/bin/kafka-console-producer.sh --broker-list 50.253.243.17:6667 --topic assets", 
                         shell=True, stdout=subprocess.PIPE)
 try:
-     send.wait(timeout=1800) #30min limit
+    send.wait(timeout=1800) #30min limit
 except subprocess.TimeoutExpired:
     print("Exceeded 30min limit, terminating kafka producer")
     send.terminate()
+
+# calc number of lines in file #
+lines = simplecount(CSV_FILE)
+
+# parse csv into json #
+csv2json(lines)
+  
+# send data to rest_server #
+send2server(URL)
+
 sys.exit()

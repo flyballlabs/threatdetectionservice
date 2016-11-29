@@ -1,51 +1,74 @@
-#from flask import jsonify
+from flask import jsonify
 from flask_restful import Resource, reqparse
-import time, datetime
-from sql.models import *  #import all of the models from models.py
-from app.parse_json import * #for json request parsing
-
-'''
-## migrate to mysql database ##
-data = {
-    'id': {
-        'glazer': {
-            'start': '08:00:00',
-            'end': '16:00:00',
-            'cmd': '' #'start', 'stop', 'now'
-        },
-        'loving': {
-            'start': '08:00:00',
-            'end': '16:00:00',
-            'cmd': ''
-        },
-        'school3': {
-            'start': '08:00:00',
-            'end': '16:00:00',
-            'cmd': ''
-        }
-    }
-}
-'''
+from datetime import datetime, timezone, timedelta
+from api.sql.models import *  #import all of the models from models.py
+from api.app.parse_json import * #for json request parsing
 
 class piController(Resource):
-    def get(self, id):
-        #if id in data['id']:
-        return {'start': data['id'][id]['start'],'end': data['id'][id]['end'],'cmd': data['id'][id]['cmd']}
-    
     def get(self):
         dtz = timezone(-timedelta(hours=4))
         dtUTC = datetime.now(dtz)
         dtfUTC = datetime.strftime(dtUTC, '%Y-%m-%d %H:%M:%S')
         return dtfUTC
     
-class update(Resource):
-    def post(self, id, start, end, cmd):
-        data['id'][id]['start'] = start
-        data['id'][id]['end'] = end
-        data['id'][id]['cmd'] = cmd
-        return 'UPDATED VALUES For:' + id + os.linesep + 'START:' + start + os.linesep + 'END:' + end + os.linesep + 'CMD:' + cmd
+    def get(self, _mac_address_):
+        try:
+            x = agent_data.query.filter_by(mac_address=_mac_address_).first()
+            _mode = x.mode
+            _cmd = x.cmd 
+            _time_setting = x.time_setting #json_decode()
+            
+            if x != None:
+                return {
+                        'mode' : _mode,
+                        'cmd' : _cmd, 
+                        'time_setting' : jsonify(_time_setting)  #jsonify() json_encode() 
+                       }
+            else:
+                return {
+                        'status': 400,
+                        'message':'Agent search failure'
+                       }
+        except Exception as e:
+            return {'error': str(e)}
 
-## TODO ##
+    def post(self, _mac_address_):
+        try:    
+            parser = reqparse.RequestParser()
+            parser.add_argument('mode', type=str, help='Mode agent is operating in', location='json')
+            parser.add_argument('cmd', type=str, help='Current cmd selection for agent', location='json')
+            parser.add_argument('time_setting', type=json_decode, help='Time settings for the agent', location='json')
+            args = parser.parse_args()#strict=True
+
+            _mac_address = _mac_address_
+            _mode = args['mode']
+            _cmd = args['cmd']
+            _time_setting = args['time_setting']
+            
+            try:
+                curr_session = db.session #open database session
+                x = agent_data.query.filter_by(mac_address=_mac_address_).first() #fetch the agent to be updated
+                x.mac_address = _mac_address#update the row
+                x.mode = _mode
+                x.cmd = _cmd
+                x.time_setting = json_encode(_time_setting)
+                curr_session.commit() #commit changes
+                
+                return  {
+                            'status': 200,
+                            'message':'Agent update successful'
+                        }
+            except:
+                curr_session.rollback()
+                curr_session.flush() # for resetting non-commited .add()
+                return  {
+                            'status':400,
+                            'message':'Agent update failure'
+                        }
+        except Exception as e:
+            return {'error': str(e)}
+
+
 class manageAgents(Resource):
     def post(self):
         try:
@@ -71,13 +94,13 @@ class manageAgents(Resource):
             _cmd = args['cmd']
             _time_setting = args['time_setting']
             
-            query = agent_data(agent_id=_agent_id, mac_address=_mac_address, ip_address=_ip_address, 
+            query = user_data(agent_id=_agent_id, mac_addres=_mac_address, ip_address=_ip_address, 
                               status=_status, company_id=_company_id, site=_site, 
                               mode=_mode, cmd=_cmd, time_setting=_time_setting)
 
             curr_session = db.session #open database session
             try:
-                curr_session.add(query) #add prepared company_idment to opened session
+                curr_session.add(query) #add prepared statement to opened session
                 curr_session.commit() #commit changes
                 return  {
                             'status': 200,
@@ -136,7 +159,7 @@ class manageAgents(Resource):
             
             try:
                 curr_session = db.session #open database session
-                x = agent_data.query.filter_by(mac_address=_mac_address_).first() #fetch the name to be updated
+                x = agent_data.query.filter_by(mac_address=_mac_address_).first() #fetch the agent to be updated
                 x.agent_id = _agent_id   #update the row
                 x.mac_address = _mac_address
                 x.ip_address = _ip_address
