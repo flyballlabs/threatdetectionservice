@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
 
 class userAuth(Resource):
-    def get(self,_username,_password):
+    def get(self, _username, _password):
         try:
             x = user_data.query.filter_by(username=_username).first()
             if x != None:

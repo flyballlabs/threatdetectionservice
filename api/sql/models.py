@@ -33,9 +33,10 @@ class user_data(db.Model):
     status = db.Column(VARCHAR(45))        #mysql_charset='utf8',       #
     phone_number = db.Column(VARCHAR(45))  #mysql_key_block_size="1024")#
     lastlogin = db.Column(VARCHAR(45))     ##############################
+    account_type = db.Column(VARCHAR(45))
     notification = db.Column(VARCHAR(100))
     
-    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, phone_number, lastlogin, notification):
+    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, phone_number, lastlogin, account_type, notification):
         self.user_id = user_id
         self.username = username
         self.firstname = firstname
@@ -46,6 +47,7 @@ class user_data(db.Model):
         self.status = status
         self.phone_number = phone_number
         self.lastlogin = lastlogin
+        self.account_type = account_type
         self.notification = notification
 
     def __repr__(self):

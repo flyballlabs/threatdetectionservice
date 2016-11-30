@@ -1,3 +1,7 @@
+python
+python2.7
+python3
+python3.5
 flask
 configparser
 mysqlclient
@@ -21,3 +25,7 @@ Jinja2
 psutil
 kafka-python
 flask-mysql
+uwsgi
+uwsgi-emperor
+uwsgi-plugin-python3
+nginx-full

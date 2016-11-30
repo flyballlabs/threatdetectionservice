@@ -16,6 +16,7 @@ class manageUsers(Resource):
             parser.add_argument('status', type=str, help='Status for account', location='json')
             parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
             parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
             args = parser.parse_args()#strict=True
 
@@ -29,12 +30,13 @@ class manageUsers(Resource):
             _status = args['status']
             _phone_number = args['phone_number']
             _lastlogin = args['lastlogin']
+            _account_type = args['account_type']
             _notification = args['notification']
             
             query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
                               lastname=_lastname, password=_password, email=_email, 
                               company_id=_company_id, status=_status, phone_number=_phone_number,
-                              lastlogin=_lastlogin, notification=_notification)
+                              lastlogin=_lastlogin, account_type=_account_type, notification=_notification)
 
             curr_session = db.session #open database session
             try:
@@ -69,6 +71,7 @@ class manageUsers(Resource):
             parser.add_argument('status', type=str, help='Status for account', location='json')
             parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
             parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
             
             args = parser.parse_args()#strict=True, require=True
@@ -96,6 +99,8 @@ class manageUsers(Resource):
                 _phone_number = args['phone_number']
             if args['lastlogin'] != None:
                 _lastlogin = args['lastlogin']
+            if args['account_type'] != None:
+                _account_type = args['account_type']
             if args['notification'] != None:
                 _notification = args['notification']
             ###################################
@@ -114,6 +119,7 @@ class manageUsers(Resource):
                 x.status = _status
                 x.phone_number = _phone_number
                 x.lastlogin = _lastlogin
+                x.account_type = _account_type
                 x.notification = _notification
                 curr_session.commit() #commit changes
                 
@@ -142,6 +148,7 @@ class manageUsers(Resource):
             _status = x.status
             _phone_number = x.phone_number
             _lastlogin = x.lastlogin
+            _account_type = x.account_type
             _notification = x.notification
             
             if x != None:
@@ -155,8 +162,8 @@ class manageUsers(Resource):
                         'status' : _status,
                         'phone_number' : _phone_number,
                         'lastlogin' : _lastlogin,
-                        'notification' : _notification,
-                        'message':'User search success'
+                        'account_type' : _account_type,
+                        'notification' : _notification
                        }
             else:
                 return {

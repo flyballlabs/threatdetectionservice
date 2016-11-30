@@ -9,6 +9,7 @@ Ensures all submodules are added to sys path and configures all runtime settings
 from api import app;
 from flask import Flask, make_response, jsonify #, request, abort, render_template, Flask
 from flask_restful import Api #, reqparse, fields , marshal, Resource
+from werkzeug.serving import run_simple
 
 # import endpoints #
 from api.auth.endpoint import userAuth
@@ -40,8 +41,8 @@ api.add_resource(manageUsers, '/api/user', '/api/user/<string:_username_>')
 api.add_resource(manageCompany, '/api/company/<string:_company_name_>')
 api.add_resource(companyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
 #api.add_resource(manageNotifications, '/api/notification', '/api/notification/<string:_username_>')
-api.add_resource(asset_discovery, '/api/metron_data/asset_discovery', '/api/metron_data/asset_discovery/<string:_company_name_>', '/api/metron_data/asset_discovery/<string:_company_name_>/<string:_sites_>')
+#api.add_resource(asset_discovery, '/api/metron_data/asset_discovery', '/api/metron_data/asset_discovery/<string:_company_name_>', '/api/metron_data/asset_discovery/<string:_company_name_>/<string:_sites_>')
 #api.add_resource(threat_intel, '/api/metron_data/threat_intel', '/api/metron_data/threat_intel/<string:_company_name_>', '/api/metron_data/threat_intel/<string:_company_name_>/<string:_sites_>')
                  
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6668, debug=False)
+    run_simple('127.0.0.1', 6668, app, use_reloader=True, use_debugger=False, use_evalex=True)

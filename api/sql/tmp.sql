@@ -41,6 +41,7 @@ CREATE TABLE `user` (
   `status` varchar(45) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
   `lastlogin` varchar(45) DEFAULT NULL,
+  `account_type` varchar(45) DEFAULT NULL,
   `notification` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY (`username`)
@@ -54,7 +55,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1','123-456-7890',NULL,'{"alert_type":"50","notification_type":"email"}'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1','248-909-2769',NULL,'{"alert_type":"75","notification_type":"sms"}');
+INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1','123-456-7890',NULL,'SU','{"alert_type":"50","notification_type":"email"}'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1','248-909-2769',NULL,'ADMIN','{"alert_type":"75","notification_type":"sms"}'), (3,'tyler.moore58@gmail.com','Tyler','Moore','flyball','tyler.moore58@gmail.com','1','1','313-123-4567',NULL,'USER','{"alert_type":"25","notification_type":"email"}');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
