@@ -24,11 +24,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cyber-Security<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Threat Dashboard</a></li>
+            <li class="active"><a href="#">Threat Dashboard</a></li>
 	    <li role="separator" class="divider"></li>
             <li><a href="#">Agent Management</a></li>
             <li><a href="#">Alert Management</a></li>
@@ -62,34 +62,66 @@
           <span class="caret"></span>
        </button>
        <ul class="dropdown-menu" aria-labelledby="sitedropdown">
-          <li><a href="#">Glazer</li>
+           {% for site in sites %}
+	   <li><a href="#">{{ site }}</li>
+	   {% endfor %}
        </ul>
       </div>
   </div>
+<div class="container"><!-- threat panel -->
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+    <div class="panel-heading">Active Threats</div>
+      <div class="panel-body">
+        <p>Contains a list of all threats that have not been acknowledged and or assigned to an enginner for review.</p>
+      </div>
+
+      <!-- Table -->
+      <table id="activeThreatsTable" class="table">
+   	<thead>
+		<th>Threat Level</th>
+		<th>Incident Type</th>
+		<th>Incident Source</th>
+		<th>Incident Time</th>
+		<th>Attack Method</th>
+		<th>Source</th>
+		<th>Destination</th>
+        </thead> 
+      </table>
+    </div>
+    </div>
+</div> <!-- end of threat panel -->
+
     </div> <!-- main container -->
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="static/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Table Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+
+    <!-- Bootstrap Table Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+
+     <!-- Bootstrap Table Latest compiled and minified Locales -->
+     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    
+     <script>
+
+	$('#activeThreatsTable').bootstrapTable({
+	url: '{{ apiServer }}{{ threatsBySiteURI }}',
+	columns: [{
+                field: '_id',
+                title: 'ID'
+        }, {
+		field: '_index',
+		title: 'Index'
+	},]
+	});
+
+    </script>
+
   </body>
-
-
-
-
-
-:
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </html>
