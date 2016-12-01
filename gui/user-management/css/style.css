@@ -1,0 +1,33 @@
+h2 { 
+  background-color: #d1d1d1;
+  padding: 15px;
+  margin-bottom: 1em;
+}
+.container { margin-top: 1em }
+.navbar-form { padding: 0; margin-right: 1em }
+.table { margin: 0 }
+#newaccount { margin-top: 8px }
+
+/*.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+  background-color: #066;
+}*/
+
+.table.table-bordered {
+  padding: 1em;
+}
+
+.table-bordered th {
+  cursor: pointer;
+}
+
+.table-bordered .caret {
+  position: relative;
+  top: 10px;
+  right: 5px;
+  float: right;
+  /*color: #bfbfc1;*/
+}
+
+#demo {
+  cursor: pointer;
+}

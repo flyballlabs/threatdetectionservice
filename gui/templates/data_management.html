@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html >
+
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Threat Management Platform - Data Management</title>
+    <title>Threat Management Platform - Data Management</title>
   
     <link rel='stylesheet' href='static/bootstrap.min.css'>
-    <link rel="stylesheet" href="static/data_management.css">
+  <link rel="stylesheet" href="static/data_management.css">
 </head>
+
 
 <body>
 
@@ -21,12 +23,12 @@
 </div>
 
 <div class="sidebar">
-  <ul>
-    <li><a href="#"><i class="fa fa-envelope-o"></i><span>Notifications</span></a></li>
-    <li><a href="#"><i class="fa fa-users"></i><span>Users</span></a></li>
-    <li><a href="#"><i class="fa fa-building"></i><span>Companies</span></a></li>
-    <li><a href="#"><i class="fa fa-desktop"></i><span>Assets</span></a></li>
-    <li><a href="#"><i class="fa fa-table"></i><span>Databases</span></a></li>
+  <ul>    
+    <li><a href="/datamanagement/tables?route=notifications"><i class="fa fa-envelope-o"></i><span>Notifications</span></a></li>
+    <li><a href="/datamanagement/tables?route=users"><i class="fa fa-users"></i><span>Users</span></a></li>
+    <li><a href="/datamanagement/tables?route=companies"><i class="fa fa-building"></i><span>Companies</span></a></li>
+    <li><a href="/datamanagement/tables?route=assets"><i class="fa fa-desktop"></i><span>Assets</span></a></li>
+    <li><a href="/datamanagement/tables?route=databases"><i class="fa fa-table"></i><span>Databases</span></a></li>
   </ul>
 </div>
 
@@ -35,41 +37,80 @@
   <div class="hipsum">
     <div class="jumbotron">
       <h1 id="hello,-world!">Welcome to the Data Management Dashboard!<a class="anchorjs-link" href="#hello,-world!"><span class="anchorjs-icon"></span></a></h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam accumsan nisl quis luctus sollicitudin.</p>
+      <p>Some description of the ui blah blah blah.</p>
       <p><a class="btn btn-primary" href="#" role="button">Configure</a></p>
     </div>
-    <p>Keffiyeh banjo keytar selfies. Actually plaid PBR&amp;B, High Life dreamcatcher kale chips master cleanse craft beer messenger bag locavore Brooklyn Blue Bottle. Freegan literally brunch kale chips small batch. Etsy iPhone gentrify photo booth. Lomo
-      keffiyeh vinyl, distillery pop-up messenger bag kale chips post-ironic DIY 90's keytar. Intelligentsia next level Pitchfork forage vinyl Marfa, normcore heirloom. Drinking vinegar asymmetrical roof party, yr artisan Carles mixtape jean shorts.</p>
-    <table class="table table-bordered">
+    <p></p>
+    
+
+    
+    <table class="table table-bordered" id="user_table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>Company ID</th>
+          <th>Company Name</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zip</th>
+          <th>Phone Number</th>
+          <th>Point of Contact</th>
+          <th>Auth Info</th>
+          <th>Sites</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
         </tr>
       </tbody>
     </table>
+    
+    
+    <table class="table table-bordered" id="company_table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Company ID</th>
+          <th>Status</th>
+          <th>Phone Number</th>
+          <th>Last Login</th>
+          <th>Account Type</th>
+          <th>Notification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+          <td>words</td>
+        </tr>
+      </tbody>
+    </table>
+    
     <p>Slow-carb fanny pack yr Brooklyn gentrify. Fanny pack keffiyeh taxidermy, ugh viral polaroid craft beer. +1 distillery Truffaut typewriter tousled crucifix, lo-fi butcher normcore skateboard. Drinking vinegar ugh whatever sriracha. Synth tofu viral
       butcher flexitarian. 3 wolf moon Schlitz plaid small batch kale chips blog. Fingerstache selfies freegan, Helvetica Neutra Brooklyn semiotics cred narwhal beard tousled leggings.</p>
     <div class="row">
