@@ -9,18 +9,21 @@ Ensures all submodules are added to sys path and configures all runtime settings
 from app import *
 from flask import Flask, make_response, jsonify #, request, abort, render_template, Flask
 from flask_restful import Api, reqparse, fields #, marshal, Resource
+from flask_cors import CORS, cross_origin
 
 # import endpoints #
 from auth.endpoint import *
 from user.endpoint import *
 from agent.endpoint import *
 from company.endpoint import *
-
+from metron.endpoint import *
+from asset.endpoint import *
 
 # flask / sql / api config  #
 app = Flask('rest_server')
+app.config['DEBUG'] = True
 api = Api(app)
-
+CORS(app)
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -39,6 +42,8 @@ api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
 api.add_resource(manageUsers, '/api/user', '/api/user/<string:_username_>')
 api.add_resource(manageCompany, '/api/company/<string:_company_name_>')
 api.add_resource(companyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
+api.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
+api.add_resource(manageAssets, '/api/assets/<string:_device_>')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7777, debug=False)

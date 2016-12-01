@@ -25,16 +25,16 @@ class manageAssets(Resource):
         except:
             return "Server Down"
         counter = 0
-        decodedList  = {}
+        decodedList  = []
         for row in jData['Row']:
             # Decode the key into ascii
-            rowKey = base64.b64decode(row['key']).decode('ascii')
+            #rowKey = base64.b64decode(row['key']).decode('ascii')
             dColumn = {}
             for cell in row['Cell']:
                columnname = base64.b64decode(cell['column']).decode('ascii')
                value = base64.b64decode(cell['$']).decode('ascii')
                dColumn[columnname] = value 
-        decodedList[rowKey] = dColumn        
+            decodedList.append (dColumn) 
         return jsonify(decodedList)
 
                

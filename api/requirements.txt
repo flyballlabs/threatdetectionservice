@@ -21,3 +21,4 @@ Jinja2
 psutil
 kafka-python
 flask-mysql
+flask_cors 

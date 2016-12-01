@@ -34,15 +34,20 @@ def threats():
     company = "Flyball-Labs"
     # Grab the sites for the company
     url = 'http://10.10.10.97:7777/api/company/' + company + "/sites"
-    site = 'glazer'
+    params = request.args.items()
+    site = request.args.get('site')
     apiServer = 'http://10.10.10.97:7777'
-    threatsBySiteURI =  '/api/metron/threats/' + site
+    if site != None:
+
+        threatsBySiteURI =  '/api/metron/threats/' + site
+        assetURI =  '/api/assets/' + site
+    
     response = requests.get(url)
     jData = response.json()
     sites = jData['sites']
     site = request.args.get('site')
     if request.method == 'GET' and site != None:
-        return render_template('threatsbysite.html',sites=sites,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI)
+        return render_template('threatsbysite.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
     
     return render_template('threatsbysite.html',sites=sites)
 

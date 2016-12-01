@@ -55,19 +55,23 @@
   </div><!-- /.container-fluid -->
 </nav>
   </div> <!-- menu container -->
-  <div class="container">
-      <div class="dropdown">
+  <div class="container"> <!-- Begin of Site Dropdown -->
+      <div class="dropdown"> 
        <button class="btn btn-default dropdown-toggle" type="button" id="sitedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     Site Dropdown
           <span class="caret"></span>
+          {% if selectedSite %}
+          <span class="selected">{{ selectedSite }}</span>
+          {% endif %}
        </button>
        <ul class="dropdown-menu" aria-labelledby="sitedropdown">
            {% for site in sites %}
-	   <li><a href="#">{{ site }}</li>
-	   {% endfor %}
+             <li><a href="#">{{ site }}</li>
+	          {% endfor %}
        </ul>
       </div>
-  </div>
+  </div> <!-- end of Site Dropdown -->
+  <br>
 <div class="container"><!-- threat panel -->
     <div class="panel panel-default">
       <!-- Default panel contents -->
@@ -89,10 +93,28 @@
         </thead> 
       </table>
     </div>
-    </div>
 </div> <!-- end of threat panel -->
+<div class="container"><!-- asset discovery panel -->
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+    <div class="panel-heading">Asset Discovery</div>
+      <div class="panel-body">
+        <p>Contains a list of all threats that have not been acknowledged and or assigned to an enginner for review.</p>
+      </div>
 
-    </div> <!-- main container -->
+      <!-- Table -->
+      <table id="assetTable" class="table">
+      <thead>
+        <th>Hostname</th>
+        <th>IP</th>
+        <th>MAC</th>
+        <th>OS</th>
+        <th>Type</th>
+      </thead> 
+      </table>
+    </div>
+  </div><!-- end of asset discovery panel -->
+</div> <!-- main container -->
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -119,6 +141,27 @@
 		title: 'Index'
 	},]
 	});
+
+  $('#assetTable').bootstrapTable({
+  url: '{{ apiServer }}{{ assetURI }}',
+  columns: [{
+      field: 'assets:hostname',
+      title: 'Hostname'
+  }, {
+    field: 'assets:ip',
+    title: 'IP'
+        }, {
+    field: 'assets:mac',
+    title: 'MAC'
+  }, {
+    field: 'assets:os',
+    title: 'OS'
+  }, {
+    field: 'assets:type',
+    title: 'Type'
+  }
+      ]
+  });
 
     </script>
 
