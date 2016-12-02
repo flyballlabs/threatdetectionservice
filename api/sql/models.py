@@ -4,6 +4,7 @@ from api import database
 from sqlalchemy import null #, Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
 from flask_table import Table, Col 
+from passlib.apps import custom_app_context as pwd_context
  
 ##### classes / methods we may need #######################################
 #  from sqlalchemy.sql import sqltypes         #  contains sqltypes.JSON  #
@@ -27,7 +28,7 @@ class user_data(db.Model):
     }
     
     user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
-    username = db.Column(VARCHAR(45), unique=True, nullable=False)
+    username = db.Column(VARCHAR(45),index=True, unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
     lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
     password = db.Column(VARCHAR(45))      #Table('mytable', metadata,  #
@@ -38,6 +39,7 @@ class user_data(db.Model):
     lastlogin = db.Column(VARCHAR(45))     ##############################
     account_type = db.Column(VARCHAR(45))
     notification = db.Column(VARCHAR(100))
+    password_hash = db.Column(db.String(64))
     
     def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, phone_number, lastlogin, account_type, notification):
         self.user_id = user_id
@@ -55,10 +57,16 @@ class user_data(db.Model):
 
     def __repr__(self):
         return '{user: %r}' % self.user_id
+    
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
 
-    def generate_auth_token(self, expiration = 600): #expires in 10min
-        s = Serializer(db.app.config['SECRET_KEY'], expires_in = expiration)
-        return s.dumps({ 'id': self.id })
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def generate_auth_token(self, expiration=600):
+        s = Serializer(db.app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
@@ -66,12 +74,12 @@ class user_data(db.Model):
         try:
             data = s.loads(token)
         except SignatureExpired:
-            return None # valid token, but expired
+            return None    # valid token, but expired
         except BadSignature:
-            return None # invalid token
+            return None    # invalid token
         user = user_data.query.get(data['id'])
         return user
-    
+
 class user_table(Table):
     classes = ['table', 'table-bordered'] #html class assignment
     user_id = Col('user_id')

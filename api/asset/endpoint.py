@@ -39,6 +39,6 @@ class manageAssets(Resource):
                
 
 
-if __name__ == '__main__':
-    mt = manageAssets()
-    print(mt.get('glazer'))
+# if __name__ == '__main__':
+#     mt = manageAssets()
+#     print(mt.get('glazer'))

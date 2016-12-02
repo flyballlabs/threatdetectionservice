@@ -109,7 +109,7 @@ def post():
     request = requests.post(hbaseBaseURL + "/" + hbaseTableName + "/" + rowKey, data=json.dumps(jsonOutput), headers={"Content-Type" : "application/json", "Accept" : "application/json"})
 
 '''
-class asset_discovery(object):
+class assetDiscovery(object):
     def post(self):
         try:
             parser = reqparse.RequestParser()

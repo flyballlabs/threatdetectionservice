@@ -16,7 +16,7 @@ class manageUsers(Resource):
             parser.add_argument('status', type=str, help='Status for account', location='json')
             parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
-            parser.add_argument('ph', type=str, help='Priveledge level for account', location='json')
+            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
             parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
             args = parser.parse_args()#strict=True
 
@@ -194,3 +194,4 @@ class manageUsers(Resource):
                         }
         except Exception as e:
             return {'error': str(e)}
+
