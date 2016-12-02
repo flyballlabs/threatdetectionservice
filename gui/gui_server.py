@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, url_for, redirect
 from werkzeug.serving import run_simple
-import requests, json
-from api.rest_server import not_found
+import requests #, json
+from api.sql.models import *
 
 app = Flask('gui_server')
 app.config['DEBUG'] = False
@@ -20,7 +20,6 @@ def not_found(error):
 def index():
     return render_template('index.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -36,9 +35,10 @@ def login():
         jData = response.json()
         if jData['authentication'] == True:
             return render_template('home.html',username=username)
+             
         else:
             error = "Username or Password was not correct"
-
+            
     return render_template('login.html',error=error)
 
 
@@ -75,41 +75,68 @@ def tables_redirect():
     route = request.args.get('route')
     print(route)
     error = None
-    '''
-    if route == "notifications":
-        pass
-    elif route == "users":
-        pass
-    elif route == "companies":
-        pass
-    elif route == "assets":
-        pass
-    elif route == "databases":
-        pass
-    else:
-        return jsonify({'error': 'Route not available or does not exist'}, 404)
+    #url = 'http://0.0.0.0:7777/api/user/' + username
+    
+    #'/api/agent', '/api/agent/<string:_mac_address_>'
+    #'/api/picontroller', '/api/picontroller/<string:_mac_address_>'
+    #'/api/auth/<string:_username>/<string:_password>'
+    #'/api/user', '/api/user/<string:_username_>'
+    #'/api/company/<string:_company_name_>'
+    #'/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites'
+    #'/api/notification', '/api/notification/<string:_username_>'
+    
+    
+    try:#### TODO getting routing issues only when passing table data ### 
+        ### load db table into html table as an example ###
+        if route == "notifications":
+            table = notification_table(notification_data.query.all())
+            return render_template('tables_ui.html',table=table)
         
+        elif route == "users":
+            table = user_table(user_data.query.all())
+            render_template('tables_ui.html',table=table)
+            
+        elif route == "companies":
+            table = company_table(company_data.query.alll())
+            render_template('tables_ui.html',table=table)
+            
+        elif route == "assets":
+            table = asset_table(asset_data.query.all())
+            render_template('tables_ui.html',table=table)
+            
+        elif route == "databases":
+            
+            render_template('tables_ui.html',table=table)
+            
+        else:
+            return jsonify({'error': 'Route not available or does not exist'}, 404)
+        
+    except Exception as e:
+        e.show_stack()
+        
+        '''
         if request.method == 'GET':
         if request.method == 'POST':
         if request.method == 'PATCH':
-        if request.method == 'DELETE':    
-            
-            
-            username = request.form['username']
-            password = request.form['password']
-            url = 'http://0.0.0.0:7777/api/auth/' + username + "/" + password
-            try:
-                response = requests.get(url)
-            except requests.exceptions.RequestException as e:
-                error = "Make sure the API Server is started and then try to login again"
-                return render_template('login.html',error=error);
-            jData = response.json()
-            if jData['authentication'] == True:
-                return render_template('home.html',username=username)
-            else:
-                error = "Username or Password was not correct"
-    
+        if request.method == 'DELETE':
+        '''
+        '''
+        username = request.form['username']
+        password = request.form['password']
+        url = 'http://0.0.0.0:7777/api/auth/' + username + "/" + password
+        try:
+            response = requests.get(url)
+        except requests.exceptions.RequestException as e:
+            error = "Make sure the API Server is started and then try to login again"
+            return render_template('login.html',error=error);
+        jData = response.json()
+        if jData['authentication'] == True:
+            return render_template('home.html',username=username)
+        else:
+            error = "Username or Password was not correct"
+
         return render_template('tables_ui.html',error=error)
+        
         
         company = "Flyball-Labs"
         # Grab the sites for the company
