@@ -133,13 +133,29 @@
 
 	$('#activeThreatsTable').bootstrapTable({
 	url: '{{ apiServer }}{{ threatsBySiteURI }}',
-	columns: [{
-                field: '_id',
+		columns: [{
+                field: 'id',
                 title: 'ID'
         }, {
-		field: '_index',
-		title: 'Index'
-	},]
+                field: 'threatlevel',
+                title: 'Threat Level'
+        },
+         {
+                field: 'time',
+                title: 'Time'
+	},{
+		field: 'type',
+                title: 'Type'
+	},{
+		field: 'sensor',
+		title: 'Sensor'
+	},{
+		field: 'ip_src_addr',
+		title: 'Source'
+	},{
+		field: 'ip_dst_addr',
+		title: 'Destination'
+	} ]
 	});
 
   $('#assetTable').bootstrapTable({
