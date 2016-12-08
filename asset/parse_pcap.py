@@ -1,17 +1,23 @@
 import pyshark
 
-pcap = pyshark.FileCapture('/capture-data/2016-10-24.pcap', only_summaries=True, keep_packets=False)
+pcap = pyshark.FileCapture('/capture-data/2016-10-24.pcap', display_filter='udp.port == 5353', keep_packets=False) #only_summaries=True
 data = []
 def print_all(pkt):
     try:
-        print(pkt.ip)
-        print(pkt.host)
+        ip = pkt.mdns.dns_a
+        target = pkt.mdns.dns_srv_target.split(sep='.')
+        host = target[0]
         
-        #if host != None and ip != None:
-        #    data.append({'host':host,'ip':ip})
+        if host != None and ip != None:
+            data.append({'host':host,'ip':ip})
+        
+        ## debug ##
+        i = 1
+        print(data[i])
     except Exception as e:
         pass
-
+    i += 1
+    
 pcap.apply_on_packets(print_all)
    
 ###Filters and Options
