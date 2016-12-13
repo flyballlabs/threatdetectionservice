@@ -1,0 +1,6 @@
+alter 'enrichment', 'assets'
+put 'enrichment', 'Flyball-Labs_glazer_10.10.10.128', 'assets:mac', '4A:1D:70:CD:54:A3'
+put 'enrichment', 'Flyball-Labs_glazer_10.10.10.128', 'assets:ip', '10.10.10.128'
+put 'enrichment', 'Flyball-Labs_glazer_10.10.10.128', 'assets:type', 'general purpose'
+put 'enrichment', 'Flyball-Labs_glazer_10.10.10.128', 'assets:os', 'Linux 2.6.x'
+put 'enrichment', 'Flyball-Labs_glazer_10.10.10.128', 'assets:os-info', 'Linux 2.6.32'
