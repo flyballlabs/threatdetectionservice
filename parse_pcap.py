@@ -1,7 +1,7 @@
 from starbase import Connection
 import pyshark
 
-metronHBaseRestURL="http://10.10.10.154"
+metronHBaseRestURL="10.10.10.154"
 metronHbaseRestPort = 9082
 metronHBaseTable = "enrichment"
 metronHBaseCF="assets"
@@ -10,10 +10,8 @@ metronHBaseCF="assets"
 company_name = "Flyball-Labs"
 site = "glazer"  
 
-pcap = pyshark.FileCapture('/capture-data/2016-10-24.pcap', display_filter='udp.port == 5353', keep_packets=False) #only_summaries=True
-data = []
+pcap = pyshark.FileCapture('/capture-data/2016-10-24.pcap', keep_packets=True) #only_summaries=True
 def run(pkt):
-    i = 1
     try:
         ip = pkt.mdns.dns_a
         target = pkt.mdns.dns_srv_target.split(sep='.')
@@ -22,22 +20,15 @@ def run(pkt):
         if host != None and ip != None:
             rowkey = company_name + "_" + site + "_" + ip
             t.insert(rowkey,{metronHBaseCF: {'hostname': host}})
-        
-        ## debug ##
-
-        print(data[i])
     except Exception as e:
         pass
-    i += 1
 
 ## setup table
 c = Connection(host=metronHBaseRestURL, port=metronHbaseRestPort)
 t = c.table(metronHBaseTable)   
 if t.exists() == True:
-    pcap.apply_on_packets(run) ## start parsing
-
-#while True:
-#    print(pcap[0])   
+    for pkt in pcap:
+        run(pkt)
 
 ###Filters and Other Options###s
 #pcap.display_filter='smb || nbns || dcerpc || nbss || dns'
