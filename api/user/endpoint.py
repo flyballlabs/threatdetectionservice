@@ -55,7 +55,8 @@ class manageUsers(Resource):
             
             # conditionally replace user data if arg exists #
             parser.add_argument('user_id', type=int, help='Username for account', location='json')
-            parser.add_argument('username', type=str, help='Password for account', location='json')
+            # You can't change your username once it's selected
+	    #parser.add_argument('username', type=str, help='Password for account', location='json')
             parser.add_argument('firstname', type=str, help='Firstname for account', location='json')
             parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
             parser.add_argument('password', type=str, help='Password for account', location='json')
@@ -68,41 +69,30 @@ class manageUsers(Resource):
             
             #for response in args:         ############################  
             #    if args[response] != None:# optimize in future release
-                
-            if args['user_id'] != None:
-                _user_id = args['user_id']
-            if args['username'] != None:
-                _username = args['username']
-            if args['firstname'] != None:
-                _firstname = args['firstname']
-            if args['lastname'] != None:
-                _lastname = args['lastname']
-            if args['password'] != None:
-                _password = args['password']
-            if args['email'] != None:
-                _email = args['email']
-            if args['company_id'] != None:
-                _company_id = args['company_id']
-            if args['status'] != None:
-                _status = args['status']
-            if args['lastlogin'] != None:
-                _lastlogin = args['lastlogin']
-            ###################################
-            # would be faster in an array / loop
-            
             try:
-                curr_session = db.session #open database session
-                x = user_data.query.filter_by(username=_username_).first() #fetch the username to be updated
-                x.user_id = _user_id   #update the row
-                x.username = _username
-                x.firstname = _firstname
-                x.lastname = _lastname
-                x.password = _password
-                x.email = _email
-                x.company_id = _company_id
-                x.status = _status
-                x.lastlogin = _lastlogin
-                curr_session.commit() #commit changes
+ 
+                curr_session = db.session
+                x = user_data.query.filter_by(username=_username_).first()
+ 
+                if args['user_id'] != None:
+                   x.user_id = args['user_id']
+                if args['firstname'] != None:
+                   x.firstname = args['firstname']
+                if args['lastname'] != None:
+                   x.lastname = args['lastname']
+                if args['password'] != None:
+                   x.password = args['password']
+                if args['email'] != None:
+                   x.email = args['email']
+                if args['company_id'] != None:
+                   x.company_id = args['company_id']
+                if args['status'] != None:
+                   x.status = args['status']
+                if args['lastlogin'] != None:
+                   x.lastlogin = args['lastlogin']
+            
+                print(args['lastname'])
+                curr_session.commit()  #commit changes
                 
                 return  {
                             'status': 200,

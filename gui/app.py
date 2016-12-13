@@ -23,7 +23,7 @@ def login():
             return render_template('login.html',error=error);
         jData = response.json()
         if jData['authentication'] == True:
-            return render_template('home.html',username=username)
+            return render_template('dashboard.html',username=username)
         else:
             error = "Username or Password was not correct"
 
@@ -51,6 +51,9 @@ def threats():
     
     return render_template('threatsbysite.html',sites=sites)
 
+@app.route('/userprofile',methods=['GET'])
+def userprofile():
+    return render_template('userprofile.html')
 
 if __name__=='__main__':
     app.run(
