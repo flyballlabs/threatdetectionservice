@@ -17,5 +17,8 @@ To build an easy to use web interface for managing the platform, with a focus on
 
 ## Framework
 
-We are going to use [web2py](http://www.web2py.com/) as the framework because it provides all of the scaffolding needed to build
-a web application quickly
+We use Flask with the Jinja2 templating framework and Knockout.js as the Javascript framework for provide data binding between GUI and the [Threat Management Platform API](https://github.com/flyballlabs/threatdetectionservice/tree/master/api)
+
+The following picture depicts the core components of the GUI.  
+
+(/gui_components.jpg "Components of the GUI")
