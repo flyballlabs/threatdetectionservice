@@ -9,26 +9,42 @@ metronHBaseCF="assets"
 #get this data from pcap#
 company_name = "Flyball-Labs"
 site = "glazer"  
+assets = {} # Dictionary objet to hold assets
 
-pcap = pyshark.FileCapture('/capture-data/2016-10-24.pcap', keep_packets=True) #only_summaries=True
+pcap = pyshark.FileCapture('/home/vagrant/2016-11-23.pcap', keep_packets=False,display_filter='udp.port==5353') #only_summaries=True
 def run(pkt):
     try:
-        ip = pkt.mdns.dns_a
-        target = pkt.mdns.dns_srv_target.split(sep='.')
-        host = target[0]
-        
+        #ip = pkt.mdns.dns_a
+        #target = pkt.mdns.dns_srv_target.split(sep='.')
+        #host = target[0]
+	
+	# More generic and works with tshark 1.8 and most likely with newer versions
+	# We support only ipv4 mdns packets.  We will add ipv6 support
+
+        ip = pkt.ip.src
+        host = pkt.dns.resp_name        
+
         if host != None and ip != None:
             rowkey = company_name + "_" + site + "_" + ip
-            t.insert(rowkey,{metronHBaseCF: {'hostname': host}})
+            assets[rowkey] = host
     except Exception as e:
         pass
 
 ## setup table
-c = Connection(host=metronHBaseRestURL, port=metronHbaseRestPort)
-t = c.table(metronHBaseTable)   
-if t.exists() == True:
-    for pkt in pcap:
-        run(pkt)
+
+#Build the asset dictionary from the pcap
+for pkt in pcap:
+    run(pkt)
+
+
+#Print out the assets that were captured from the pcap
+for k,v in assets.items():
+    print(k,v)
+    #c = Connection(host=metronHBaseRestURL, port=metronHbaseRestPort)
+    c = Connection(host='192.168.66.121', port=metronHbaseRestPort)
+    t = c.table(metronHBaseTable)   
+    if t.exists() == True:
+        t.insert(k,{metronHBaseCF: {'hostname': v}})
 
 ###Filters and Other Options###s
 #pcap.display_filter='smb || nbns || dcerpc || nbss || dns'
