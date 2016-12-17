@@ -20,7 +20,12 @@ API Server is implemented using Python with the Flask framework to provide Restf
 
 ## Metron Version
 
-0.2.1 Beta
+- 0.2.1 Beta
+
+## Hortonworks HDP Version
+
+- 2.4.2
+
 
 # Starting the API Server
 
