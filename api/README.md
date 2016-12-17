@@ -5,6 +5,6 @@ The API Server is implemented using Python with the Flask framework to provide R
 # Starting the API Server
 
 ``` 
-./rest_server.sh
+./start.sh
 ```
 
