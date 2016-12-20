@@ -7,8 +7,8 @@ We are using the Flask library to implement the RestFul interfaces for this proj
 The resource definition is just a mapping between the URI and the classes that will implement the logic for the API.
 
 1. vi api/rest_server.py
-2. find the section called "import endpoints"
-3. add to the bottom "from <entity name>.endpoint import *"
+2. find the section called `import endpoints`
+3. add to the bottom `from <entity name>.endpoint import *`
 4. add your resource configuration to the end of the file.  The resource configuration consists of your class names and the request URI.  In this example, we will be adding a RestFul API for the User entity.
 ```
 api.add_resource(manageUser, '/api/user/<string:_username_>')
