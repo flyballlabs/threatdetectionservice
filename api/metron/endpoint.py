@@ -19,7 +19,7 @@ class metronThreats(Resource):
             response = requests.get(metronElasticURL)
             jData = response.json()
             #data = [{ 'id': 1, 'threatlevel': 2, 'incidenttype': 'Out of Country Access' }]
-	        #data['id'] = 1
+	    #data['id'] = 1
             #data['threatlevel'] = 2
             #data['incidenttype'] = 'Out of Country Access'
 	    

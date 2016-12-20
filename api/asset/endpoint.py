@@ -1,6 +1,7 @@
 from flask import jsonify, request, json
 from flask_restful import Resource, reqparse
-import requests, base64
+import requests
+import base64
 
 #from sql.models import *  #import all of the models from models.py
 #from app.parse_json import * #for json arg parsing
@@ -30,15 +31,15 @@ class manageAssets(Resource):
             #rowKey = base64.b64decode(row['key']).decode('ascii')
             dColumn = {}
             for cell in row['Cell']:
-                columnname = base64.b64decode(cell['column']).decode('ascii')
-                value = base64.b64decode(cell['$']).decode('ascii')
-                dColumn[columnname] = value 
+               columnname = base64.b64decode(cell['column']).decode('ascii')
+               value = base64.b64decode(cell['$']).decode('ascii')
+               dColumn[columnname] = value 
             decodedList.append (dColumn) 
         return jsonify(decodedList)
 
                
 
 
-# if __name__ == '__main__':
-#     mt = manageAssets()
-#     print(mt.get('glazer'))
+if __name__ == '__main__':
+    mt = manageAssets()
+    print(mt.get('glazer'))
