@@ -104,7 +104,17 @@ class manageUserList(Resource):
   
 ## Test the API
   
-  Coming soon
+ Use [Postman](http://www.getpostman.com) or Curl to test that the API has all of the following HTTP Verbs implemented:
+ 
+ manage`<entity name>`:
+ 
+ - GET (add a new entity)
+ - POST (get a list of entites)
+ 
+  manage`<entity name>`List:
+ - GET (for a particular entity id)
+ - DELETE (for a particular entity id)
+ - PUT  (for a particular entity id)
 
 
 # New GUI Page
