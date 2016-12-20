@@ -99,11 +99,10 @@ class manageUserList(Resource):
         
         except Exception as e:
             return {'error': str(e)}
+  
   ```
   
-  
-  
-  ## Test the API
+## Test the API
   
   Coming soon
 
