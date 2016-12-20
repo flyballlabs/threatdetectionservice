@@ -1,0 +1,18 @@
+body {
+  font-family:"Arial", Helvetic, sans-serif
+}
+hr {
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 2em 0 1em;
+}
+#dataGrid {
+	margin-bottom: 160px;
+}
+#example_wrapper {
+	width: 100%;
+}
+.dataTables_wrapper {
+	padding: 1em 0;
+}

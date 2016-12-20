@@ -5,40 +5,146 @@
 Ensures all submodules are added to sys path and configures all runtime settings.
 @author devopsec
 '''
+import os
+from datetime import datetime
+from api import app;
+from flask import Flask, make_response, jsonify, g, url_for ,abort, request
+from flask_restful import Api  #, marshal, Resource, reqparse, fields
+from werkzeug.serving import run_simple
+from flask_cors import CORS, cross_origin
+from flask_httpauth import HTTPBasicAuth
 
-from app import *
-from flask import Flask, make_response, jsonify #, request, abort, render_template, Flask
-from flask_restful import Api, reqparse, fields #, marshal, Resource
+from api.database import *
+from api.sql.models import *
 
 # import endpoints #
-from auth.endpoint import *
-from user.endpoint import *
-from agent.endpoint import *
-from company.endpoint import *
-
+from api.auth.endpoint import userAuth
+from api.user.endpoint import manageUsers
+from api.agent.endpoint import manageAgents, piController
+from api.company.endpoint import manageCompany, companyList
+#from api.notification.endpoint import manageNotifications
+from api.asset.endpoint import manageAssets
+from api.metron.endpoint import metronThreats
+#from api.metron_data.endpoint import asset_discovery#, threat_intel
 
 # flask / sql / api config  #
 app = Flask('rest_server')
+#app.config['DEBUG'] = False
 api = Api(app)
+CORS(app)
+auth = HTTPBasicAuth()
+
+#for login page
+@auth.verify_password
+def verify_password(username_or_token, password):
+    # first try to authenticate by token
+    USER = user_data.verify_auth_token(username_or_token)
+    if not USER:
+        # try to authenticate with username/password
+        USER = user_data.query.filter_by(username=username_or_token).first()
+        if not USER or not user_data.verify_password(password):
+            return False
+    g.user_data = USER
+    return True
+
+#redir at here to get a token#
+@app.route('/api/auth/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token(600)
+    return jsonify({'token': token.decode('ascii'), 'duration': 600})
+
+#verify to protect resources
+@app.route('/api/resource')
+@auth.login_required
+def get_resource():
+    return jsonify({'data': 'Hello, %s!' % g.user.username})
+
+@app.errorhandler(400)
+@app.route('/api/register', methods=['POST'])
+def register_user():
+    try:
+        username = request.json.get('username')
+        password = request.json.get('password')
+        if username is None or password is None:
+            abort(400)    # missing arguments
+        if user_data.query.filter_by(username=username).first() is not None:
+            abort(400)    # existing user
+        
+        user_id = user_data.query().count + 1
+        username = request.json.get('username')
+        firstname = request.json.get('firstname')
+        lastname = request.json.get('lastname')
+        password = request.json.get('password')
+        email = request.json.get('email')
+        company_id = request.json.get('company_id')
+        status = request.json.get('status')
+        phone_number = request.json.get('phone_number')
+        
+        
+        USER = user_data(user_id=user_id, username=username, firstname=firstname, lastname=lastname, password=password, 
+                 email=email, company_id=company_id, status=status, phone_number=phone_number, lastlogin = datetime.datetime.now().tostring(),
+                 account_type='1', notification=None)
+        user_data.hash_password(password)
+        db.session.add(USER)
+        db.session.commit()
+        
+        return (jsonify({'username': USER.username}), 201, {'Location': url_for('get_user', id=USER.id, _external=True)})
+    except Exception as e:
+        return  {
+                    'status': 200,
+                    'message':'User creation successful'
+                }
+        
+        
+@app.route('/api/users/<int:id>')
+def get_userID(id):
+    USER = user_data.query.get(id)
+    if not USER:
+        abort(400)
+    return jsonify({'username': USER.username})
+
+
+'''# hashing functions #
+@auth.hash_password
+def hash_pw(password):
+    return md5(password).hexdigest()
+
+@auth.hash_password
+def hash_pw(username, password):
+    get_salt(username)
+    return hash(password, salt)
+
+@auth.verify_password
+def verify_pw(username, password):
+    return call_custom_verify_function(username, password)'''
 
 
 @app.errorhandler(400)
 def bad_request(error):
     return make_response(jsonify({'error': 'Bad request'}), 400)
 
-
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
+
+
+api.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
+api.add_resource(manageAssets, '/api/assets/<string:_device_>')
+
 api.add_resource(manageAgents, '/api/agent', '/api/agent/<string:_mac_address_>')
-#api.add_resource(timeSync, '/api/picontroller/time')
-#api.add_resource(piController, '/api/picontroller/<string:id>')
-#api.add_resource(update, '/api/picontroller/<string:id>/<string:start>/<string:end>/<string:cmd>')
+api.add_resource(piController, '/api/picontroller', '/api/picontroller/<string:_mac_address_>')
 api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
 api.add_resource(manageUsers, '/api/user', '/api/user/<string:_username_>')
 api.add_resource(manageCompany, '/api/company/<string:_company_name_>')
 api.add_resource(companyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
-
+#api.add_resource(manageNotifications, '/api/notification', '/api/notification/<string:_username_>')
+#api.add_resource(asset_discovery, '/api/metron_data/asset_discovery', '/api/metron_data/asset_discovery/<string:_company_name_>', '/api/metron_data/asset_discovery/<string:_company_name_>/<string:_sites_>')
+#api.add_resource(threat_intel, '/api/metron_data/threat_intel', '/api/metron_data/threat_intel/<string:_company_name_>', '/api/metron_data/threat_intel/<string:_company_name_>/<string:_sites_>')
+                 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6668, debug=False)
+    if not os.path.exists('db.mysql'):
+        db = connect()
+        db.create_all()
+    app.run(host='0.0.0.0', port=7777, debug=True)

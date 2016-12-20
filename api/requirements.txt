@@ -1,9 +1,12 @@
+python2.7
+python3
+python3.5
 flask
 configparser
 mysqlclient
 flask-login
-flask-openid
-flask-mail
+#flask-openid
+#flask-mail
 flask-restful
 SQLAlchemy
 flask-sqlalchemy
@@ -21,3 +24,12 @@ Jinja2
 psutil
 kafka-python
 flask-mysql
+flask_cors 
+uwsgi
+uwsgi-emperor
+uwsgi-plugin-python3
+nginx-full
+Flask-Table
+Flask-HTTPAuth
+MarkupSafe
+passlib

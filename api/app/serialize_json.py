@@ -1,4 +1,4 @@
-import json
+import simplejson, json
 import sqlalchemy as sqla
 from sqlalchemy.ext import mutable
 

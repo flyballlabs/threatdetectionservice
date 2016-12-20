@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Threat Management Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+	<div class="container"> <!-- menu container -->
+    <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cyber-Security<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="active"><a href="#">Threat Dashboard</a></li>
+	    <li role="separator" class="divider"></li>
+            <li><a href="#">Agent Management</a></li>
+            <li><a href="#">Alert Management</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Enter Site">
+        </div>
+        <button type="submit" class="btn btn-default">Find Site</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Welcome</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ username }} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  </div> <!-- menu container -->
+  <div class="container"> <!-- Begin of Site Dropdown -->
+      <div class="dropdown"> 
+       <button class="btn btn-default dropdown-toggle" type="button" id="sitedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Site Dropdown
+          <span class="caret"></span>
+          {% if selectedSite %}
+          <span class="selected">{{ selectedSite }}</span>
+          {% endif %}
+       </button>
+       <ul class="dropdown-menu" aria-labelledby="sitedropdown">
+           {% for site in sites %}
+             <li><a href="#">{{ site }}</li>
+	          {% endfor %}
+       </ul>
+      </div>
+  </div> <!-- end of Site Dropdown -->
+  <br>
+<div class="container"><!-- threat panel -->
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+    <div class="panel-heading">Active Threats</div>
+      <div class="panel-body">
+        <p>Contains a list of all threats that have not been acknowledged and or assigned to an enginner for review.</p>
+      </div>
+
+      <!-- Table -->
+      <table id="activeThreatsTable" class="table">
+   	<thead>
+		<th>Threat Level</th>
+		<th>Incident Type</th>
+		<th>Incident Source</th>
+		<th>Incident Time</th>
+		<th>Attack Method</th>
+		<th>Source</th>
+		<th>Destination</th>
+        </thead> 
+      </table>
+    </div>
+</div> <!-- end of threat panel -->
+<div class="container"><!-- asset discovery panel -->
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+    <div class="panel-heading">Asset Discovery</div>
+      <div class="panel-body">
+        <p>Contains a list of all threats that have not been acknowledged and or assigned to an enginner for review.</p>
+      </div>
+
+      <!-- Table -->
+      <table id="assetTable" class="table">
+      <thead>
+        <th>Hostname</th>
+        <th>IP</th>
+        <th>MAC</th>
+        <th>OS</th>
+        <th>Type</th>
+      </thead> 
+      </table>
+    </div>
+  </div><!-- end of asset discovery panel -->
+</div> <!-- main container -->
+   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="static/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Table Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+
+    <!-- Bootstrap Table Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+
+     <!-- Bootstrap Table Latest compiled and minified Locales -->
+     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    
+     <script>
+
+	$('#activeThreatsTable').bootstrapTable({
+	url: '{{ apiServer }}{{ threatsBySiteURI }}',
+	columns: [{
+                field: '_id',
+                title: 'ID'
+        }, {
+		field: '_index',
+		title: 'Index'
+	},]
+	});
+
+  $('#assetTable').bootstrapTable({
+  url: '{{ apiServer }}{{ assetURI }}',
+  columns: [{
+      field: 'assets:hostname',
+      title: 'Hostname'
+  }, {
+    field: 'assets:ip',
+    title: 'IP'
+        }, {
+    field: 'assets:mac',
+    title: 'MAC'
+  }, {
+    field: 'assets:os',
+    title: 'OS'
+  }, {
+    field: 'assets:type',
+    title: 'Type'
+  }
+      ]
+  });
+
+    </script>
+
+  </body>
+
+</html>
