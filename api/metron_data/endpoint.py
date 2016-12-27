@@ -1,26 +1,27 @@
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
-import requests, json, base64
+import requests, json, base64, struct
 from api.sql.models import *  #import all of the models from models.py
 from api.app.parse_json import * #for json arg parsing
 from collections import OrderedDict
 
-'''
+
 # Method for encoding ints with base64 encoding
 def encode(n):
-     data = struct.pack("i", n)
-     s = base64.b64encode(data)
-     return s
+    data = struct.pack("i", n)
+    s = base64.b64encode(data)
+    return s
  
 # Method for decoding ints with base64 encoding
 def decode(s):
-     data = base64.b64decode(s)
-     n = struct.unpack("i", data)
-     return n[0]
+    data = base64.b64decode(s)
+    n = struct.unpack("i", data)
+    return n[0]
     
 # Checks the request object to see if the call was successful
 def issuccessful(request):
-    if 200
+    if 200:
+        True
 
 # check if table exists #
 def checkTable():
@@ -31,7 +32,7 @@ def deleteTable():
     request = requests.delete(hbaseBaseURL + "/" + hbaseTableName + "/schema")
 ########
 
-hbaseBaseURL="http://10.10.10.154:9082"
+hbaseBaseURL="http://10.0.0.239:9082"
 hbaseTableName = "enrichment"
 hbaseSiteName = "glazer-*"
 
@@ -108,7 +109,7 @@ def post():
     # Submit JSON to REST server
     request = requests.post(hbaseBaseURL + "/" + hbaseTableName + "/" + rowKey, data=json.dumps(jsonOutput), headers={"Content-Type" : "application/json", "Accept" : "application/json"})
 
-'''
+
 class assetDiscovery(object):
     def post(self):
         try:
@@ -153,51 +154,3 @@ class assetDiscovery(object):
         except Exception as e:
             return {'error': str(e)}
 
-'''
-class threat_intel(object):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('user_id', type=int, help='User_id for account', location='json')
-            parser.add_argument('username', type=str, help='Username for account', location='json')
-            parser.add_argument('firstname', type=str, help='Firstname for account', location='json')
-            parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
-            parser.add_argument('password', type=str, help='Password for account', location='json')
-            parser.add_argument('email', type=str, help='Email for account', location='json')
-            parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('status', type=str, help='Status for account', location='json')
-            parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
-            args = parser.parse_args()#strict=True
-
-            _user_id = args['user_id']
-            _username = args['username']
-            _firstname = args['firstname']
-            _lastname = args['lastname']
-            _password = args['password']
-            _email = args['email']
-            _company_id = args['company_id']
-            _status = args['status']
-            _lastlogin = args['lastlogin']
-            
-            query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
-                              lastname=_lastname, password=_password, email=_email, 
-                              company_id=_company_id, status=_status, lastlogin=_lastlogin)
-
-            curr_session = db.session #open database session
-            try:
-                curr_session.add(query) #add prepared statement to opened session
-                curr_session.commit() #commit changes
-                return  {
-                            'status': 200,
-                            'message':'User creation successful'
-                        }
-            except:
-                curr_session.rollback()
-                curr_session.flush() # for resetting non-commited .add()
-                return  {
-                            'status': 400,
-                            'message':'User creation failure'
-                        }
-        except Exception as e:
-            return {'error': str(e)}
-'''

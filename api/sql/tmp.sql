@@ -25,6 +25,9 @@ use tmp;
 
 --
 -- Table structure for table `user`
+--  ***** needs integrated ************
+--  
+
 --
 
 DROP TABLE IF EXISTS `user`;
@@ -42,14 +45,13 @@ CREATE TABLE `user` (
   `phone_number` varchar(45) DEFAULT NULL,
   `lastlogin` varchar(45) DEFAULT NULL,
   `account_type` varchar(45) DEFAULT NULL,
-  `notification` varchar(100) DEFAULT NULL,
+  `notification` json DEFAULT NULL,
   `password_hash` TEXT(64) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
--- DEFAULT CHARSET=latin1 <=debug
 --
 -- Dumping data for table `user`
 --
@@ -70,14 +72,14 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `company_id` int(11) NOT NULL AUTO_INCREMENT,
   `company_name` varchar(45) NOT NULL,
-  `address` varchar(45) DEFAULT NULL,
+  `street` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `state` varchar(45) DEFAULT NULL,
   `zip` varchar(45) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
-  `poc` varchar(100) NOT NULL,
-  `authinfo` varchar(100) DEFAULT NULL,
-  `sites` varchar(100) DEFAULT NULL,
+  `poc` json DEFAULT NULL,
+  `authinfo` json DEFAULT NULL,
+  `sites` json DEFAULT NULL,
   PRIMARY KEY (`company_id`),
   UNIQUE KEY (`company_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -109,7 +111,7 @@ CREATE TABLE `agent` (
   `site` varchar(45) DEFAULT NULL,
   `mode` varchar(45) DEFAULT NULL,
   `cmd` varchar(45) DEFAULT NULL,
-  `time_setting` varchar(100) DEFAULT NULL,
+  `time_setting` json DEFAULT NULL,
   PRIMARY KEY (`agent_id`),
   UNIQUE KEY (`mac_address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

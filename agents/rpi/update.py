@@ -40,6 +40,7 @@ temp = t.split(' ')
 t = temp[1]
 
 # variable hostname, ensure hostname is set correctly on device #
+## TODO: change to MAC address specified query - per agent ##
 r2 = requests.get("http://50.253.243.17:6668/api/picontroller/" + socket.gethostname())
 cmds = json.loads(r2.text)
 if cmds['start'] != "":

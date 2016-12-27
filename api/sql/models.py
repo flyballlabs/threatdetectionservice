@@ -1,13 +1,13 @@
-from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired) #tokens
+from flask import url_for
 from api import database
+import json
 # MySQL specific imports #
-from sqlalchemy import null #, Column
+from sqlalchemy import null, Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
 from flask_table import Table, Col 
 from passlib.apps import custom_app_context as pwd_context
  
 ##### classes / methods we may need #######################################
-#  from sqlalchemy.sql import sqltypes         #  contains sqltypes.JSON  #
 #  from wtforms.validators import mac_address  #    mac address parsing   #
 #  from ipaddress import ip_address            #     ip address parsing   #
 #  from alembic.util.messaging import status   #       html code status   #
@@ -15,10 +15,26 @@ from passlib.apps import custom_app_context as pwd_context
 
 # Connect to the database and provide a handle #
 db = database.connect()
+
 # null constants #
 SQL_NULL = null()  # will *always* insert SQL NULL
 JSON_NULL = db.Column(JSON(none_as_null=True))  # will *always* insert JSON string "null"
 
+'''Transforms a model into a dictionary which can be dumped to JSON'''
+def serialize(model):
+  # get names of all columns in model
+  columns = [c.key for c in sqlalchemy.orm.class_mapper(model.__class__).columns]
+  # return values in a dict
+  return dict((c, getattr(model, c)) for c in columns)
+
+'''Enables JSON storage by encoding and decoding on the fly'''
+class JsonEncodedDict(sqla.TypeDecorator): # easily iterable #
+  impl = sqlalchemy.String
+  def process_bind_param(self, value, dialect):
+    return json.dumps(value)
+  def process_result_value(self, value, dialect):
+    return json.loads(value)
+mutable.MutableDict.associate_with(JsonEncodedDict) # add this datatype to table column #
 
 class user_data(db.Model):
     __tablename__ = 'user'
@@ -27,7 +43,7 @@ class user_data(db.Model):
         'mysql_charset': 'utf8'  #latin1
     }
     
-    user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
+	user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     username = db.Column(VARCHAR(45),index=True, unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
     lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
@@ -39,8 +55,8 @@ class user_data(db.Model):
     lastlogin = db.Column(VARCHAR(45))     ##############################
     account_type = db.Column(VARCHAR(45))
     notification = db.Column(VARCHAR(100))
-    password_hash = db.Column(db.String(64))
-    
+    password_hash = db.Column(db.String(64))    
+                                           
     def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, phone_number, lastlogin, account_type, notification):
         self.user_id = user_id
         self.username = username
@@ -65,12 +81,12 @@ class user_data(db.Model):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_auth_token(self, expiration=600):
-        s = Serializer(db.app.config['SECRET_KEY'], expires_in=expiration)
+        s = Serializer(db.app.config["NOT_FOR_PRODUCTION"], expires_in=expiration)
         return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(db.app.config['SECRET_KEY'])
+        s = Serializer(db.app.config["NOT_FOR_PRODUCTION"])
         try:
             data = s.loads(token)
         except SignatureExpired:
@@ -81,7 +97,7 @@ class user_data(db.Model):
         return user
 
 class user_table(Table):
-    classes = ['table', 'table-bordered'] #html class assignment
+    classes = ['sp-table', 'sp-table-striped', 'sp-table-hover'] #html class assignment
     user_id = Col('user_id')
     username = Col('username')
     firstname = Col('firstname')
@@ -94,7 +110,15 @@ class user_table(Table):
     lastlogin = Col('lastlogin')
     account_type = Col('account_type')
     notification = Col('notification')
-    
+'''
+    allow_sort = True
+    def sort_url(self, col_key, reverse=False):
+        if reverse:
+            direction =  'desc'
+        else:
+            direction = 'asc'
+        return url_for('user_id', sort=col_key, direction=direction)
+'''
 
 class company_data(db.Model):
     __tablename__ = 'company'
@@ -105,24 +129,24 @@ class company_data(db.Model):
     
     company_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     company_name = db.Column(VARCHAR(45), unique=True, nullable=False)
-    address = db.Column(VARCHAR(45))
+    street = db.Column(VARCHAR(45))
     city = db.Column(VARCHAR(45))
     state = db.Column(VARCHAR(45))
     zip = db.Column(VARCHAR(45))
     phone_number = db.Column(VARCHAR(45))
-    poc = db.Column(VARCHAR(100), nullable=False) #JSON
-    authinfo =  db.Column(VARCHAR(100)) #JSON
-    sites = db.Column(VARCHAR(100)) #JSON
+	poc =  db.Column(JSON)
+    authinfo =  db.Column(JSON)
+    sites = db.Column(JSON)
     
-    def __init__(self, company_id, company_name, address, city, state, zip, phone_number, poc, authinfo, sites):
+    def __init__(self, company_id, company_name, street, city, state, zip, phone_number, poc, authinfo, sites):
         self.company_id = company_id
         self.company_name = company_name
-        self.address = address
+        self.street = street
         self.city = city
         self.state = state
         self.zip = zip
         self.phone_number = phone_number
-        self.poc = poc
+		self.poc = poc
         self.authinfo = authinfo
         self.sites = sites
 
@@ -130,7 +154,7 @@ class company_data(db.Model):
         return '{company: %r}' % self.company_id
 
 class company_table(Table):
-    classes = ['table', 'table-bordered'] #html class assignment
+    classes = ['sp-table', 'sp-table-striped', 'sp-table-hover'] #html class assignment
     company_id = Col('company_id')
     company_name = Col('company_name')
     address = Col('address')
@@ -158,7 +182,7 @@ class agent_data(db.Model):
     site = db.Column(VARCHAR(45))
     mode = db.Column(VARCHAR(45))
     cmd = db.Column(VARCHAR(45))
-    time_setting = db.Column(VARCHAR(100)) #JSON
+    time_setting = db.Column(JSON)
     
     def __init__(self, agent_id, mac_address, ip_address, status, company_id, site, mode, cmd, time_setting):
         self.agent_id = agent_id
@@ -175,7 +199,7 @@ class agent_data(db.Model):
         return '{agent: %r}' % self.agent_id
     
 class agent_table(Table):
-    classes = ['table', 'table-bordered'] #html class assignment
+    classes = ['sp-table', 'sp-table-striped', 'sp-table-hover'] #html class assignment
     agent_id = Col('agent_id')
     mac_address = Col('mac_address')
     ip_address = Col('ip_address')
@@ -217,7 +241,7 @@ class asset_data(db.Model):
         return '{asset: %r}' % self.asset_id
     
 class asset_table(Table):
-    classes = ['table', 'table-bordered'] #html class assignment
+    classes = ['sp-table', 'sp-table-striped', 'sp-table-hover'] #html class assignment
     asset_id = Col('asset_id')
     company_name = Col('company_name')
     site = Col('site')
@@ -250,7 +274,7 @@ class notification_data(db.Model):
         return '{notification: %r}' % self.notification_id
     
 class notification_table(Table):
-    classes = ['table', 'table-bordered'] #html class assignment
+    classes = ['sp-table', 'sp-table-striped', 'sp-table-hover'] #html class assignment
     notification_id = Col('notification_id')
     company_name = Col('company_name')
     site = Col('site')

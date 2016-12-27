@@ -33,3 +33,6 @@ Flask-Table
 Flask-HTTPAuth
 MarkupSafe
 passlib
+pyshark
+tshark
+starbase

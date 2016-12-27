@@ -1,7 +1,5 @@
-python3.5
 python3
-python
+python3.5
 kafka-python
 psutil
 requests
-dataconverters

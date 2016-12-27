@@ -2,7 +2,7 @@ import struct
 import base64
 
 hbaseSiteName = "glazer-*"
-hbaseBaseURL = "http://10.10.10.154:9082"
+hbaseBaseURL = "http://127.0.0.1:9082"
 
 hbaseTableName = "enrichment"
 hbaseCFName = "assets"

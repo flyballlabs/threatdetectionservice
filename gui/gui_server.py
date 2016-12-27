@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, jsonify, make_response, url_for, redirect
-from werkzeug.serving import run_simple
+from flask import Flask, render_template, request, jsonify, make_response, url_for, redirect, abort, Markup
 import requests #, json
 from api.sql.models import *
+from datetime import datetime
 
 app = Flask('gui_server')
 app.config['DEBUG'] = False
@@ -14,6 +14,44 @@ def bad_request(error):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
+@app.errorhandler(400)
+@app.route('/registration', methods=['POST', 'GET'])
+def register_user():
+    if request.method == 'POST':
+        try:
+            username = request.json.get('username')
+            password = request.json.get('password')
+            if username is None or password is None:
+                abort(400)    # missing arguments
+            if user_data.query.filter_by(username=username).first() is not None:
+                abort(400)    # existing user
+            
+            user_id = user_data.query().count + 1
+            firstname = request.json.get('firstname')
+            lastname = request.json.get('lastname')
+            email = request.json.get('email')
+            company_id = request.json.get('company_id')
+            status = request.json.get('status')
+            phone_number = request.json.get('phone_number')
+            
+            
+            USER = user_data(user_id=user_id, username=username, firstname=firstname, lastname=lastname, password=password, 
+                     email=email, company_id=company_id, status=status, phone_number=phone_number, lastlogin = datetime.datetime.now().tostring(),
+                     account_type='1', notification=None)
+            user_data.hash_password(password)
+            db.session.add(USER)
+            db.session.commit()
+            
+            return (jsonify({'username': USER.username}), 201, {'Location': url_for('get_user', id=USER.id, _external=True)})
+        except Exception as e:
+            return  {
+                        'status': 400,
+                        'message':'User creation unsuccessful'
+                    }
+    else:
+        return render_template('user_registration.html')
+            
 
 # routes #
 @app.route('/')
@@ -46,10 +84,10 @@ def login():
 def threats():
     company = "Flyball-Labs"
     # Grab the sites for the company
-    url = 'http://0.0.0.0:7777/api/company/' + company + "/sites"
+    url = 'http://10.10.10.97:7777/api/company/' + company + "/sites"
     params = request.args.items()
     site = request.args.get('site')
-    apiServer = 'http://0.0.0.0:7777'
+    apiServer = 'http://10.10.10.97:7777'
     if site != None:
 
         threatsBySiteURI =  '/api/metron/threats/' + site
@@ -61,6 +99,7 @@ def threats():
     site = request.args.get('site')
     if request.method == 'GET' and site != None:
         return render_template('threatsbysite.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+    
     return render_template('threatsbysite.html',sites=sites)
 
 
@@ -74,7 +113,6 @@ def show_UI():
 def tables_redirect():
     route = request.args.get('route')
     print(route)
-    error = None
     #url = 'http://0.0.0.0:7777/api/user/' + username
     
     #'/api/agent', '/api/agent/<string:_mac_address_>'
@@ -85,20 +123,50 @@ def tables_redirect():
     #'/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites'
     #'/api/notification', '/api/notification/<string:_username_>'
     
+    '''if site != None:
+        if request.method == 'POST':
+            if route == 'notifications':
+                return render_template('tables_ui.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+            return render_template('tables_ui.html',sites=sites)
+        
+        if request.method == 'POST':
+            if route == 'users':
+                return render_template('tables_ui.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+            return render_template('tables_ui.html',sites=sites)
+        
+        if requet.method == "POST":
+            if route == 'companies':
+                return render_template('tables_ui.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+            return render_template('tables_ui.html',sites=sites)   
+        
+        if request.method == "POST":
+                return render_template('tables_ui.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+            return render_template('tables_ui.html',sites=sites)
+        
+        else:
+            return render_template(('tables_ui.html'))
+    else:'''    
     
     try:#### TODO getting routing issues only when passing table data ### 
         ### load db table into html table as an example ###
         if route == "notifications":
             table = notification_table(notification_data.query.all())
-            return render_template('tables_ui.html',table=table)
+            return render_template('tables_ui.html',table=table) 
         
         elif route == "users":
-            table = user_table(user_data.query.all())
+            curr_session = db.session
+            data = user_data.query.all()
+            print(data)
+            table = user_table(data)
+            print(table.__html__())
             render_template('tables_ui.html',table=table)
             
         elif route == "companies":
-            table = company_table(company_data.query.alll())
-            render_template('tables_ui.html',table=table)
+            data = company_data.query.all()
+            print(data)
+            table = company_table(data)
+            print(table.__html__())
+            render_template('tables_ui.html',table=Markup(table.__html__()))
             
         elif route == "assets":
             table = asset_table(asset_data.query.all())
@@ -109,11 +177,11 @@ def tables_redirect():
             render_template('tables_ui.html',table=table)
             
         else:
-            return jsonify({'error': 'Route not available or does not exist'}, 404)
+            return {'error': 'Route not available or does not exist'}, 404
         
     except Exception as e:
-        e.show_stack()
-        
+        return {"An Error Occurred" : e.traceback()}, 404
+                
         '''
         if request.method == 'GET':
         if request.method == 'POST':

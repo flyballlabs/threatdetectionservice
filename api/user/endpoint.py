@@ -1,62 +1,48 @@
+from flask import jsonify
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
-#from app.parse_json import * #for json request parsing
+from api.parse_json import * #for json request parsing
 
-class manageUsers(Resource):
-    def post(self):
+class manageUser(Resource):
+    def get(self, _username_):
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('user_id', type=int, help='User_id for account', location='json')
-            parser.add_argument('username', type=str, help='Username for account', location='json')
-            parser.add_argument('firstname', type=str, help='Firstname for account', location='json')
-            parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
-            parser.add_argument('password', type=str, help='Password for account', location='json')
-            parser.add_argument('email', type=str, help='Email for account', location='json')
-            parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('status', type=str, help='Status for account', location='json')
-            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
-            parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
-            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
-            parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
-            args = parser.parse_args()#strict=True
-
-            _user_id = args['user_id']
-            _username = args['username']
-            _firstname = args['firstname']
-            _lastname = args['lastname']
-            _password = args['password']
-            _email = args['email']
-            _company_id = args['company_id']
-            _status = args['status']
-            _phone_number = args['phone_number']
-            _lastlogin = args['lastlogin']
-            _account_type = args['account_type']
-            _notification = args['notification']
+            x = user_data.query.filter_by(username=_username_).first()
+            _user_id = x.user_id
+            _firstname = x.firstname
+            _lastname = x.lastname
+            _email = x.email
+            _company_id = x.company_id
+            _status = x.status
+            _phone_number = x.phone_number
+            _lastlogin = x.lastlogin
+            _account_type = x.account_type
+            _notification = x.notification
             
-            query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
-                              lastname=_lastname, password=_password, email=_email, 
-                              company_id=_company_id, status=_status, phone_number=_phone_number,
-                              lastlogin=_lastlogin, account_type=_account_type, notification=_notification)
-
-            curr_session = db.session #open database session
-            try:
-                curr_session.add(query) #add prepared statement to opened session
-                curr_session.commit() #commit changes
-                return  {
-                            'status': 200,
-                            'message':'User creation successful'
-                        }
-            except:
-                curr_session.rollback()
-                curr_session.flush() # for resetting non-commited .add()
-                return  {
-                            'status': 400,
-                            'message':'User creation failure'
-                        }
+            if x != None:
+                return jsonify(
+					response = 200,
+					message = 'User search success',
+                    user_id = _user_id,
+                    username = _username_,
+                    firstname = _firstname,
+                    lastname = _lastname,
+                    email = _email,
+                    company_id = _company_id,
+                    status = _status,
+					phone_number = _phone_number,
+                    lastlogin = _lastlogin,
+					account_type = _account_type,
+					notification = _notification
+                )
+            else:
+                return {
+                        'response' : 400,
+                        'message' : 'User search failure'
+                       }
         except Exception as e:
-            return {'error': str(e)}
-
-    def patch(self, _username_):
+            return {'response' : 400}
+    
+    def put(self, _username_):
         try:
             parser = reqparse.RequestParser()
             
@@ -71,8 +57,8 @@ class manageUsers(Resource):
             parser.add_argument('status', type=str, help='Status for account', location='json')
             parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
-            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
-            parser.add_argument('notification', type=str, help='Notification settings for account', location='json')
+            parser.add_argument('account_type', type=str, help='Account priveledge level', location='json')
+            parser.add_argument('notification', type=json_encode, help='Notification settings', location='json')
             
             args = parser.parse_args()#strict=True, require=True
             
@@ -103,6 +89,7 @@ class manageUsers(Resource):
                 _account_type = args['account_type']
             if args['notification'] != None:
                 _notification = args['notification']
+			
             ###################################
             # would be faster in an array / loop
             
@@ -120,59 +107,22 @@ class manageUsers(Resource):
                 x.phone_number = _phone_number
                 x.lastlogin = _lastlogin
                 x.account_type = _account_type
-                x.notification = _notification
+                x.notification = json_decode(_notification)
                 curr_session.commit() #commit changes
                 
                 return  {
-                            'status': 200,
-                            'message':'User update successful'
+                            'response' : 200,
+                            'message' : 'User update successful'
                         }
             except:
                 curr_session.rollback()
                 curr_session.flush() # for resetting non-commited .add()
                 return  {
-                            'status':400,
-                            'message':'User update failure'
+                            'response' : 400,
+                            'message' : 'User update failure'
                         }
         except Exception as e:
-            return {'error': str(e)}
-        
-    
-    def get(self, _username_):
-        try:
-            x = user_data.query.filter_by(username=_username_).first()
-            _user_id = x.user_id
-            _firstname = x.firstname
-            _lastname = x.lastname
-            _email = x.email
-            _company_id = x.company_id
-            _status = x.status
-            _phone_number = x.phone_number
-            _lastlogin = x.lastlogin
-            _account_type = x.account_type
-            _notification = x.notification
-            
-            if x != None:
-                return {
-                        'user_id':_user_id,
-                        'username':_username_,
-                        'firstname' : _firstname,
-                        'lastname' : _lastname,
-                        'email' : _email,
-                        'company_id' : _company_id,
-                        'status' : _status,
-                        'phone_number' : _phone_number,
-                        'lastlogin' : _lastlogin,
-                        'account_type' : _account_type,
-                        'notification' : _notification
-                       }
-            else:
-                return {
-                        'status': 400,
-                        'message':'User search failure'
-                       }
-        except Exception as e:
-            return {'error': str(e)}
+            return {'response' : 400}
         
     def delete(self, _username_):
         try:
@@ -182,16 +132,103 @@ class manageUsers(Resource):
                 db.session.delete(x)
                 db.session.commit()
                 return  {
-                            'status': 200,
-                            'message':'User delete successful'
+                            'response' : 200,
+                            'message' : 'User delete successful'
                         }
             except:
                 curr_session.rollback()
                 curr_session.flush() # for resetting non-commited .add()
                 return  {
-                            'status':400,
-                            'message':'User delete failure'
+                            'response' : 400,
+                            'message' : 'User delete failure'
                         }
         except Exception as e:
-            return {'error': str(e)}
+            return {'response' : 400}
 
+
+class manageUserList(Resource):
+    def get(self):
+        try:
+            x = user_data.query.all()
+            if x != None:
+                results = []
+                for user in x:
+                    results.append( {
+                        'user_id' : user.user_id,
+                        'username' : user.username,
+                        'firstname' : user.firstname,
+                        'lastname' : user.lastname,
+                        'email' : user.email,
+                        'company_id' : user.company_id,
+                        'status' : user.status,
+                        'phone_number' : user.phone_number,
+                        'lastlogin' : user.lastlogin,
+						'account_type' : user.account_type,
+						'notification' : user.notification
+                    } )
+
+                return jsonify(
+					response = 200,
+                    message = 'User search success',
+                    users = results
+                )
+            else:
+                return {
+                        'response' : 400,
+                        'message' : 'User search failure'
+                       }
+        except Exception as e:
+            return {'response' : 400}
+    
+    def post(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('user_id', type=int, help='User_id for account', location='json')
+            parser.add_argument('username', type=str, help='Username for account', location='json')
+            parser.add_argument('firstname', type=str, help='Firstname for account', location='json')
+            parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
+            parser.add_argument('password', type=str, help='Password for account', location='json')
+            parser.add_argument('email', type=str, help='Email for account', location='json')
+            parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
+            parser.add_argument('status', type=str, help='Status for account', location='json')
+            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
+            parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('account_type', type=str, help='Priveledge level for account', location='json')
+            parser.add_argument('notification', type=json_encode, help='Notification settings', location='json')
+            args = parser.parse_args()#strict=True
+
+            _user_id = args['user_id']
+            _username = args['username']
+            _firstname = args['firstname']
+            _lastname = args['lastname']
+            _password = args['password']
+            _email = args['email']
+            _company_id = args['company_id']
+            _status = args['status']
+            _phone_number = args['phone_number']
+            _lastlogin = args['lastlogin']
+            _account_type = args['account_type']
+            _notification = args['notification']
+            
+            query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
+                              lastname=_lastname, password=_password, email=_email, company_id=_company_id,
+							  status=_status, phone_number=_phone_number, lastlogin=_lastlogin, 
+							  account_type=_account_type, notification=json_decode(_notification))
+
+            curr_session = db.session #open database session
+            try:
+                curr_session.add(query) #add prepared statement to opened session
+                curr_session.commit() #commit changes
+                return  {
+                            'response' : 200,
+                            'message' : 'User creation successful'
+                        }
+            except:
+                curr_session.rollback()
+                curr_session.flush() # for resetting non-commited .add()
+                return  {
+                            'response' : 400,
+                            'message' : 'User creation failure'
+                        }
+        except Exception as e:
+            return {'response' : 400}

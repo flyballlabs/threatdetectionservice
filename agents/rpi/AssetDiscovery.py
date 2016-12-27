@@ -1,17 +1,15 @@
 '''
-This script scans devices on the net
-and sends aseet informatino to metron
+@description: This script scans devices on the net and sends aseet information to metron
 @author: devopsec
 '''
 
 import subprocess, sys, io, re
 from asyncio.tasks import wait
-import requests, json, csv
+import requests, json, csv, socket
 
 URL = '0.0.0.0:6668/api/metron_data/asset_discovery' #url of rest server
 CSV_FILE = '/asset-data/filtered_data.csv'
 JSON_FILE = '/asset-data/filtered_data.json'
-#csvjson -k "State Abbreviate" -i 4 examples/realdata/FY09_EDU_Recipients_by_State.csv
 
 def simplecount(filename):
     lines = 0
@@ -44,10 +42,12 @@ def csv2json(numLines):
 
 def send2server(url):
     try:
+        identifiers = socket.gethostname().split(sep='_')
         json_data = open(JSON_FILE, 'r')
         payload = json.load(json_data)
+        query_data =  {'_company_name_': identifiers[0], '_sites_': identifiers[1]}
         headers = {'Accept': 'application/vnd.api+json','Content-Type': 'application/vnd.api+json'}
-        response = requests.post(url, data=json.dumps(payload), headers=headers)
+        response = requests.post(url, params=query_data, data=json.dumps(payload), headers=headers)
         json_data.close()
     except Exception as e:
         json_data.close()

@@ -3,18 +3,48 @@ import json, base64, requests, os, os.path
 from collections import OrderedDict
 
 # Delete table if it exists
-request = requests.get(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, headers={"Accept" : "application/json"})
+#request = requests.get(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, headers={"Accept" : "application/json"})
 
-if issuccessful(request):
-	request = requests.get(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, headers={"Accept" : "application/json"})
-
-	if issuccessful(request):
-		print("Deleted table " + hbaseTableName)
-	else:
-		print("Errored out.  Status code was " + str(request.status_code) + "\n" + request.text)
-		
-
+#if issuccessful(request):
+#	request = requests.get(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, headers={"Accept" : "application/json"})
+#
+#	if issuccessful(request):
+#		print("Deleted table " + hbaseTableName)
+#	else:
+#		print("Errored out.  Status code was " + str(request.status_code) + "\n" + request.text)
+#		
+#
 # Create Messages Table
+
+
+bleats = json.loads(request.text)
+
+for row in bleats['Row']:
+	message = ''
+	lineNumber = 0
+	username = ''
+
+	for cell in row['Cell']:
+		columnname = base64.b64decode(cell['column'])
+		value = cell['$']
+		
+		if value == None:
+			continue
+
+		if columnname == hbaseCFName + ":" + messagecolumn:
+			message = base64.b64decode(value)
+		elif columnname == hbaseCFName + ":" + linenumbercolumn:
+			lineNumber = decode(str(value))
+		elif columnname == hbaseCFName + ":" + usernamecolumn:
+			username = base64.b64decode(value)
+
+	rowKey = base64.b64decode(row['key'])
+
+	# Output only messages whose line numbers are divisible by 10
+	# and have the word again in them.
+	if lineNumber % 10 == 0 and message.find("again") != -1:
+		print(rowKey + ":" + str(lineNumber) + ":" + username + ":" + message);
+
 content =   {"name":"test5", "column_families":
 				[{
 		            "name":"columnfam1",
@@ -28,7 +58,7 @@ content =   {"name":"test5", "column_families":
             	}]
 			}
 
-request = requests.get(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, data=content, headers={"Content-Type" : "application/json", "Accept" : "application/json"})
+request = requests.post(hbaseBaseURL + "/" + hbaseTableName + "/" + hbaseSiteName, data=content, headers={"Content-Type" : "application/json", "Accept" : "application/json"})
 
 if issuccessful(request):
 	print ("Created table " + hbaseTableName)

@@ -1,6 +1,10 @@
+'''
+@description: This endpoint holds logic for accessing threat intel data from elastic search
+'''
+
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
-import requests
+import requests, socket
 #from sql.models import *  #import all of the models from models.py
 #from app.parse_json import * #for json arg parsing
 
