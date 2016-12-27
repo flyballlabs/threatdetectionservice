@@ -3,7 +3,7 @@
 CREATE DATABASE IF NOT EXISTS `tmp`;
 grant all on tmp.* TO 'tmp'@'localhost' IDENTIFIED BY 'tmp';
 grant all on tmp.* TO 'tmp'@'%' IDENTIFIED BY 'tmp';
-flush privileges;
+#flush privileges;
 use tmp;
 
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
@@ -66,13 +66,13 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `company_id` int(11) NOT NULL AUTO_INCREMENT,
   `company_name` varchar(45) NOT NULL,
-  `address` varchar(45) DEFAULT NULL,
+  `street` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `state` varchar(45) DEFAULT NULL,
   `zip` varchar(45) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
-  `authinfo` varchar(100) DEFAULT NULL,
-  `sites` varchar(100) DEFAULT NULL,
+  `authinfo` json DEFAULT NULL,
+  `sites` json DEFAULT NULL,
   PRIMARY KEY (`company_id`),
   UNIQUE KEY (`company_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -104,7 +104,7 @@ CREATE TABLE `agent` (
   `site` varchar(45) DEFAULT NULL,
   `mode` varchar(45) DEFAULT NULL,
   `cmd` varchar(45) DEFAULT NULL,
-  `time_setting` varchar(100) DEFAULT NULL,
+  `time_setting` json DEFAULT NULL,
   PRIMARY KEY (`agent_id`),
   UNIQUE KEY (`mac_address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

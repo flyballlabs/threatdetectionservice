@@ -10,6 +10,8 @@ from app import *
 from flask import Flask, make_response, jsonify #, request, abort, render_template, Flask
 from flask_restful import Api, reqparse, fields #, marshal, Resource
 from flask_cors import CORS, cross_origin
+#from flask.ext.security import current_user, login_required, RoleMixin, Security, \
+#    SQLAlchemyUserDatastore, UserMixin, utils
 
 # import endpoints #
 from auth.endpoint import *
@@ -19,11 +21,31 @@ from company.endpoint import *
 from metron.endpoint import *
 from asset.endpoint import *
 
+# import models
+from sql.models import *
+
 # flask / sql / api config  #
 app = Flask('rest_server')
 app.config['DEBUG'] = True
+# SECRET_KEY is used by Flask to encrypt data in the Session object
+app.config['SECRET_KEY'] = 'flyball2016'
 api = Api(app)
 CORS(app)
+
+# Secret configuration for Flask-Security
+# Specify the security has PBKDF2 with salt.
+#app.config['SECURITY_PASSWORD_HASH'] = 'pbkdf2_sha512'
+# Replace this with your own salt.
+#app.config['SECURITY_PASSWORD_SALT'] = 'flyball2016' 
+
+# Create a table to support a many-to-many relationship between Users and Roles
+#roles_users = db.Table(
+#    'roles_users',
+#    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+#    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+#)
+
+
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -42,7 +64,7 @@ api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
 api.add_resource(manageUser, '/api/user/<string:_username_>')
 api.add_resource(manageUserList, '/api/user')
 api.add_resource(manageCompany, '/api/company/<string:_company_name_>')
-api.add_resource(companyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
+api.add_resource(manageCompanyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites')
 api.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
 api.add_resource(manageAssets, '/api/assets/<string:_device_>')
 

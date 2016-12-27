@@ -2,17 +2,25 @@ import database
 # MySQL specific imports #
 from sqlalchemy import null , Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
-#from sqlalchemy.sql import sqltypes
+
 ##### classes / methods we may need ############
 #  from wtforms.validators import mac_address  #
 #  from ipaddress import ip_address            #  
 #  from alembic.util.messaging import status   #
+#  from sqlalchemy.sql import sqltypes         #
 ################################################
-# Connect to the database and provide a handle #
-db = database.connect()
+
+db = database.connect() # Connect to the database and provide a handle #
 # null constants #
 SQL_NULL = null()  # will *always* insert SQL NULL
 JSON_NULL = db.Column(JSON(none_as_null=True))  # will *always* insert JSON string "null"
+
+def serialize(model):
+  """Transforms a model into a dictionary which can be dumped to JSON."""
+  # get names of all columns in model
+  columns = [c.key for c in sqlalchemy.orm.class_mapper(model.__class__).columns]
+  # return values in a dict
+  return dict((c, getattr(model, c)) for c in columns)
 
 class user_data(db.Model):
     __tablename__ = 'user'
@@ -24,13 +32,13 @@ class user_data(db.Model):
     user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     username = db.Column(VARCHAR(45), unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
-    lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
-    password = db.Column(VARCHAR(45))      #Table('mytable', metadata,  #
-    email = db.Column(VARCHAR(45))         #Column('data', String(32)), #
-    company_id = db.Column(VARCHAR(45))    #mysql_engine='InnoDB',      #
-    status = db.Column(VARCHAR(45))        #mysql_charset='utf8',       #
-    lastlogin = db.Column(VARCHAR(45))     #mysql_key_block_size="1024")#
-                                           ##############################
+    lastname = db.Column(VARCHAR(45))      
+    password = db.Column(VARCHAR(45))      
+    email = db.Column(VARCHAR(45))         
+    company_id = db.Column(VARCHAR(45))    
+    status = db.Column(VARCHAR(45))        
+    lastlogin = db.Column(VARCHAR(45))     
+                                           
     def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, lastlogin):
         self.user_id = user_id
         self.username = username
@@ -55,18 +63,18 @@ class company_data(db.Model):
     
     company_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     company_name = db.Column(VARCHAR(45), unique=True, nullable=False)
-    address = db.Column(VARCHAR(45))
+    street = db.Column(VARCHAR(45))
     city = db.Column(VARCHAR(45))
     state = db.Column(VARCHAR(45))
     zip = db.Column(VARCHAR(45))
     phone_number = db.Column(VARCHAR(45))
-    authinfo =  db.Column(JSON)#VARCHAR(100)
-    sites = db.Column(JSON)#(sqltypes.JSON)
+    authinfo =  db.Column(JSON)
+    sites = db.Column(JSON)
     
-    def __init__(self, company_id, company_name, address, city, state, zip, phone_number, authinfo, sites):
+    def __init__(self, company_id, company_name, street, city, state, zip, phone_number, authinfo, sites):
         self.company_id = company_id
         self.company_name = company_name
-        self.address = address
+        self.street = street
         self.city = city
         self.state = state
         self.zip = zip
@@ -92,7 +100,7 @@ class agent_data(db.Model):
     site = db.Column(VARCHAR(45))
     mode = db.Column(VARCHAR(45))
     cmd = db.Column(VARCHAR(45))
-    time_setting = db.Column(JSON)#(sqltypes.JSON)
+    time_setting = db.Column(JSON) #(sqltypes.JSON)
     
     def __init__(self, agent_id, mac_address, ip_address, status, company_id, site, mode, cmd, time_setting):
         self.agent_id = agent_id
