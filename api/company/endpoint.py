@@ -51,37 +51,29 @@ class manageCompany(Resource):
             parser.add_argument('sites', type=json_encode, help='List of divisions for account', location='json')
             args = parser.parse_args()
             
-            if args['company_id'] != None:
-                _company_id = args['company_id']
-            if args['company_name'] != None:
-                _company_name = args['company_name']
-            if args['street'] != None:
-                _street = args['street']
-            if args['city'] != None:
-                _city = args['city']
-            if args['state'] != None:
-                _state = args['state']
-            if args['zip'] != None:
-                _zip = args['zip']
-            if args['phone_number'] != None:
-                _phone_number = args['phone_number']
-            if args['authinfo'] != None:
-                _authinfo = args['authinfo']
-            if args['sites'] != None:
-                _sites = args['sites']
-            
             try:
                 curr_session = db.session #open database session
                 x = company_data.query.filter_by(company_name=_company_name_).first() #fetch the name to be updated
-                x.company_id = _company_id   #update the row
-                x.company_name = _company_name
-                x.street = _street
-                x.city = _city
-                x.state = _state
-                x.zip = _zip
-                x.phone_number = _phone_number
-                x.authinfo = json_decode(_authinfo)
-                x.sites = json_decode(_sites)
+            
+                if args['company_id'] != None:
+                    x.company_id = args['company_id']
+                if args['company_name'] != None:
+                    x.company_name = args['company_name']
+                if args['street'] != None:
+                    x.street = args['street']
+                if args['city'] != None:
+                    x.city = args['city']
+                if args['state'] != None:
+                    x.state = args['state']
+                if args['zip'] != None:
+                    x.zip = args['zip']
+                if args['phone_number'] != None:
+                    x.phone_number = args['phone_number']
+                if args['authinfo'] != None:
+                    x.authinfo = json_decode(args['authinfo'])
+                if args['sites'] != None:
+                    x.sites = json_decode(args['sites'])
+                
                 curr_session.commit() #commit changes
                 
                 return  {
@@ -212,7 +204,7 @@ class manageCompanyList(Resource):
             _phone_number = args['phone_number']
             _authinfo = args['authinfo']
             _sites = args['sites']
-            
+
             query = company_data(company_id=_company_id, company_name=_company_name, street=_street, 
                               city=_city, state=_state, zip=_zip, 
                               phone_number=_phone_number, authinfo=json_decode(_authinfo), sites=json_decode(_sites))
@@ -233,4 +225,7 @@ class manageCompanyList(Resource):
                             'message' : 'Company creation failure'
                         }
         except Exception as e:
-            return {'response' : 400}
+            return {
+                        'response' : 400,
+		        'message' : 'General error' 
+                   }
