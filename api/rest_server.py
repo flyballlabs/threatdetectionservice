@@ -58,9 +58,9 @@ def not_found(error):
 
 api.add_resource(manageAgent, '/api/agent/<string:_mac_address_>')
 api.add_resource(manageAgentList, '/api/agent')
-#api.add_resource(timeSync, '/api/picontroller/time')
-#api.add_resource(piController, '/api/picontroller/<string:id>')
-#api.add_resource(update, '/api/picontroller/<string:id>/<string:start>/<string:end>/<string:cmd>')
+
+api.add_resource(piController, '/api/picontroller/time', '/api/picontroller/<string:_mac_address_>')
+
 api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
 
 api.add_resource(manageUser, '/api/user/<string:_username_>')

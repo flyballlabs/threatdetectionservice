@@ -98,6 +98,7 @@ class manageAgent(Resource):
                     mac_address = _mac_address,
                     ip_address = _ip_address,
                     status = _status,
+                    company_id = _company_id,
                     site = _site,
                     mode = _mode,
                     cmd = _cmd, 
@@ -130,36 +131,28 @@ class manageAgent(Resource):
             #for response in args:         ############################  
             #    if response != None:# optimize in future release
                 
-            if args['agent_id'] != None:
-                _agent_id = args['agent_id']
-            if args['ip_address'] != None:
-                _ip_address = args['ip_address']
-            if args['status'] != None:
-                _status = args['status']
-            if args['company_id'] != None:
-                _company_id = args['company_id']
-            if args['site'] != None:
-                _site = args['site']
-            if args['mode'] != None:
-                _mode = args['mode']
-            if args['cmd'] != None:
-                _cmd = args['cmd']
-            if args['time_setting'] != None:
-                _time_setting = args['time_setting']
             ##################### would be faster in an array / loop
             #return jsonify(encoded = _time_setting, decoded = json_decode(_time_setting))
             
             try:
                 curr_session = db.session #open database session
                 x = agent_data.query.filter_by(mac_address=_mac_address_).first() #fetch the agent to be updated
-                x.agent_id = _agent_id   #update the row
-                x.ip_address = _ip_address
-                x.status = _status
-                x.company_id = _company_id
-                x.site = _site
-                x.mode = _mode
-                x.cmd = _cmd
-                x.time_setting = json_decode(_time_setting)
+                if args['agent_id'] != None:
+                    x.agent_id = args['agent_id']
+                if args['ip_address'] != None:
+                    x.ip_address = args['ip_address']
+                if args['status'] != None:
+                    x.status = args['status']
+                if args['company_id'] != None:
+                    x.company_id = args['company_id']
+                if args['site'] != None:
+                    x.site = args['site']
+                if args['mode'] != None:
+                    x.mode = args['mode']
+                if args['cmd'] != None:
+                    x.cmd = args['cmd']
+                if args['time_setting'] != None:
+                    x.time_setting = json_decode(args['time_setting'])
                 curr_session.commit() #commit changes
                 
                 return  {
