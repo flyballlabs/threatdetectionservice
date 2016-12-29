@@ -10,7 +10,11 @@ API Server is implemented using Python with the Flask framework to provide Restf
 
 1. Download Python 3.5 if it's not already installed.
 2. Make sure Python 3.5 is in your path
+3. Execute the setup.sh script 
 
+```
+./setup.sh
+```
 # Tested Platforms
 
 ## Operating Systems
