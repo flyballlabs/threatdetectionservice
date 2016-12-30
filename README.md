@@ -13,5 +13,7 @@ Our Threat Management Platform is using [Apache Metron](http://metron.incubator.
 The architecture for TMP is shown below:
 
 
+![TMP Architecture](guides/images/tmp_architecture.jpg)
+
 The TMP API Server can be used to provide an API on top of Metron.  Metron has alot of raw functionality and it's evolving each day.  Our API provides a high level interface into Metron and adds concepts such as a User, Asset and Agents.  We have developed the API to be easy to install and configure.  Also, it comes with some sample data.  The instructions to configure the API can be found [here](./api)
 
