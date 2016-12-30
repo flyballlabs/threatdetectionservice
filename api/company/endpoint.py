@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
-from sql.models import *  #import all of the models from models.py
-from app.parse_json import json_decode, json_encode #for json request parsing
+from api.sql.models import *  #import all of the models from models.py
+from api.util.parse_json import json_decode, json_encode #for json request parsing
 
 class manageCompany(Resource):
     def get(self, _company_name_): # get all info about a company #

@@ -1,7 +1,8 @@
-import database
 # MySQL specific imports #
 from sqlalchemy import null , Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
+from flask_security import RoleMixin, UserMixin
+from api import db
 
 ##### classes / methods we may need ############
 #  from wtforms.validators import mac_address  #
@@ -10,7 +11,6 @@ from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
 #  from sqlalchemy.sql import sqltypes         #
 ################################################
 
-db = database.connect() # Connect to the database and provide a handle #
 # null constants #
 SQL_NULL = null()  # will *always* insert SQL NULL
 JSON_NULL = db.Column(JSON(none_as_null=True))  # will *always* insert JSON string "null"
@@ -22,7 +22,7 @@ def serialize(model):
   # return values in a dict
   return dict((c, getattr(model, c)) for c in columns)
 
-class user_data(db.Model):
+class user_data(db.Model, UserMixin):
     __tablename__ = 'user'
     __table_args__ = {  
         'mysql_engine': 'InnoDB',  
@@ -52,6 +52,23 @@ class user_data(db.Model):
 
     def __repr__(self):
         return '{user: %r}' % self.user_id
+
+# Role class
+class Role(db.Model, RoleMixin):
+
+    # Our Role has three fields, ID, name and description
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    # __str__ is required by Flask-Admin, so we can have human-readable values for the Role when editing a User.
+    # If we were using Python 2.7, this would be __unicode__ instead.
+    def __str__(self):
+        return self.name
+
+    # __hash__ is required to avoid the exception TypeError: unhashable type: 'Role' when saving a User
+    def __hash__(self):
+        return hash(self.name)
 
 
 class company_data(db.Model):

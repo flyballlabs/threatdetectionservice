@@ -14,11 +14,6 @@ flask-babel
 guess_language
 flipflop
 coverage
->>>>>>> devopsec-master
-itsdangerous
-Werkzeug
-Jinja2
-psutil
-kafka-python
 flask-mysql
 flask_cors 
+flask-security

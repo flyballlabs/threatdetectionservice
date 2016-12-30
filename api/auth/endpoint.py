@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from sql.models import *  #import all of the models from models.py
+from api.sql.models import *  #import all of the models from models.py
 
 class userAuth(Resource):
     def get(self,_username,_password):
@@ -18,7 +18,8 @@ class userAuth(Resource):
             x = user_data.query.filter_by(username=_username).first()
             if x != None:
                 if x.password == _password:
-                    return {
+                   login_user(x) 
+                   return {
                             'authentication': True,
                             'message':'Authentication success'
                            }
