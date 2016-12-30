@@ -21,4 +21,4 @@ We use Flask with the Jinja2 templating framework and Knockout.js as the Javascr
 
 The following picture depicts the core components of the GUI.  
 
-![alt text](https://github.com/flyballlabs/threatdetectionservice/blob/master/gui/gui_components.jpg "Components of the GUI")
+![alt text](../guides/images/gui_components.jpg "Components of the GUI")
