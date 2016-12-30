@@ -127,3 +127,6 @@ The process of adding a new GUI page or adding additional functionality to an ex
 3. Copy the [GUI template page](gui/templates/gui.template) to the name of the file that you want to create.  For example, if you wanted to create a page for managing Agents then the name would be agents.html.
 4. Copy the [GUI javascript template](gui/static/viewmodel.template) to <name of the gui page>viewmodel.js.  For example, the javasript file would be agentsviewmodel.js.  This javasript file contains the data-binding logic used to connect html elements to actions.  The data-binding logic is handled by [Knockout.js](http://knockout.js).
 
+# Documentation
+There should be a "README.md" for each top level directory in this project.  Any images used in the README.md files should be located in the ./guides/images folder.  Each README.md file should provide a brief overview of what's in that directory and it should direct the user to the [guides](./guides) directory, which will contain detailed documentation.
+The images used for top level "README.md" files should be stored in the guide/images directory.  
