@@ -15,5 +15,19 @@ The architecture for TMP is shown below:
 
 ![TMP Architecture](guides/images/tmp_architecture.jpg)
 
+## TMP API Server
+
 The TMP API Server can be used to provide an API on top of Metron.  Metron has alot of raw functionality and it's evolving each day.  Our API provides a high level interface into Metron and adds concepts such as a User, Asset and Agents.  We have developed the API to be easy to install and configure.  Also, it comes with some sample data.  The instructions to configure the API can be found [here](./api)
+
+# Getting the Software Running
+
+1. git clone https://github.com/flyballlabs/threatdetectionservice.git
+2. cd threatdetectionservice
+3. Start the API by following the instructions [here](./api)
+4. Start the GUI by following the instructions [here](./gui)
+5. TODO: Simulate some threats
+
+Note, the API can be run without the GUI.  The API docs will be produced soon
+
+
 

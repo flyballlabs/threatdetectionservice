@@ -15,16 +15,18 @@ API Server is implemented using Python with the Flask framework to provide Restf
 
 1. Download Python 3.5 if it's not already installed.
 2. Make sure Python 3.5 is in your path
-3. Execute the setup.sh script (which only needs to be run once) 
+3. Install MySQL 5.7 
+4. Load the database schema located at sql/tmp.sql (TODO: this will go away)
+5. Execute the setup.sh script (which only needs to be run once) 
 
 ```
-./server-setup.sh
+../server-setup.sh
 ```
 
 # Starting the API Server
 
 ``` 
-./server-start.sh
+../server-start.sh
 ```
 
 # Tested Platforms
