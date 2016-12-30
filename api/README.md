@@ -6,15 +6,27 @@ The Threat Detection Service leverages Hortonworks HDP and Metron.  The Hortonwo
 
 API Server is implemented using Python with the Flask framework to provide Restful dispatching.
 
-# Installation
+# Getting the Software
+
+1. git clone git clone https://github.com/flyballlabs/threatdetectionservice.git
+2. cd threatdetectionservice
+
+# Setup
 
 1. Download Python 3.5 if it's not already installed.
 2. Make sure Python 3.5 is in your path
-3. Execute the setup.sh script 
+3. Execute the setup.sh script (which only needs to be run once) 
 
 ```
-./setup.sh
+./server-setup.sh
 ```
+
+# Starting the API Server
+
+``` 
+./server-start.sh
+```
+
 # Tested Platforms
 
 ## Operating Systems
@@ -31,9 +43,5 @@ API Server is implemented using Python with the Flask framework to provide Restf
 - 2.4.2
 
 
-# Starting the API Server
 
-``` 
-./start.sh
-```
 
