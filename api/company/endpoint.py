@@ -39,6 +39,7 @@ class manageCompany(Resource):
         except Exception as e:
             return {'response' : 400}
     
+    @login_required    
     def put(self, _company_name_): # update a company's info #
         try:
             parser = reqparse.RequestParser()
@@ -92,6 +93,7 @@ class manageCompany(Resource):
         except Exception as e:
             return {'response' : 400}
         
+    @login_required    
     def delete(self, _company_name_): # delete a company #
         try:
             curr_session = db.session #open database session
@@ -115,6 +117,7 @@ class manageCompany(Resource):
 
 class manageCompanyList(Resource):
     # _company_name_ is optional param #
+    @login_required    
     def get(self, _company_name_=None):
         URL = request.url
         # get a list of sites for specified company #
@@ -183,6 +186,7 @@ class manageCompanyList(Resource):
             
     
     # add to list / create new company #
+    @login_required    
     def post(self):
         try:
             parser = reqparse.RequestParser()

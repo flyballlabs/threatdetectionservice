@@ -1,7 +1,9 @@
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
+from api import *
 
 class manageUser(Resource):
+    @login_required    
     def get(self, _username_):
         try:
             x = user_data.query.filter_by(username=_username_).first()
@@ -33,6 +35,7 @@ class manageUser(Resource):
         except Exception as e:
             return {'error': str(e)}
     
+    @login_required    
     def put(self, _username_):
         try:
             parser = reqparse.RequestParser()
@@ -111,6 +114,7 @@ class manageUser(Resource):
         except Exception as e:
             return {'error': str(e)}
         
+    @login_required    
     def delete(self, _username_):
         try:
             curr_session = db.session #open database session
@@ -133,6 +137,7 @@ class manageUser(Resource):
             return {'error': str(e)}
 
 class manageUserList(Resource):
+    @login_required    
     def get(self):
         try:
             x = user_data.query.all()
@@ -162,6 +167,7 @@ class manageUserList(Resource):
         except Exception as e:
             return {'error': str(e)}
     
+    @login_required    
     def post(self):
         try:
             parser = reqparse.RequestParser()

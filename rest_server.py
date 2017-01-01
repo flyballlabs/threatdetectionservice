@@ -8,6 +8,7 @@ api.add_resource(manageAgentList, '/api/agent')
 api.add_resource(piController, '/api/picontroller/time', '/api/picontroller/<string:_mac_address_>')
 
 api.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
+api.add_resource(userAuthToken, '/api/auth')
 
 api.add_resource(manageUser, '/api/user/<string:_username_>')
 api.add_resource(manageUserList, '/api/user')

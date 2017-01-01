@@ -29,6 +29,7 @@ from .asset.endpoint import *
 app.config['DEBUG'] = True
 # SECRET_KEY is used by Flask to encrypt data in the Session object
 app.config['SECRET_KEY'] = 'flyball2016'
+app.config['TOKEN_EXPIRATION'] = '3600'
 
 # Define API object based on the app object
 api = Api(app)

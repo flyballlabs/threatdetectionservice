@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse
 from datetime import datetime, timezone, timedelta
 from api.sql.models import *  #import all of the models from models.py
 from api.util.parse_json import json_decode, json_encode #for json request parsing
+from api import *
 
 ## for agent-ops ##
 class piController(Resource):
@@ -45,6 +46,7 @@ class piController(Resource):
         else:
             return {'response' : 404}
 
+    @login_required
     def post(self, _mac_address_): # update ip / status
         try:    
             parser = reqparse.RequestParser()
@@ -77,6 +79,7 @@ class piController(Resource):
             return {'response' : 400}
 
 class manageAgent(Resource):
+    @login_required
     def get(self, _mac_address_):
         try:
             x = agent_data.query.filter_by(mac_address=_mac_address_).first()
@@ -112,6 +115,7 @@ class manageAgent(Resource):
         except Exception as e:
             return {'response' : 400}
     
+    @login_required
     def put(self, _mac_address_):
         try:
             parser = reqparse.RequestParser()
@@ -169,6 +173,7 @@ class manageAgent(Resource):
         except Exception as e:
             return {'response' : 400}
     
+    @login_required
     def delete(self, _mac_address_):
         try:
             curr_session = db.session #open database session
@@ -191,6 +196,7 @@ class manageAgent(Resource):
             return {'response' : 400}
 
 class manageAgentList(Resource):
+    @login_required
     def get(self):
         try:
             x = agent_data.query.all()
@@ -221,6 +227,7 @@ class manageAgentList(Resource):
         except Exception as e:
             return {'response' : 400}
     
+    @login_required
     def post(self):
         try:
             parser = reqparse.RequestParser()

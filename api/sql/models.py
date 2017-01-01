@@ -64,6 +64,7 @@ class user_data(db.Model, UserMixin):
      # The app config variable SECRET_KEY will be used as the secret to generate the token
      # The expiration of the token is set for 600 seconds 
     def generate_auth_token(self, expiration = 600):
+        expiration = app.config['TOKEN_EXPIRATION']
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
         return s.dumps({ 'user_id': self.user_id }) 
 
