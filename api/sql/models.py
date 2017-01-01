@@ -36,10 +36,11 @@ class user_data(db.Model, UserMixin):
     password = db.Column(VARCHAR(45))      
     email = db.Column(VARCHAR(45))         
     company_id = db.Column(VARCHAR(45))    
-    status = db.Column(VARCHAR(45))        
-    lastlogin = db.Column(VARCHAR(45))     
+    active = db.Column(VARCHAR(45))        
+    lastlogin = db.Column(VARCHAR(45))    
+     
                                            
-    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, lastlogin):
+    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, active, lastlogin):
         self.user_id = user_id
         self.username = username
         self.firstname = firstname
@@ -47,11 +48,14 @@ class user_data(db.Model, UserMixin):
         self.password = password
         self.email = email
         self.company_id = company_id
-        self.status = status
+        self.active = active
         self.lastlogin = lastlogin
 
     def __repr__(self):
         return '{user: %r}' % self.user_id
+
+    def get_id(self):
+        return str(self.user_id)
 
 # Role class
 class Role(db.Model, RoleMixin):

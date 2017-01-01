@@ -2,8 +2,10 @@ from flask import jsonify, request
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
 from api.util.parse_json import json_decode, json_encode #for json request parsing
+from api import login_required
 
 class manageCompany(Resource):
+    @login_required    
     def get(self, _company_name_): # get all info about a company #
         try:
             x = company_data.query.filter_by(company_name=_company_name_).first()

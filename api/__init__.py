@@ -1,7 +1,7 @@
 from flask import Flask, Response, make_response, jsonify 
 from flask_restful import Api, reqparse, fields 
 from flask_cors import CORS, cross_origin
-from flask_login import LoginManager, UserMixin, login_required,utils
+from flask_login import LoginManager, UserMixin, login_required,utils,login_user
 from flask_sqlalchemy import SQLAlchemy
 
 # Define the Application object
@@ -47,6 +47,39 @@ app.config['SECURITY_PASSWORD_SALT'] = 'flyball2016'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# user_loader callback - used to load a user by it's id
+#@login_manager.user_loader
+#def load_user(id):
+#    return user_data.query.get(int(id))
+
+@login_manager.request_loader
+def load_user_from_request(request):
+
+     #first, try to Login using a token
+    token = request.headers.get('X-TOKEN')
+    if token:
+        print(token)
+        #decode the token and then look up the user
+        user = user_data.query.filter_by(username='mack@goflyball.com').first()
+        if user:
+            return user
+
+    #next, try to Login using Basic Auth
+    basic_auth  = request.headers.get('Authorization')
+    if basic_auth:
+        basic_auth = basic_auth.replace('Basic ', '', 1)
+        try:
+            basic_auth = base64.b64decode(basic_auth)
+        except TypeError:
+            pass
+        print(basic_auth)
+        creds = basic_auth.split(b':')
+        _username = creds[0]
+        _password = creds[1]
+        user = user_data.query.filter_by(username=_username,password=_password).first()
+        if user:
+             return user
+    return None
 
 #@app.before_first_request
 #def before_first_request():

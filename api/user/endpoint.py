@@ -10,7 +10,7 @@ class manageUser(Resource):
             _lastname = x.lastname
             _email = x.email
             _company_id = x.company_id
-            _status = x.status
+            _active = x.active
             _lastlogin = x.lastlogin
             
             if x != None:
@@ -21,7 +21,7 @@ class manageUser(Resource):
                         'lastname' : _lastname,
                         'email' : _email,
                         'company_id' : _company_id,
-                        'status' : _status,
+                        'active' : _active,
                         'lastlogin' : _lastlogin,
                         'message':'User search success'
                        }
@@ -45,7 +45,7 @@ class manageUser(Resource):
             parser.add_argument('password', type=str, help='Password for account', location='json')
             parser.add_argument('email', type=str, help='Email for account', location='json')
             parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('status', type=str, help='Status for account', location='json')
+            parser.add_argument('active', type=str, help='Status for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
             
             args = parser.parse_args()#strict=True, require=True
@@ -67,8 +67,8 @@ class manageUser(Resource):
             #    _email = args['email']
             #if args['company_id'] != None:
             #    _company_id = args['company_id']
-            #if args['status'] != None:
-            #    _status = args['status']
+            #if args['active'] != None:
+            #    _active = args['active']
             #if args['lastlogin'] != None:
             #    _lastlogin = args['lastlogin']
             ###################################
@@ -91,8 +91,8 @@ class manageUser(Resource):
                     x.email = args['email']
                 if args['company_id'] != None:
                     x.company_id = args['company_id']
-                if args['status'] != None:
-                    x.status = args['status']
+                if args['active'] != None:
+                    x.active = args['active']
                 if args['lastlogin'] != None:
                     x.lastlogin = args['lastlogin'] 
                 curr_session.commit() #commit changes
@@ -146,7 +146,7 @@ class manageUserList(Resource):
                     'lastname' : user.lastname,
                     'email' : user.email,
                     'company_id' : user.company_id,
-                    'status' : user.status,
+                    'active' : user.active,
                     'lastlogin' : user.lastlogin
                     })
                             
@@ -172,7 +172,7 @@ class manageUserList(Resource):
             parser.add_argument('password', type=str, help='Password for account', location='json')
             parser.add_argument('email', type=str, help='Email for account', location='json')
             parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('status', type=str, help='Status for account', location='json')
+            parser.add_argument('active', type=str, help='Status for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
             args = parser.parse_args()#strict=True
 
@@ -183,12 +183,12 @@ class manageUserList(Resource):
             _password = args['password']
             _email = args['email']
             _company_id = args['company_id']
-            _status = args['status']
+            _active = args['active']
             _lastlogin = args['lastlogin']
             
             query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
                               lastname=_lastname, password=_password, email=_email, 
-                              company_id=_company_id, status=_status, lastlogin=_lastlogin)
+                              company_id=_company_id, active=_active, lastlogin=_lastlogin)
 
             curr_session = db.session #open database session
             try:
