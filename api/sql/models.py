@@ -2,7 +2,10 @@
 from sqlalchemy import null , Column
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
 from flask_security import RoleMixin, UserMixin
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 from api import db
+from api import app
 
 ##### classes / methods we may need ############
 #  from wtforms.validators import mac_address  #
@@ -56,6 +59,13 @@ class user_data(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.user_id)
+
+     # Will generate a token using the itsdangerous extension
+     # The app config variable SECRET_KEY will be used as the secret to generate the token
+     # The expiration of the token is set for 600 seconds 
+    def generate_auth_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'user_id': self.user_id }) 
 
 # Role class
 class Role(db.Model, RoleMixin):

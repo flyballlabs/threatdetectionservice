@@ -56,11 +56,17 @@ login_manager.init_app(app)
 def load_user_from_request(request):
 
      #first, try to Login using a token
-    token = request.headers.get('X-TOKEN')
+    token = request.headers.get('X-AUTH-TOKEN')
     if token:
-        print(token)
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
         #decode the token and then look up the user
-        user = user_data.query.filter_by(username='mack@goflyball.com').first()
+        user = user_data.query.get(data['user_id'])
         if user:
             return user
 
@@ -72,7 +78,6 @@ def load_user_from_request(request):
             basic_auth = base64.b64decode(basic_auth)
         except TypeError:
             pass
-        print(basic_auth)
         creds = basic_auth.split(b':')
         _username = creds[0]
         _password = creds[1]

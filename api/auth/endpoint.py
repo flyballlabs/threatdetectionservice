@@ -21,10 +21,11 @@ class userAuth(Resource):
             if x != None:
                 if x.password == _password:
                    login_user(x) 
-                   return {
-                            'authentication': True,
-                            'message':'Authentication success'
-                           }
+                   retMessage = {}
+                   retMessage['authentication'] = True
+                   retMessage['message'] = 'Authentication success'
+                   retMessage['X-AUTH-TOKEN'] = x.generate_auth_token().decode('ascii')
+                   return jsonify(**retMessage)
                 else:
                     return {
                             'authentication': False,

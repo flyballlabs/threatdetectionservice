@@ -17,3 +17,4 @@ coverage
 flask-mysql
 flask_cors 
 flask-security
+itsdangerous
