@@ -137,7 +137,10 @@ curl -H "Accept: application/vnd.api+json" --user mack@goflyball.com:flyball -X 
 <strong>Use the X-AUTH-TOKEN to make service call</strong>
 ```
 curl -H "Accept: application/vnd.api+json" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4MzMxMzk1NCwiaWF0IjoxNDgzMzEwMzU0fQ.eyJ1c2VyX2lkIjoxfQ.HAm5c7ILF4SGl37ibuunXrTdcmqQsYXx0O5epFgY4hE"  -X GET 10.10.10.97:7777/api/user
-{"users": [{"firstname": "Mack", "lastname": "Hendricks", "email": "mack@goflyball.com", "company_id": "1", "user_id": 1, "lastlogin": null, "active": 1, "username": "mack@goflyball.com"}, {"firstname": "Tyler", "lastname": "Moore", "email": "tmoore@goflyball.com", "company_id": "1", "user_id": 2, "lastlogin": null, "active": 1, "username": "tmoore@goflyball.com"}], "message": "User search success"}
+{"users": 
+   [{"firstname": "Mack", "lastname": "Hendricks", "email": "mack@goflyball.com", "company_id": "1", "user_id": 1, "lastlogin": null, "active": 1, "username": "mack@goflyball.com"}, 
+   {"firstname": "Tyler", "lastname": "Moore", "email": "tmoore@goflyball.com", "company_id": "1", "user_id": 2, "lastlogin": null, "active": 1, "username": "tmoore@goflyball.com"}], 
+ "message": "User search success"}
 ```
 
 
