@@ -134,7 +134,7 @@ curl -H "Accept: application/vnd.api+json" --user mack@goflyball.com:flyball -X 
   "message": "Authentication success"
 }
 ```
-<strong>Use the X-AUTH-TOKEN to make service call</strong>
+<strong>Use the X-AUTH-TOKEN to make a RestFul service call</strong>
 ```
 curl -H "Accept: application/vnd.api+json" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4MzMxMzk1NCwiaWF0IjoxNDgzMzEwMzU0fQ.eyJ1c2VyX2lkIjoxfQ.HAm5c7ILF4SGl37ibuunXrTdcmqQsYXx0O5epFgY4hE"  -X GET 10.10.10.97:7777/api/user
 {"users": 
