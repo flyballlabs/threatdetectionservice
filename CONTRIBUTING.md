@@ -69,18 +69,19 @@ from flask_restful import Resource, reqparse
 from sql.models import *
 
 class manageUser(Resource):
+     @login_required
      def get(self,_username_):
         try:
         
         except Exception as e:
             return {'error': str(e)}
-    
+    @login_required
     def put(self,_username_):
         try:
         
         except Exception as e:
             return {'error': str(e)}
-    
+    @login_required
     def delete(self,_username_):
         try:
         
@@ -88,12 +89,14 @@ class manageUser(Resource):
             return {'error': str(e)}
             
 class manageUserList(Resource):
+     @login_required
      def get(self):
         try:
         
         except Exception as e:
             return {'error': str(e)}
-    
+            
+    @login_required
     def post(self):
         try:
         
@@ -101,6 +104,8 @@ class manageUserList(Resource):
             return {'error': str(e)}
   
   ```
+  
+Notice the @login_required statement.  This statement is called a function decoratar, which is used to force authentication before allowing the caller to access the endpoint.
   
 ## Test the API
   
@@ -116,6 +121,27 @@ manage`<entity name>`List:
 - GET (for a particular entity id)
 - DELETE (for a particular entity id)
 - PUT  (for a particular entity id)
+
+### Accesing the API Securely
+
+You will need to make RestFul call to the /api/auth endpoint to receive an auth token, which will allow you to access the other endpoint.  The /api/auth endpoint allows the user to auth using HTTP Basic Authentication, which is insecure.  Therefore, in a production environment, you will need to use SSL to make the connection secure.  Below is an example of how this works:
+
+```
+curl -H "Accept: application/vnd.api+json" --user mack@goflyball.com:flyball -X GET 10.10.10.97:7777/api/auth
+{
+  "X-AUTH-TOKEN": "eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4MzMxMzk1NCwiaWF0IjoxNDgzMzEwMzU0fQ.eyJ1c2VyX2lkIjoxfQ.HAm5c7ILF4SGl37ibuunXrTdcmqQsYXx0O5epFgY4hE",
+  "authentication": true,
+  "message": "Authentication success"
+}
+```
+<strong>Use the X-AUTH-TOKEN to make a RestFul service call</strong>
+```
+curl -H "Accept: application/vnd.api+json" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4MzMxMzk1NCwiaWF0IjoxNDgzMzEwMzU0fQ.eyJ1c2VyX2lkIjoxfQ.HAm5c7ILF4SGl37ibuunXrTdcmqQsYXx0O5epFgY4hE"  -X GET 10.10.10.97:7777/api/user
+{"users": 
+   [{"firstname": "Mack", "lastname": "Hendricks", "email": "mack@goflyball.com", "company_id": "1", "user_id": 1, "lastlogin": null, "active": 1, "username": "mack@goflyball.com"}, 
+   {"firstname": "Tyler", "lastname": "Moore", "email": "tmoore@goflyball.com", "company_id": "1", "user_id": 2, "lastlogin": null, "active": 1, "username": "tmoore@goflyball.com"}], 
+ "message": "User search success"}
+```
 
 
 # New GUI Page
