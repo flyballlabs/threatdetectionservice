@@ -1,4 +1,5 @@
-from flask.ext.sqlalchemy import SQLAlchemy
+from ...rest_server import app #import app object
+from api.database import connect; #import db object
 
 from flask import Flask
 from marketing_notifications_python import get_env
@@ -22,13 +23,12 @@ def get_app(config_name=None):
 
 
 def init_app(config_name):
-    flask_app = Flask(__name__)
-    _configure_app(flask_app, config_name)
-    return flask_app
+    _configure_app(app, config_name)
+    return app
 
 
 def _configure_app(flask_app, config_name):
-    flask_app.config.from_object(config_env_files[config_name])
-    app_db = SQLAlchemy(flask_app)
-    set_db(app_db, config_name)
-    flask_app.register_blueprint(construct_view_blueprint(flask_app, app_db))
+    app.config.from_object(config_env_files[config_name])
+    db = connect()
+    set_db(db, config_name)
+    flask_app.register_blueprint(construct_view_blueprint(app, db))
