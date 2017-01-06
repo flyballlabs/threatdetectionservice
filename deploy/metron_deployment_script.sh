@@ -168,6 +168,9 @@ echo "AMBARI_UI=node1:8080" >> ~/.bashrc
 echo "METRON_UI=node1:5000"
 echo "METRON_UI=node1:5000" >> ~/.bashrc
 
+echo "CLUSTER_NAME=metron_cluster"
+echo "CLUSTER_NAME=metron_cluster" >> ~/.bashrc
+
 echo "NIFI_HOST=node1:8089/nifi"
 echo "NIFI_HOST=node1:8089/nifi" >> ~/.bashrc
 
@@ -194,6 +197,9 @@ echo "STORM_UI=node1:2812" >> ~/.bashrc
 
 echo "SEARCH_HOST=node1:9300"
 echo "SEARCH_HOST=node1:9300" >> ~/.bashrc
+
+echo "metron = metron bash cmd"
+echo 'PATH=$PATH:/threatdetectionservice/deploy/metron' >> ~/.bashrc
 source ~/.bashrc
 
 
