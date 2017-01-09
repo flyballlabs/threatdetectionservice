@@ -143,7 +143,13 @@ else
 	git pull https://github.com/apache/incubator-metron.git
 fi
 echo "compiling metron vm.."
-mvn clean package -DskipTests
+cmnd=$(mvn clean install -PHDP-2.5.0.0 -DskipTests)
+eval "${cmnd}"
+ret_code=$?
+if [ $ret_code != 0 ]; then
+printf "Error : [%d] when executing command: '$cmnd'" $ret_code
+exit $ret_code
+fi
 vagrant plugin install vagrant-hostmanager
 cd /incubator-metron/metron-deployment/vagrant/quick-dev-platform
 vagrant up
