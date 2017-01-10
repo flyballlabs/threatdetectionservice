@@ -19,6 +19,36 @@
 
 METRON_VAGRANT_DIR=/incubator-metron/metron-deployment/vagrant/quick-dev-platform
 
+# Function responsible for installing TMP
+
+install_tmp() {
+
+	echo "About to install Threat Management Platform"
+	
+	vagrant ssh -c 'sudo rm -rf /usr/threatmanagementplatform'
+	vagrant ssh -c 'sudo mkdir /usr/threatmanagementplatform'
+	if [ $? -eq 1 ]; then
+	
+		echo "The directory for configuration files could not be created"
+		exit
+	fi	
+
+	scp -r -P 2222 -i $SSH_PRIVATE_KEY ~/threatdetectionservice/metron vagrant@127.0.0.1:.
+	if [ $? -eq 0 ]; then
+
+		echo "The Metron files have been copied sucessfully"
+	
+	fi
+
+	vagrant ssh -c 'sudo mv ~/metron /usr/threatmanagementplatform'
+	if [ $? -eq 1 ]; then
+	
+		echo "The directory for configuration files could not be created"
+		exit
+	fi	
+	
+}
+
 if [ -z "${METRON_VAGRANT_DIR+x}" ]; then
 
 	echo "Please provide the directory that contains your Metron Vagrant File"
@@ -37,10 +67,22 @@ cd $METRON_VAGRANT_DIR
 SSH_PRIVATE_KEY=`vagrant ssh-config | grep IdentityFile | awk '{print $2}'|sed 's/\"//g'`
 echo "Vagrant SSH_PRIVATE_KEY:$SSH_PRIVATE_KEY"
 
-scp -P 2222 -i $SSH_PRIVATE_KEY ~/test.txt vagrant@127.0.0.1:.
+scp -P 2222 -i $SSH_PRIVATE_KEY ~/mack.txt vagrant@127.0.0.1:.
 if [ $? -eq 0 ]; then
 
 	echo "Test file was sent over"
+fi
+
+METRON_VERSION=`vagrant ssh -c 'ls /usr/metron'`
+METRON_VERSION=`echo $METRON_VERSION | cut -d " " -f 11`
+#echo $METRON_VERSION
+
+if [ -z "${METRON_VERSION+x}" ]; then
+
+	echo "Metron doesn't seem to be installed.  Metron has to be installed before Installing the Threat Management Platform"
+else
+	echo "Metron Version Detected: $METRON_VERSION"
+	install_tmp
 fi
 
 
