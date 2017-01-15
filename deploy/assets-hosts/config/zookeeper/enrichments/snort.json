@@ -1,0 +1,33 @@
+{
+  "index": "snort",
+  "batchSize": 1,
+  "enrichment" : {
+    "fieldMap":
+      {
+      "geo": ["ip_dst_addr", "ip_src_addr"],
+      "host": ["host"]
+    }
+  },
+  "threatIntel" : {
+    "fieldMap":
+      {
+      "hbaseThreatIntel": ["ip_src_addr", "ip_dst_addr", "domain_without_subdomains"]
+    },
+    "fieldToTypeMap":
+      {
+      "ip_src_addr" : ["malicious_ip"],
+      "ip_dst_addr" : ["malicious_ip"],
+      "domain_without_subdomains": ["zeusList"]
+    },
+    "config": {},
+    "triageConfig" : {
+      "riskLevelRules" : {
+        "exists(threatintels.hbaseThreatIntel.domain_without_subdomains.zeusList)": 5,
+        "not(ENDS_WITH(domain_without_subdomains, '.com') or ENDS_WITH(domain_without_subdomains, '.net'))": 10,
+        "not(IN_SUBNET(ip_dst_addr, '192.168.0.0/24'))": 15
+      },
+      "aggregator" : "MAX",
+      "aggregationConfig": {}
+    }
+  }
+}

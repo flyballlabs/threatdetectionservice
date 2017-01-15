@@ -1,0 +1,16 @@
+{
+  "es.clustername": "metron",
+  "es.ip": "node1",
+  "es.port": "9300",
+  "es.date.format": "yyyy.MM.dd.HH",
+
+  "fieldValidations" : [
+   {
+      "input" : [ "ip_src_addr", "ip_dst_addr" ],
+      "validation" : "IP",
+      "config" : {
+      "type" : "IPV4"
+       }
+   }
+]
+}

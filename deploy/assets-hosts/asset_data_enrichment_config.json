@@ -1,0 +1,12 @@
+{
+  "zkQuorum" : "node1:2181",
+  "sensorToFieldList" : {
+     "bro" : {
+       "type" : "ENRICHMENT",
+       "fieldToEnrichmentTypes" : {
+         "ip_src_addr" : ["asset"],
+         "ip_dst_addr" : ["asset"]
+         }
+      }
+   }
+}

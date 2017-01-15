@@ -1,0 +1,11 @@
+{
+    "zkQuorum": "node1:2181",
+    "sensorToFieldList": {
+        "snort": {
+            "type": "THREAT_INTEL",
+            "fieldToEnrichmentTypes": {
+                "domain_without_subdomains": ["zeusList"]
+            }
+        }
+    }
+}

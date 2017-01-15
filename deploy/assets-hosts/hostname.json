@@ -1,0 +1,16 @@
+{
+  "parserClassName" : "org.apache.metron.parsers.csv.CSVParser",
+  "writerClassName" : "org.apache.metron.enrichment.writer.SimpleHbaseEnrichmentWriter",
+  "sensorTopic":"hostnames",
+  "parserConfig":
+  {
+    "shew.table" : "enrichment",
+    "shew.cf" : "hosts",
+    "shew.keyColumns" : "ip",
+    "shew.enrichmentType" : "hostname",
+    "columns" : {
+      "ip" : 0,
+      "host" : 1
+    }
+  }
+}

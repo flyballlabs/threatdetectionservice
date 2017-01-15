@@ -1,0 +1,4 @@
+[{"mac": "4A:1D:70:CD:54:A3", "ip": "10.0.0.1", "type": "general purpose", "os-info": "Linux 2.6.32 - 2.6.39", "os": "Linux 2.6.X"},
+{"mac": "D4:85:64:A3:9A:27", "ip": "10.0.0.17", "type": "general purpose", "os-info": "Linux 3.2 - 4.0", "os": "Linux 3.X|4.X"},
+{"mac": "E4:98:D6:F0:40:BD", "ip": "10.0.0.143", "type": "", "os-info": "", "os": ""},
+{"mac": "00:05:04:03:02:01", "ip": "10.0.0.254", "type": "general purpose", "os-info": "Linux 2.6.38 - 3.0", "os": "Linux 2.6.X|3.X"}]
