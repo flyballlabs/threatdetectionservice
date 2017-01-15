@@ -1,0 +1,19 @@
+{
+  "parserClassName" : "org.apache.metron.parsers.csv.CSVParser",
+  "writerClassName" : "org.apache.metron.enrichment.writer.SimpleHbaseEnrichmentWriter",
+  "sensorTopic":"assets",
+  "parserConfig":
+  {
+    "shew.table" : "enrichment",
+    "shew.cf" : "assets",
+    "shew.keyColumns" : "ip",
+    "shew.enrichmentType" : "asset",
+    "shew.columns" : {
+         "ip" : 0,
+         "mac" : 1,
+         "type" : 2,
+         "os" : 3,
+         "os-info" : 4
+    }
+  }
+}

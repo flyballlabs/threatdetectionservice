@@ -1,0 +1,12 @@
+{
+  "config" : {
+    "columns" : {
+         "ip" : 0,
+         "host" : 1
+    },
+     "indicator_column" : "ip",
+     "type" : "hostname",
+     "separator" : ","
+  },
+  "extractor" : "CSV"
+}

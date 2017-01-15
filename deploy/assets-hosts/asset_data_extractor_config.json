@@ -1,0 +1,15 @@
+{
+  "config" : {
+    "columns" : {
+         "ip" : 0,
+         "mac" : 1,
+         "type" : 2,
+         "os" : 3,
+         "os-info" : 4
+    },
+     "indicator_column" : "ip",
+     "type" : "asset",
+     "separator" : ","
+  },
+  "extractor" : "CSV"
+}

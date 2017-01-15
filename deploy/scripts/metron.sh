@@ -1,6 +1,4 @@
 #!/bin/bash
-# Author: devopsec
-# Summary: Convenience script for metron to start and stop services.
 
 ### function definitions ###
 start_cluster() {

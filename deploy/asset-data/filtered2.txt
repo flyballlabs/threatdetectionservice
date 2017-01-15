@@ -1,0 +1,25 @@
+Nmap scan report for 10.0.0.1
+MAC Address: 4A:1D:70:CD:54:A3 (Unknown)
+Device type: general purpose
+Running: Linux 2.6.X
+OS details: Linux 2.6.32 - 2.6.39
+Nmap scan report for 10.0.0.17
+MAC Address: D4:85:64:A3:9A:27 (Hewlett Packard)
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS details: Linux 3.2 - 4.0
+Nmap scan report for 10.0.0.143
+MAC Address: E4:98:D6:F0:40:BD (Apple)
+Nmap scan report for 10.0.0.254
+MAC Address: 00:05:04:03:02:01 (Naray Information & Communication Enterprise)
+Device type: general purpose
+Running: Linux 2.6.X|3.X
+OS details: Linux 2.6.38 - 3.0
+Nmap scan report for 10.0.0.30
+Device type: general purpose
+Running: Linux 3.X
+OS details: Linux 3.8 - 3.19
+Nmap scan report for 10.0.0.239
+Device type: general purpose
+Running: Linux 3.X
+OS details: Linux 3.12 - 3.19, Linux 3.8 - 3.19

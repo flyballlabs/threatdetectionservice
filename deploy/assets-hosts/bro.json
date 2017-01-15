@@ -1,0 +1,24 @@
+{
+  "index": "bro",
+  "batchSize": 5,
+  "enrichment" : {
+  "fieldMap": {
+      "geo": ["ip_src_addr", "ip_dst_addr"],
+      "host": ["ip_src_addr", "ip_dst_addr"],
+      "hbaseEnrichment" : ["ip_src_addr", "ip_dst_addr"]
+    },
+    "fieldToTypeMap" : {
+      "ip_dst_addr" : ["asset"],
+      "ip_src_addr" : ["asset"]
+    }
+  },
+  "threatIntel": {
+  "fieldMap": {
+      "hbaseThreatIntel": ["ip_src_addr", "ip_dst_addr"]
+    },
+    "fieldToTypeMap": {
+      "ip_src_addr" : ["malicious_ip"],
+      "ip_dst_addr" : ["malicious_ip"]
+    }
+  }
+}

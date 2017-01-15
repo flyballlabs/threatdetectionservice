@@ -1,0 +1,12 @@
+{
+    "config": {
+        "columns": {
+            "domain": 0,
+            "source": 1
+        },
+        "indicator_column": "domain",
+        "type": "zeusList",
+        "separator": ","
+    },
+    "extractor": "CSV"
+}
