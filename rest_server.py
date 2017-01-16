@@ -19,5 +19,7 @@ api.add_resource(manageCompanyList, '/api/company', '/api/company/sites', '/api/
 api.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
 api.add_resource(manageAssets, '/api/assets/<string:_device_>')
 
+api.add_resource(manageNotifications, '/api/notification', '/api/notification/<string:_username_>', '/api/notification/email', '/api/notification/sms')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7777, debug=False)

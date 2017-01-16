@@ -19,6 +19,7 @@ from .agent.endpoint import *
 from .company.endpoint import *
 from .metron.endpoint import *
 from .asset.endpoint import *
+from .notification.endpoint import *
 
 # Import Models
 #from .sql import models
