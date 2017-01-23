@@ -5,7 +5,7 @@ function userViewModel() {
     self.lastName = ko.observable("");
     self.email = ko.observable("");
     
-    $.getJSON("http://10.10.10.97:7777/api/user/mack@goflyball.com",
+    /* $.getJSON(API_SERVER + "/api/user/mack@goflyball.com",
             function(data) {
 		console.log(data);
                 //var parsed = JSON.parse(data);
@@ -17,7 +17,22 @@ function userViewModel() {
 		//self.firstName(parsed.firstName);
             }
        );
-   
+   */
+
+   $.ajax({
+	url: API_SERVER + "/api/user/mack@goflyball.com",
+	dataType: 'json',
+	success: function(data) {
+			 self.firstName(data["firstname"]);
+			 self.lastName(data["lastname"]);
+			 self.email(data["email"]);
+		},
+	beforeSend: setHeader
+    });
+
+    function setHeader(xhr) {
+        xhr.setRequestHeader('X-AUTH-TOKEN', AUTH_TOKEN);
+      }
 
     self.responseJSON = ko.observable(null);
     self.onSubmit = function() 
@@ -35,7 +50,7 @@ function userViewModel() {
         // })
 
 	$.ajax({ headers : { 'Content-Type' : 'application/json'},
-		 url: "http://10.10.10.97:7777/api/user/mack@goflyball.com",
+		 url: API_SERVER + "/api/user/mack@goflyball.com",
 		 type: 'PATCH',
 		 data: data,
 		 success : function(response, textStatus,jqXhr) { 
