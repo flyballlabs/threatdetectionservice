@@ -8,7 +8,8 @@ app.config['DEBUG'] = True
 # Configurations
 app.config.from_object('config')
 
-print("API Server:" + app.config['API_SERVER_URL'])
+API_SERVER = app.config['API_SERVER_URL']
+print("API Server:" + API_SERVER)
 
 @app.route('/')
 def index():
@@ -20,7 +21,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        url = 'http://localhost:7777/api/auth/' + username + "/" + password
+        url = API_SERVER + "/api/auth/" + username + "/" + password
         try:
             response = requests.get(url)
         except requests.exceptions.RequestException as e:
@@ -47,7 +48,7 @@ def logout():
 def threats():
     company = "Flyball-Labs"
     # Grab the sites for the company
-    url =  app.config['API_SERVER_URL'] + '/api/company/' + company + "/sites"
+    url =  API_SERVER  + '/api/company/' + company + "/sites"
     params = request.args.items()
     site = request.args.get('site')
     apiServer = app.config['API_SERVER_URL']
@@ -56,7 +57,7 @@ def threats():
         threatsBySiteURI =  '/api/metron/threats/' + site
         assetURI =  '/api/assets/' + site
     try:
-        _header = getAuthToken()
+        _header = "X-AUTH-TOKEN:%s", getAuthToken()
         response = requests.get(url,headers=_header)
     except requests.exceptions.RequestException as e:
         error = "Problem occured while accessing threat information. "
@@ -79,12 +80,27 @@ def threats():
 # Get the Auth Token from the Cookie 
 def getAuthToken():
     authToken = request.cookies.get('X-AUTH-TOKEN')
-    header = {'X-AUTH-TOKEN':'%s' % authToken}
-    return header;
+    return authToken
 
 @app.route('/userprofile',methods=['GET'])
 def userprofile():
-    return render_template('userprofile.html')
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('userprofile.html',apiServer=apiServer,authToken=authToken)
+
+
+@app.route('/facial-upload',methods=['GET'])
+def facial_paste():
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('facial.html',apiServer=apiServer,authToken=authToken)
+
+@app.route('/facial',methods=['GET'])
+def facial():
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('facial-paste.html',apiServer=apiServer,authToken=authToken)
+
 
 if __name__=='__main__':
     app.run(

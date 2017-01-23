@@ -61,6 +61,7 @@ class manageNotifications(Resource):
         if URL.find("api/notification/email") > 0:
             try:
                 parser = reqparse.RequestParser()
+                parser.add_argument('subject', type=json_encode, location='json')
                 parser.add_argument('recipients', type=json_encode, location='json')
                 parser.add_argument('text_body', type=str, location='json')
                 parser.add_argument('html_body', type=str, location='json')
@@ -73,7 +74,7 @@ class manageNotifications(Resource):
     #                     html_body = args['html_body'],
     #                     sender = args['sender']
     #                 )
-                send_email(args['subject'], json_decode(args['recipients']), args['text_body'], args['html_body'], args['sender'])
+                send_email(json_decode(args['recipients']), args['text_body'], args['html_body'])
                 return jsonify(
                         response = 200,
                         message = 'Email delivery success'
