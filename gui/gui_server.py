@@ -1,10 +1,16 @@
+'''
+@summary: Bootstrapper file to run gui_server, and UI associated with it.
+Ensures all routing for pages, error routing, and user sessions are handled.
+@author devopsec and mackhendricks
+'''
+
 from flask import Flask, render_template, request, jsonify, make_response, url_for, redirect, abort, Markup
 import requests #, json
 from api.sql.models import *
 from datetime import datetime
 
 app = Flask('gui_server')
-app.config['DEBUG'] = False
+#app.config['DEBUG'] = False
 
 # error handling #
 @app.errorhandler(400)
