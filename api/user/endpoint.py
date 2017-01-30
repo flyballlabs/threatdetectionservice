@@ -163,8 +163,8 @@ class manageUserList(Resource):
                         'status' : user.status,
                         'phone_number' : user.phone_number,
                         'lastlogin' : user.lastlogin,
-						'account_type' : user.account_type,
-						'notification' : user.notification
+                        'account_type' : user.account_type,
+                        'notification' : user.notification
                     } )
 
                 return jsonify(
@@ -212,8 +212,8 @@ class manageUserList(Resource):
             
             query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
                               lastname=_lastname, password=_password, email=_email, company_id=_company_id,
-							  status=_status, phone_number=_phone_number, lastlogin=_lastlogin, 
-							  account_type=_account_type, notification=json_decode(_notification))
+                              status=_status, phone_number=_phone_number, lastlogin=_lastlogin,
+                              account_type=_account_type, notification=json_decode(_notification))
 
             curr_session = db.session #open database session
             try:

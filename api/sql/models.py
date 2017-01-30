@@ -1,11 +1,14 @@
-from flask import url_for
+import json, sqlalchemy
 from api import database
-import json
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
+
 # MySQL specific imports #
 from sqlalchemy import null, Column
+from sqlalchemy.orm import class_mapper
+from sqlalchemy.ext import mutable
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
 from flask_table import Table, Col 
-from passlib.apps import custom_app_context as pwd_context
  
 ##### classes / methods we may need #######################################
 #  from wtforms.validators import mac_address  #    mac address parsing   #
@@ -22,18 +25,18 @@ JSON_NULL = db.Column(JSON(none_as_null=True))  # will *always* insert JSON stri
 
 '''Transforms a model into a dictionary which can be dumped to JSON'''
 def serialize(model):
-  # get names of all columns in model
-  columns = [c.key for c in sqlalchemy.orm.class_mapper(model.__class__).columns]
-  # return values in a dict
-  return dict((c, getattr(model, c)) for c in columns)
+    # get names of all columns in model
+    columns = [c.key for c in class_mapper(model.__class__).columns]
+    # return values in a dict
+    return dict((c, getattr(model, c)) for c in columns)
 
 '''Enables JSON storage by encoding and decoding on the fly'''
-class JsonEncodedDict(sqla.TypeDecorator): # easily iterable #
-  impl = sqlalchemy.String
-  def process_bind_param(self, value, dialect):
-    return json.dumps(value)
-  def process_result_value(self, value, dialect):
-    return json.loads(value)
+class JsonEncodedDict(sqlalchemy.TypeDecorator): # easily iterable #
+    impl = sqlalchemy.String
+    def process_bind_param(self, value, dialect):
+        return json.dumps(value)
+    def process_result_value(self, value, dialect):
+        return json.loads(value)
 mutable.MutableDict.associate_with(JsonEncodedDict) # add this datatype to table column #
 
 class user_data(db.Model):
@@ -43,7 +46,7 @@ class user_data(db.Model):
         'mysql_charset': 'utf8'  #latin1
     }
     
-	user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
+    user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     username = db.Column(VARCHAR(45),index=True, unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
     lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
@@ -54,7 +57,7 @@ class user_data(db.Model):
     phone_number = db.Column(VARCHAR(45))  #mysql_key_block_size="1024")#
     lastlogin = db.Column(VARCHAR(45))     ##############################
     account_type = db.Column(VARCHAR(45))
-    notification = db.Column(VARCHAR(100))
+    notification = db.Column(JSON)
     password_hash = db.Column(db.String(64))    
                                            
     def __init__(self, user_id, username, firstname, lastname, password, email, company_id, status, phone_number, lastlogin, account_type, notification):
@@ -134,7 +137,7 @@ class company_data(db.Model):
     state = db.Column(VARCHAR(45))
     zip = db.Column(VARCHAR(45))
     phone_number = db.Column(VARCHAR(45))
-	poc =  db.Column(JSON)
+    poc =  db.Column(JSON)
     authinfo =  db.Column(JSON)
     sites = db.Column(JSON)
     
@@ -146,7 +149,7 @@ class company_data(db.Model):
         self.state = state
         self.zip = zip
         self.phone_number = phone_number
-		self.poc = poc
+        self.poc = poc
         self.authinfo = authinfo
         self.sites = sites
 

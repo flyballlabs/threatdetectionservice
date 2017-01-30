@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Threat Management Notification Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link rel="stylesheet" href="static/email.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+</head>
+
+<body>
+  <!-- titles / headings -->
+  <header>  
+    <h1>Threat Notification Service Report</h1>
+    <br>
+    <p>Click <a href="/login">here</a> to go login</p>
+    <br>
+  </header>
+
+  <!-- threat panel -->
+  <div class="container" id="main">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+    </div>
+    <div class="panel-heading">Active Threats</div>
+    <div class="panel-body">
+      <p>Contains a list of all threats that have not been acknowledged and or assigned to an enginner for review.</p>
+    </div>
+
+    <!-- Table -->
+    <table id="activeThreatsTable" class="table sp-table sp-table-striped sp-table-hover">
+      <thead>
+        <tr>
+          <th>Threat Level</th>
+          <th>Incident Type</th>
+          <th>Incident Source</th>
+          <th>Incident Time</th>
+          <th>Attack Method</th>
+          <th>Source</th>
+          <th>Destination</th>
+        <tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>{{threat_level}}</td>
+          <td>{{incident_type}}</td>
+          <td>{{incident_source}}</td>
+          <td>{{incident_time}}</td>
+          <td>{{attack_method}}</td>
+          <td>{{source}}</td>
+          <td>{{destination}}</td>
+        </tr>
+    </table>
+  </div> <!-- end of main container -->
+  
+  <!--  -->
+  <script src="static/email.js"></script>
+  
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="static/bootstrap.min.js"></script>
+
+  <!-- Bootstrap Table Latest compiled and minified JavaScript -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+
+  <!-- Bootstrap Table Latest compiled and minified Locales -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+
+  <script>
+    $(window).resize(function() {
+      $('#main').css({
+        width: $(window).width()
+      });
+    });
+  </script>
+
+</body>
+
+</html>

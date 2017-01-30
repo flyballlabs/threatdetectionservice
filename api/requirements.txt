@@ -5,8 +5,7 @@ flask
 configparser
 mysqlclient
 flask-login
-#flask-openid
-#flask-mail
+flask-mail
 flask-restful
 SQLAlchemy
 flask-sqlalchemy
@@ -36,3 +35,6 @@ passlib
 pyshark
 tshark
 starbase
+Unirest==1.1.6
+jsonpickle==0.7.1
+poster==0.8.1
