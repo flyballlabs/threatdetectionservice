@@ -1,4 +1,6 @@
 #!/bin/bash
+# Author: devopsec
+# Summary: Convenience script for metron to start and stop services.
 
 ### function definitions ###
 start_cluster() {
@@ -49,12 +51,13 @@ HELP() {
 }
 
 #Check the number of arguments. If none are passed, print help and exit
-options=$(getopt -o h: -l start:,stop: -n metron -- "$@")
-if [ $? -eq 0 ]; then
-	echo $0
-	echo $1
-	echo $?
-	echo $*
+
+# Since -h does not require any argument the colon (:) is extra.
+options=$(getopt -o h -l start:,stop: -n metron -- "$@")
+
+# If the number of arguments after processing them using getopt is larger 
+# than zero, then it means there is an unknown argument.
+if [ $? -ne 0 ]; then
 	HELP
 	exit 1
 fi
@@ -67,21 +70,22 @@ while true; do
 			HELP # Show help option menu
 			;;
 		--start ) # Parse options to start sub command
-			cmd=$1 # Remove 'start' from the argument list
+			# $1 is the command, you need to use the second argument
+			cmd=$2 # Remove 'start' from the argument list
 			shift;
-			if [[ cmd == "cluster" ]]; then
+			if [[ $cmd == "cluster" ]]; then
 				start_cluster
-			elif [[ cmd == "service" ]]; then
+			elif [[ $cmd == "service" ]]; then
 				start_services
 			fi
 			;;
 		--stop ) # Parse options to start sub command
-			cmd=$1 # Remove 'stop' from the argument list
+			cmd=$2 # Remove 'stop' from the argument list
 			shift;
-			if [[ cmd == "cluster" ]]; then
-				start_cluster
-			elif [[ cmd == "service" ]]; then
-				start_services
+			if [[ $cmd == "cluster" ]]; then
+				stop_cluster
+			elif [[ $cmd == "service" ]]; then
+				stop_services
 			fi
 			;;
 		-- ) 
