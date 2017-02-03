@@ -20,9 +20,16 @@ function uploadFile(file) {
 
     xhr.onload = function() {
         if (xhr.status == 200) {
-            alert("Sucess! Upload completed");
-        } else {
-            alert("Error! Upload failed");
+
+           var jsonResponse = xhr.responseText;
+           var jsonObject = JSON.parse(jsonResponse);
+           var searchImageURL = jsonObject.searchImage;
+
+           // Display Search Image
+           var queryDiv = document.getElementById('query');
+           queryDiv.innerHTML = "<img src=" + searchImageURL +  " style='max-height: 300px; max-width: 300px;' />";
+           
+           // Display Results TODO: make async callback to get results
         }
     };
 
@@ -30,7 +37,7 @@ function uploadFile(file) {
         alert("Error! Upload failed. Can not connect to server.");
     };
 
-    xhr.open("POSTileUploader", true);
+    xhr.open("POST",API_SERVER + "/api/facial/search/dbd/dbd_user", true);
     xhr.setRequestHeader("Content-Type", file.type);
     xhr.send(file);
 }

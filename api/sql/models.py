@@ -6,6 +6,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from api import db
 from api import app
+import uuid
 
 ##### classes / methods we may need ############
 #  from wtforms.validators import mac_address  #
@@ -85,6 +86,32 @@ class Role(db.Model, RoleMixin):
     def __hash__(self):
         return hash(self.name)
 
+class facial_image_data(db.Model):
+    __tablename__ = 'facial_image'
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+
+    facial_image_id = db.Column(VARCHAR(200), primary_key=True, default=lambda: uuid.uuid4().hex)
+    company_id = db.Column(VARCHAR(45))
+    image_name = db.Column(VARCHAR(100))
+    image_http_url = db.Column(VARCHAR(200))
+    engine_type = db.Column(VARCHAR(45))
+    face_id = db.Column(VARCHAR(100))
+    facelist_id = db.Column(VARCHAR(45))
+
+    def __init__(self, company_id, image_name, image_http_url, engine_type, face_id, facelist_id):
+        #self.facial_image_id = facial_image_id
+        self.company_id = company_id
+        self.image_name = image_name
+        self.image_http_url = image_http_url
+        self.engine_type = engine_type
+        self.face_id = face_id
+        self.facelist_id = facelist_id
+
+    def __repr__(self):
+        return '{facial_image: %r}' % self.facial_image_id
 
 class company_data(db.Model):
     __tablename__ = 'company'

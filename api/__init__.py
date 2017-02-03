@@ -7,6 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 # Define the Application object
 app = Flask(__name__)
 
+# Configurations
+app.config.from_object('config')
+
 # Define the database object
 app.config.setdefault('SQLALCHEMY_DATABASE_URI', 'mysql://tmp:tmp@127.0.0.1/tmp')
 db = SQLAlchemy(app)
@@ -20,6 +23,7 @@ from .company.endpoint import *
 from .metron.endpoint import *
 from .asset.endpoint import *
 from .notification.endpoint import *
+from .facial.endpoint import *
 
 # Import Models
 #from .sql import models

@@ -18,3 +18,4 @@ flask-mysql
 flask_cors 
 flask-security
 itsdangerous
+pillow

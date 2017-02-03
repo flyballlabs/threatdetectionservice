@@ -1,5 +1,6 @@
 from api import *
 
+
 # Setup API routes and start the server
 
 api.add_resource(manageAgent, '/api/agent/<string:_mac_address_>')
@@ -20,6 +21,10 @@ api.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
 api.add_resource(manageAssets, '/api/assets/<string:_device_>')
 
 api.add_resource(manageNotifications, '/api/notification', '/api/notification/<string:_username_>', '/api/notification/email', '/api/notification/sms')
+
+api.add_resource(manageFacial, '/api/facial')
+api.add_resource(manageFacialRepo, '/api/facial/images/<string:_customerID_>/repo/<string:_fileName_>')
+api.add_resource(manageFacialSearch, '/api/facial/search/<string:_customerID_>/<string:_userID_>', '/api/facial/search/<string:_customerID_>/<string:_userID_>/<string:_fileName_>')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7777, debug=False)

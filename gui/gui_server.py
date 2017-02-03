@@ -58,6 +58,7 @@ def threats():
         assetURI =  '/api/assets/' + site
     try:
         _header = "X-AUTH-TOKEN:%s", getAuthToken()
+        print(_header)
         response = requests.get(url,headers=_header)
     except requests.exceptions.RequestException as e:
         error = "Problem occured while accessing threat information. "
