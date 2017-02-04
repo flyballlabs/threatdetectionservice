@@ -37,7 +37,7 @@ function uploadFile(file) {
         alert("Error! Upload failed. Can not connect to server.");
     };
 
-    xhr.open("POST",API_SERVER + "/api/facial/search/dbd/dbd_user", true);
+    xhr.open("POST",API_SERVER + "/api/facial/search/dpd/dpd_user", true);
     xhr.setRequestHeader("Content-Type", file.type);
     xhr.send(file);
 }
