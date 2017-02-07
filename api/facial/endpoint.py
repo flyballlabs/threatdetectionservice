@@ -50,14 +50,17 @@ class manageFacialSearch(Resource):
                f.write(data) 
                f.close()
         
-        imageURL = self.getSearchImageURL(_customerID_,_userID_,filename + "." + imageType)
+        imageURL = self.getSearchImageURL(_customerID_.strip(),_userID_.strip(),filename.strip() + "." + imageType.strip())
         print(imageURL)
-
-        #time.sleep(5)
+        
+        if (isinstance(imageURL,str)):
+            print("***This is a str")
+         
+        #time.sleep(30)
         # Start Search
         engine = MSFTFacialEngine()
         engine.setAPIKey("e0ace679238e4af9a6217f460a1378d5")
-        found = engine.search("http","http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/99493f6c396e4258ba1e8b08398b87ef.png")
+        found = engine.search("http",imageURL)
 
         jsonResult = {"searchImage":imageURL, "results":found}
         return jsonResult
@@ -67,7 +70,10 @@ class manageFacialSearch(Resource):
     #   all active and finished searchs.  Searchs are deleted when they close the search window
      
    def getSearchImageURL(self,customerID,userID,fileName):
-        url = app.config['EXTERNAL_URL'] + "/api/facial/search/" + customerID + "/" + userID + "/" + fileName 
+        #url = app.config['EXTERNAL_URL'] + "/api/facial/search/" + customerID + "/" + userID + "/" + fileName 
+        #url = "http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/4040cdf442e44678a2f4c90e51ca6d8b.png"
+        url = "http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/4040cdf442e44678a2f4c90e51ca6d8b.png"
+        url = "http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/4040cdf442e44678a2f4c90e51ca6d8b.png"
         return url
 
 class manageFacialRepo(Resource):

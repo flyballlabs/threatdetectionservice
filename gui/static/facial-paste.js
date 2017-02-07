@@ -24,12 +24,22 @@ function uploadFile(file) {
            var jsonResponse = xhr.responseText;
            var jsonObject = JSON.parse(jsonResponse);
            var searchImageURL = jsonObject.searchImage;
+           var results = jsonObject.results;
+
+           if (results == null)
+              resultsMessage = "No facial match";
 
            // Display Search Image
            var queryDiv = document.getElementById('query');
            queryDiv.innerHTML = "<img src=" + searchImageURL +  " style='max-height: 300px; max-width: 300px;' />";
            
            // Display Results TODO: make async callback to get results
+           var resultsDiv = document.getElementById('results')
+
+           if (results != null)   
+              resultsDiv.innerHTML = "<img src=" + results +  " style='max-height: 300px; max-width: 300px;' />";
+           else
+              resultsDiv.innerHTML = resultsMessage;
         }
     };
 

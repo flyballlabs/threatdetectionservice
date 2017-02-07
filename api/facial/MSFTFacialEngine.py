@@ -1,6 +1,6 @@
 from .FacialEngine import FacialEngine
 import http.client, urllib.request, urllib.parse, urllib.error, base64
-import json
+import json, requests
 import os,sys
 sys.path.append('/home/mack/threatdetectionservice/')
 from api import *
@@ -83,13 +83,17 @@ class MSFTFacialEngine(FacialEngine):
         return persistIDtoImage
 
     def search(self,type,uri):
-       
+        #uri = "http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/1280_jeremy_meeks_hot_mugshot_guy.jpg"       
+        #uri = "http://www.etonline.com/news/2016/06/24246818/1280_jeremy_meeks_hot_mugshot_guy.jpg"
+        #uri = "http://edge.dopensource.com:7777/api/facial/search/dpd/dpd_user/6af91cea433d4cf7a55a3b06cd50c312.png"
+        #uri = "http://50.253.243.17:7777/api/facial/search/dpd/dpd_user/4040cdf442e44678a2f4c90e51ca6d8b.png"
         found = []
         # Call Facial Detect
         opURL = self.endpoint + "/" + self.apiVersion + "/detect"
-        jsonBody = {"url":uri}
-        print(json.dumps(jsonBody))
-        r = self.invoke(self.hostname, opURL,"POST",json.dumps(jsonBody).strip())
+        jsonBody = {
+                     'url': uri
+                   }
+        r = self.invoke(self.hostname, opURL,"POST",jsonBody)
         if (r['code'] == 200):
                    print(r['response'])
                    response = json.loads(r['response']) 
@@ -100,13 +104,14 @@ class MSFTFacialEngine(FacialEngine):
         else:
             return None
        # Look for facial match
+      
         opURL = self.endpoint + "/" + self.apiVersion + "/findsimilars"
         jsonBody = { 
                      'faceId':queryFaceID,
                      'faceListId':self.customerID
           }
         print(jsonBody)
-        r = self.invoke(self.hostname, opURL,"POST",json.dumps(jsonBody))
+        r = self.invoke(self.hostname, opURL,"POST",jsonBody)
         if (r['code'] == 200):
                    print(r['response'])
                    response = json.loads(r['response'])
@@ -127,40 +132,58 @@ class MSFTFacialEngine(FacialEngine):
             return {'error': str(e)}
 
     def invoke(self,hostname,url,action="POST",body=None):
+            #print("In Invoke:" + body) 
             result = {}
             _headers= { 
                     
                 'Ocp-Apim-Subscription-Key' : self.getAPIKey(),
+                'Content-Type' : 'application/json',
             }
    
             params = urllib.parse.urlencode({
             })
 
             try:
-                conn = http.client.HTTPSConnection(self.hostname)
-                if (body == None):
-                    conn.request(action, url,headers= _headers)
-                else:
-                    conn.request(action, url,body,_headers)
-                response = conn.getresponse()
-                #data = str(response.read())
-                data = response.read().decode('utf8')
-                conn.close()
+            
+                fullURL = "https://" + hostname + url
+                print(fullURL)
+                response = requests.request(action,fullURL,json=body,headers=_headers)
+            #    conn = http.client.HTTPSConnection(self.hostname)
+            #    if (body == None):
+            #        conn.request(action, url,headers= _headers)
+            #    else:
+            #        conn.request(action, url,body,_headers)
+            #        print("Finished request with body")
+            #    response = conn.getresponse()
+            #    #data = str(response.read())
+            #    data = response.read().decode('utf8')
+            #    conn.close()
             except Exception as e:
-                print("[Errno {0}] {1}".format(e.errno, e.strerror)) 
-                result['code'] = 404
-                result['response'] = data
-                return result
-
-            if data.find("error") != -1:
-                print(data)
-                result['code'] = 404
-                result['response'] = data
-                return result
+                  print("[Errno {0}] {1}".format(e.errno, e.strerror)) 
+                  result['code'] = 404
+                  result['response'] = data
+                  return result
+            if response.status_code in (200, 202):
+                  result['code'] = response.status_code
+                  result['response'] = response.text
+                  print(response.text)
+                  return result 
             else:
-                result['code'] = 200
-                result['response'] = data
-                return result
+                  result['code'] = response.status_code
+                  result['response'] = response.text  
+                  print(response.text)
+                  return result 
+
+
+            #if data.find("error") != -1:
+            #    print(data)
+            #    result['code'] = 404
+            #    result['response'] = data
+            #    return result
+            #else:
+            #    result['code'] = 200
+            #    result['response'] = data
+            #    return result
 
 if __name__ == "__main__":
     db.create_all()
