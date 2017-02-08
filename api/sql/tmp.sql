@@ -1,3 +1,9 @@
+CREATE DATABASE IF NOT EXISTS `tmp`;
+grant all on tmp.* TO 'tmp'@'localhost' IDENTIFIED BY 'tmp';
+grant all on tmp.* TO 'tmp'@'%' IDENTIFIED BY 'tmp';
+flush privileges;
+use tmp;
+
 -- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
 --
 -- Host: localhost    Database: tmp
