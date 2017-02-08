@@ -1,2 +1,2 @@
 # The API Server contains the hostname and portname
-API_SERVER_URL = "http://10.10.10.97:7777"
+API_SERVER_URL = "http://0.0.0.0:7777"
