@@ -4,6 +4,51 @@ from api.sql.models import *  #import all of the models from models.py
 from api.util.parse_json import json_decode, json_encode #for json request parsing
 from api import login_required
 
+class companyUtils:
+    ''' Decoupling of re-usable methods in a static context
+        Note: jsonify does not handle lists and isn't used here '''
+
+    @staticmethod
+    def get_company_poc_list(_company_name_):
+        try:
+            x = company_data.query.filter_by(company_name=_company_name_).first()
+            if x != None:
+                return {
+                    'response': 200,
+                    'poc': x.poc
+                }
+            else:
+                return {
+                    'response': 400,
+                    'message': 'Company POCs for specified company are not available'
+                }
+        except Exception as e:
+            return {'response': 400}
+
+    @staticmethod
+    def get_all_poc_list():
+        try: # load_only("company_name")
+            x = company_data.query.all()
+            if x != None:
+                co_poc_list = []
+                for co in x:
+                    co_poc_list.append({
+                        'company_name': co.company_name,
+                        'poc': co.poc
+                    })
+
+                return {
+                    'response': 200,
+                    'all_company_poc': co_poc_list
+                }
+            else:
+                return {
+                    'response' : 400,
+                    'message' : 'Company POCs are not available'
+                }
+        except Exception as e:
+            return {'response' : 400}
+
 class manageCompany(Resource):
     @login_required    
     def get(self, _company_name_): # get all info about a company #
@@ -22,12 +67,15 @@ class manageCompany(Resource):
             if x != None:
                 return jsonify(
                     response = 200,
+                    message = 'Company search success',
                     company_id = _company_id,
                     company_name = _company_name,
                     street = _street,
                     city = _city,
+                    state = _state,
                     zip = _zip,
                     phone_number = _phone_number,
+                    poc = _poc,
                     authinfo = _authinfo,
                     sites = _sites
                 )
@@ -118,7 +166,8 @@ class manageCompany(Resource):
 class manageCompanyList(Resource):
     # _company_name_ is optional param #
     @login_required    
-    def get(self, _company_name_=None):
+    '''contains methods for accessing resource lists from company table in mysql'''
+    def get(self, _company_name_=None): # _company_name_ is optional param #
         URL = request.url
         # get a list of sites for specified company #
         if URL.find("api/company") > 0 and URL.find("sites") > 0 and _company_name_ != None:
@@ -156,6 +205,14 @@ class manageCompanyList(Resource):
                            }
             except Exception as e:
                 return {'response' : 400}
+
+        # get a list of poc's for specified company #
+        if URL.find("api/company") > 0 and URL.find("poc") > 0 and _company_name_ != None:
+            return companyUtils.get_company_poc_list(_company_name_)
+            
+        # get list of all poc's for all companies #
+        elif URL.find("api/company/poc") > 0 and _company_name_ == None:
+            return companyUtils.get_all_poc_list()
             
         # get a list of all companies #
         elif URL.find("api/company") > 0 and _company_name_ == None:
@@ -210,10 +267,9 @@ class manageCompanyList(Resource):
             _phone_number = args['phone_number']
             _authinfo = args['authinfo']
             _sites = args['sites']
-
-            query = company_data(company_id=_company_id, company_name=_company_name, street=_street, 
-                              city=_city, state=_state, zip=_zip, 
-                              phone_number=_phone_number, authinfo=json_decode(_authinfo), sites=json_decode(_sites))
+            query = company_data(company_id=_company_id, company_name=_company_name, street=_street, city=_city,
+                                 state=_state, zip=_zip, phone_number=_phone_number, poc=json_decode(_poc),
+                                 authinfo=json_decode(_authinfo), sites=json_decode(_sites))
             
             curr_session = db.session #open database session
             try:

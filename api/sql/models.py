@@ -1,32 +1,45 @@
-# MySQL specific imports #
-from sqlalchemy import null , Column
-from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
-from flask_security import RoleMixin, UserMixin
-from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
-from api import db
-from api import app
-import uuid
+import json, sqlalchemy
+from api import database
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
-##### classes / methods we may need ############
-#  from wtforms.validators import mac_address  #
-#  from ipaddress import ip_address            #  
-#  from alembic.util.messaging import status   #
-#  from sqlalchemy.sql import sqltypes         #
-################################################
+# MySQL specific imports #
+from sqlalchemy import null, Column
+from sqlalchemy.orm import class_mapper
+from sqlalchemy.ext import mutable
+from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
+from flask_table import Table, Col 
+ 
+##### classes / methods we may need #######################################
+#  from wtforms.validators import mac_address  #    mac address parsing   #
+#  from ipaddress import ip_address            #     ip address parsing   #
+#  from alembic.util.messaging import status   #       html code status   #
+###########################################################################
+
+# Connect to the database and provide a handle #
+db = database.connect()
 
 # null constants #
 SQL_NULL = null()  # will *always* insert SQL NULL
 JSON_NULL = db.Column(JSON(none_as_null=True))  # will *always* insert JSON string "null"
 
 def serialize(model):
-  """Transforms a model into a dictionary which can be dumped to JSON."""
-  # get names of all columns in model
-  columns = [c.key for c in sqlalchemy.orm.class_mapper(model.__class__).columns]
-  # return values in a dict
-  return dict((c, getattr(model, c)) for c in columns)
+    # get names of all columns in model
+    columns = [c.key for c in class_mapper(model.__class__).columns]
+    # return values in a dict
+    return dict((c, getattr(model, c)) for c in columns)
 
-class user_data(db.Model, UserMixin):
+'''Enables JSON storage by encoding and decoding on the fly'''
+class JsonEncodedDict(sqlalchemy.TypeDecorator): # easily iterable #
+    impl = sqlalchemy.String
+    def process_bind_param(self, value, dialect):
+        return json.dumps(value)
+    def process_result_value(self, value, dialect):
+        return json.loads(value)
+mutable.MutableDict.associate_with(JsonEncodedDict) # add this datatype to table column #
+
+class user_data(db.Model):
     __tablename__ = 'user'
     __table_args__ = {  
         'mysql_engine': 'InnoDB',  
@@ -34,15 +47,18 @@ class user_data(db.Model, UserMixin):
     }
     
     user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
-    username = db.Column(VARCHAR(45), unique=True, nullable=False)
+    username = db.Column(VARCHAR(45),index=True, unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
-    lastname = db.Column(VARCHAR(45))      
-    password = db.Column(VARCHAR(45))      
-    email = db.Column(VARCHAR(45))         
-    company_id = db.Column(VARCHAR(45))    
-    active = db.Column(VARCHAR(45))        
-    lastlogin = db.Column(VARCHAR(45))    
-     
+    lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
+    password = db.Column(VARCHAR(45))      #Table('mytable', metadata,  #
+    email = db.Column(VARCHAR(45))         #Column('data', String(32)), #
+    company_id = db.Column(VARCHAR(45))    #mysql_engine='InnoDB',      #
+    status = db.Column(VARCHAR(45))        #mysql_charset='utf8',       #
+    phone_number = db.Column(VARCHAR(45))  #mysql_key_block_size="1024")#
+    lastlogin = db.Column(VARCHAR(45))     ##############################
+    account_type = db.Column(VARCHAR(45))
+    notification = db.Column(JSON)
+    password_hash = db.Column(db.String(64))    
                                            
     def __init__(self, user_id, username, firstname, lastname, password, email, company_id, active, lastlogin):
         self.user_id = user_id
@@ -127,6 +143,7 @@ class company_data(db.Model):
     state = db.Column(VARCHAR(45))
     zip = db.Column(VARCHAR(45))
     phone_number = db.Column(VARCHAR(45))
+    poc =  db.Column(JSON)
     authinfo =  db.Column(JSON)
     sites = db.Column(JSON)
     
@@ -138,6 +155,7 @@ class company_data(db.Model):
         self.state = state
         self.zip = zip
         self.phone_number = phone_number
+        self.poc = poc
         self.authinfo = authinfo
         self.sites = sites
 

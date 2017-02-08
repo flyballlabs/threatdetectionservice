@@ -47,6 +47,13 @@ INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1','1','2','new_site',
 /*!40000 ALTER TABLE `agent` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1','19475176566',NULL,'SU','{"alert_type":50,"notification_type":"email"}','NOT_A_PROD_KEY'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1','12489092769',NULL,'ADMIN','{"alert_type":10,"notification_type":"sms"}','NOT_A_PROD_KEY'), (3,'tyler.moore58@gmail.com','Tyler','Moore','flyball','tyler.moore58@gmail.com','1','1','13131234567',NULL,'USER','{"alert_type":10,"notification_type":"email"}','NOT_A_PROD_KEY');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `company`
 --

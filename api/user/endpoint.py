@@ -144,21 +144,25 @@ class manageUserList(Resource):
             if x != None:
                 results = []
                 for user in x:
-                    results.append({
-                    'user_id':user.user_id,
-                    'username':user.username,
-                    'firstname' : user.firstname,
-                    'lastname' : user.lastname,
-                    'email' : user.email,
-                    'company_id' : user.company_id,
-                    'active' : user.active,
-                    'lastlogin' : user.lastlogin
-                    })
-                            
-                return {
-                        'message':'User search success',
-                        'users':results
-                       }
+                    results.append( {
+                        'user_id' : user.user_id,
+                        'username' : user.username,
+                        'firstname' : user.firstname,
+                        'lastname' : user.lastname,
+                        'email' : user.email,
+                        'company_id' : user.company_id,
+                        'status' : user.status,
+                        'phone_number' : user.phone_number,
+                        'lastlogin' : user.lastlogin,
+                        'account_type' : user.account_type,
+                        'notification' : user.notification
+                    } )
+
+                return jsonify(
+					response = 200,
+                    message = 'User search success',
+                    users = results
+                )
             else:
                 return {
                         'status': 400,
@@ -193,8 +197,9 @@ class manageUserList(Resource):
             _lastlogin = args['lastlogin']
             
             query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
-                              lastname=_lastname, password=_password, email=_email, 
-                              company_id=_company_id, active=_active, lastlogin=_lastlogin)
+                              lastname=_lastname, password=_password, email=_email, company_id=_company_id,
+                              status=_status, phone_number=_phone_number, lastlogin=_lastlogin,
+                              account_type=_account_type, notification=json_decode(_notification))
 
             curr_session = db.session #open database session
             try:

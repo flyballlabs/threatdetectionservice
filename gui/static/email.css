@@ -1,0 +1,111 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,300);
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  color: #4d4d4d;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+header {
+  width: 100%;
+  background-color: #212a31;
+  position: fixed;
+  text-align: center;
+  line-height: 50px;
+}
+
+header p a {
+  display: inline-block;
+  width: 130px;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+header p a:hover {
+  background-color: #0c1012;
+}
+
+#main {
+  width: 100%;
+  float: left;
+  overflow-x: hidden;
+}
+
+.sub {
+  width: 100%;
+  background-color: #ebebeb;
+  overflow: hidden;
+  padding: 28px 0 0 20px;
+}
+
+.sub a {
+  display: inline-block;
+  min-width: 110px;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  border-radius: 3px 3px 0 0;
+  transition: background-color .5s, color .5s;
+  color: #cccccc;
+  padding: 2px 0 0 0;
+  line-height: 35px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sub a:hover,
+.sub a.current {
+  color: gray;
+  background-color: white;
+}
+
+/* Table */
+table {
+  border-color: gray;
+  line-height: 20px;
+}
+
+.sp-table {
+  width: 98%;
+  margin: 15px;
+}
+
+.sp-table th {
+  text-align: left;
+  font-weight: 600;
+}
+
+.sp-table thead.stay {
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+}
+
+.sp-table th,
+.sp-table td {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px 8px;
+}
+
+/* Striped */
+.sp-table-striped tbody tr:nth-of-type(odd) td {
+  background-color: #fafafa;
+}
+
+/* Hover */
+.sp-table-hover tbody tr:hover td {
+  background-color: #ededed;
+}
+
+.opacity {
+  opacity: 0;
+}

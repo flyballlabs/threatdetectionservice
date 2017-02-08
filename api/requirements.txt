@@ -2,7 +2,6 @@ flask
 configparser
 mysqlclient
 flask-login
-flask-openid
 flask-mail
 flask-restful
 SQLAlchemy
@@ -16,6 +15,21 @@ flipflop
 coverage
 flask-mysql
 flask_cors 
+<<<<<<< HEAD
 flask-security
 itsdangerous
 pillow
+uwsgi
+uwsgi-emperor
+uwsgi-plugin-python3
+nginx-full
+Flask-Table
+Flask-HTTPAuth
+MarkupSafe
+passlib
+pyshark
+tshark
+starbase
+Unirest==1.1.6
+jsonpickle==0.7.1
+poster==0.8.1
