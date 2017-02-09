@@ -114,7 +114,7 @@ class facial_image_data(db.Model):
     }
 
     facial_image_id = db.Column(VARCHAR(200), primary_key=True, default=lambda: uuid.uuid4().hex)
-    company_id = db.Column(INTEGER, nullable=False)
+    company_id = db.Column(VARCHAR(45))
     image_name = db.Column(VARCHAR(100))
     image_http_url = db.Column(VARCHAR(200))
     engine_type = db.Column(VARCHAR(45))

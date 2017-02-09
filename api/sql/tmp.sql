@@ -32,8 +32,8 @@ CREATE TABLE `agent` (
   `agent_id` int(11) NOT NULL AUTO_INCREMENT,
   `mac_address` varchar(45) NOT NULL,
   `ip_address` varchar(45) DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  `company_id` varchar(45) DEFAULT NULL,
+  `active` TINYINT(1) DEFAULT NULL,
+  `company_id` int(11) DEFAULT NULL,
   `site` varchar(45) DEFAULT NULL,
   `mode` varchar(45) DEFAULT NULL,
   `cmd` varchar(45) DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `agent` (
 
 LOCK TABLES `agent` WRITE;
 /*!40000 ALTER TABLE `agent` DISABLE KEYS */;
-INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1','1','1','glazer','replay','start','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17','1','2','loving','live','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:15:00","update":"06:00:00","discover_assets":"12:00:00"}}');
+INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1',1,1,'glazer','replay','start','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17',1,2,'loving','live','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:15:00","update":"06:00:00","discover_assets":"12:00:00"}}');
 /*!40000 ALTER TABLE `agent` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,7 +155,7 @@ CREATE TABLE `user` (
   `lastname` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `company_id` varchar(45) DEFAULT NULL,
+  `company_id` int(11) DEFAULT NULL,
   `active` TINYINT(1) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
   `lastlogin` varchar(45) DEFAULT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1','19475176566',NULL,'SU','{"alert_type":50,"notification_type":"email"}','NOT_A_PROD_KEY'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1','12489092769',NULL,'ADMIN','{"alert_type":10,"notification_type":"sms"}','NOT_A_PROD_KEY'), (3,'tyler.moore58@gmail.com','Tyler','Moore','flyball','tyler.moore58@gmail.com','1','1','13131234567',NULL,'USER','{"alert_type":10,"notification_type":"email"}','NOT_A_PROD_KEY');
+INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com',1,1,'19475176566',NULL,'SU','{"alert_type":50,"notification_type":"email"}','NOT_A_PROD_KEY'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com',1,1,'12489092769',NULL,'ADMIN','{"alert_type":10,"notification_type":"sms"}','NOT_A_PROD_KEY'), (3,'tyler.moore58@gmail.com','Tyler','Moore','flyball','tyler.moore58@gmail.com',1,1,'13131234567',NULL,'USER','{"alert_type":10,"notification_type":"email"}','NOT_A_PROD_KEY');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
