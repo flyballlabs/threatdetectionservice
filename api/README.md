@@ -34,7 +34,8 @@ API Server is implemented using Python with the Flask framework to provide Restf
 ## Operating Systems
 
 - CentOS 6.6
-- Ubuntu (version needed)
+- Ubuntu 16.04
+- Linux Mint 18.1
 
 ## Metron Version
 

@@ -39,8 +39,8 @@ CREATE TABLE `agent` (
   `cmd` varchar(45) DEFAULT NULL,
   `time_setting` json DEFAULT NULL,
   PRIMARY KEY (`agent_id`),
-  UNIQUE KEY `mac_address` (`mac_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  UNIQUE KEY (`mac_address`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,9 +49,10 @@ CREATE TABLE `agent` (
 
 LOCK TABLES `agent` WRITE;
 /*!40000 ALTER TABLE `agent` DISABLE KEYS */;
-INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1','1','2','new_site','stream','stop','{\"interval\": {\"update\": \"08:00:00\", \"time_sync\": \"00:05:00\", \"discover_assets\": \"48:00:00\"}, \"start_stop\": {\"stop\": \"16:00:00\", \"start\": \"08:00:00\"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17','1','2','loving','live','stop','{\"interval\": {\"update\": \"06:00:00\", \"time_sync\": \"00:15:00\", \"discover_assets\": \"12:00:00\"}, \"start_stop\": {\"stop\": \"16:00:00\", \"start\": \"08:00:00\"}}'),(3,'00:05:04:03:02:01','10.0.0.254','1','2','site_3','replay','restart','{\"interval\": {\"update\": \"04:00:00\", \"time_sync\": \"00:30:00\", \"discover_assets\": \"24:00:00\"}, \"start_stop\": {\"stop\": \"18:00:00\", \"start\": \"06:00:00\"}}');
+INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1','1','1','glazer','replay','start','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17','1','2','loving','live','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:15:00","update":"06:00:00","discover_assets":"12:00:00"}}');
 /*!40000 ALTER TABLE `agent` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 --
 -- Table structure for table `company`
@@ -68,11 +69,12 @@ CREATE TABLE `company` (
   `state` varchar(45) DEFAULT NULL,
   `zip` varchar(45) DEFAULT NULL,
   `phone_number` varchar(45) DEFAULT NULL,
+  `poc` json DEFAULT NULL,
   `authinfo` json DEFAULT NULL,
   `sites` json DEFAULT NULL,
   PRIMARY KEY (`company_id`),
-  UNIQUE KEY `company_name` (`company_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  UNIQUE KEY (`company_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +83,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'Flyball-Labs','1234-Fake-St','Detroit','MI','12345','012-345-6789','{\"ldap\": {\"port\": \"0000\", \"server\": \"0.0.0.0\"}, \"type\": \"basic\"}','[\"Site1\", \"Site2\", \"Site3\", \"Site4\"]'),(2,'Dopensource','1234-Fake-St','Detroit','MI','12345','012-345-6789','{\"ldap\": {\"port\": \"0000\", \"server\": \"0.0.0.0\"}, \"type\": \"basic\"}','[\"Site1\", \"Site2\", \"Site3\", \"Site4\"]'),(3,'Swagcity-Software','1234-Fake-Dr','Detroit','MI','01234','012-345-6789','{\"ldap\": {\"port\": \"0000\", \"server\": \"0.0.0.0\"}, \"type\": \"basic\"}','[\"Site1\", \"Site2\", \"Site3\", \"Site4\"]');
+INSERT INTO `company` VALUES (1,'Flyball-Labs','1234-Fake-St','Detroit','MI','12345','01234567890','["mack@goflyball.com","tmoore@goflyball.com"]','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]'),(2,'Dopensource','1234-Fake-St','Detroit','MI','12345','01234567890','["mack@goflyball.com","tmoore@goflyball.com"]','{"type":"basic","ldap":{"server":"0.0.0.0","port":"0000"}}','["Site1","Site2","Site3","Site4"]');
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,10 +156,14 @@ CREATE TABLE `user` (
   `password` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `company_id` varchar(45) DEFAULT NULL,
-  `active` tinyint(1) DEFAULT NULL,
+  `active` TINYINT(1) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
   `lastlogin` varchar(45) DEFAULT NULL,
+  `account_type` varchar(45) DEFAULT NULL,
+  `notification` json DEFAULT NULL,
+  `password_hash` TEXT(64) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -167,9 +173,10 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1',1,NULL),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1',1,NULL);
+INSERT INTO `user` VALUES (1,'mack@goflyball.com','Mack','Hendricks','flyball','mack@goflyball.com','1','1','19475176566',NULL,'SU','{"alert_type":50,"notification_type":"email"}','NOT_A_PROD_KEY'),(2,'tmoore@goflyball.com','Tyler','Moore','flyball','tmoore@goflyball.com','1','1','12489092769',NULL,'ADMIN','{"alert_type":10,"notification_type":"sms"}','NOT_A_PROD_KEY'), (3,'tyler.moore58@gmail.com','Tyler','Moore','flyball','tyler.moore58@gmail.com','1','1','13131234567',NULL,'USER','{"alert_type":10,"notification_type":"email"}','NOT_A_PROD_KEY');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
