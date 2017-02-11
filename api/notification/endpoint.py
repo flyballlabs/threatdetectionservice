@@ -13,7 +13,6 @@ from api.company.endpoint import companyUtils
 from flask import jsonify, request, json, render_template
 from flask_mail import Mail, Message
 from flask_restful import Resource, reqparse
-from starbase import Connection
 import requests, base64, subprocess, os
 
 # email server config #

@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request, jsonify, make_response 
 import requests
 import json
+from  util.netinterfaces import get_lan_ip
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 # Configurations
 app.config.from_object('config')
+    
+if ('API_SERVER_URL' in app.config) and len(app.config['API_SERVER_URL']) > 0:
+    API_SERVER = app.config['API_SERVER_URL']
+else: #Assume the the server is located on the local server
+    ip = get_lan_ip()
+    url = "http://{}:7777".format(ip)
+    app.config['API_SERVER_URL'] = url
+    API_SERVER = url
 
-API_SERVER = app.config['API_SERVER_URL']
+# Print the API Server URL on the console
 print("API Server:" + API_SERVER)
 
 @app.route('/')
@@ -114,7 +123,9 @@ def facial():
     return render_template('facial-paste.html',apiServer=apiServer,authToken=authToken)
 
 
+
 if __name__=='__main__':
+
     app.run(
        host = "0.0.0.0",
        port = 8888
