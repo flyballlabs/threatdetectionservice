@@ -162,3 +162,31 @@ background-color: #fff;
     background-color: #0f3c4b;
 }
 
+/* Animations */
+
+/* Fade-In Effect */
+.visible {
+  visibility: visible;
+  -webkit-opacity: 0.90;
+  -moz-opacity: 0.90;
+  opacity: 0.90;
+  -webkit-transition: visibility 2s, ease-in 1s;
+  -moz-transition: visibility 2s, ease-in 1s;
+  -ms-transition: visibility 2s, ease-in 1s;
+  -o-transition: visibility 2s, ease-in 1s;
+  transition: visibility 2s, ease-in 1s;
+}
+
+
+/* Fade-Out Effect */
+.hidden {
+  visibility: hidden;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  opacity: 0;
+  -webkit-transition: visibility 2s, opacity 2s ease-out 0s;
+  -moz-transition: visibility 2s, opacity 2s ease-out 0s;
+  -ms-transition: visibility 2s, opacity 2s ease-out 0s;
+  -o-transition: visibility 2s, opacity 2s ease-out 0s;
+  transition: visibility 2s, opacity 2s ease-out 0s;
+}

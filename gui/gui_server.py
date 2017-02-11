@@ -7,9 +7,7 @@ app.config['DEBUG'] = True
 
 # Configurations
 app.config.from_object('config')
-
-API_SERVER = app.config['API_SERVER_URL']
-print("API Server:" + API_SERVER)
+print("API Server:" + app.config['API_SERVER_URL'])
 
 @app.route('/')
 def index():
@@ -21,7 +19,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        url = API_SERVER + "/api/auth/" + username + "/" + password
+        apiServer = app.config['API_SERVER_URL']
+        url = apiServer + "/api/auth/" + username + "/" + password
         try:
             response = requests.get(url)
         except requests.exceptions.RequestException as e:
@@ -29,7 +28,7 @@ def login():
             return render_template('login.html',error=error)
         jData = response.json()
         if jData['authentication'] == True:
-            resp = make_response(render_template('dashboard.html',username=username))
+            resp = make_response(render_template('dashboard.html',username=username, apiServer=apiServer, authToken=jData['X-AUTH-TOKEN']))
             resp.set_cookie('X-AUTH-TOKEN',jData['X-AUTH-TOKEN'])
             return resp
         else:
@@ -47,13 +46,13 @@ def logout():
 @app.route('/threats', methods=['GET'])
 def threats():
     company = "Flyball-Labs"
+    apiServer = app.config['API_SERVER_URL']
     # Grab the sites for the company
-    url =  API_SERVER  + '/api/company/' + company + "/sites"
+    url =  apiServer  + '/api/company/' + company + "/sites"
     params = request.args.items()
     site = request.args.get('site')
-    apiServer = app.config['API_SERVER_URL']
-    if site != None:
 
+    if site != None:
         threatsBySiteURI =  '/api/metron/threats/' + site
         assetURI =  '/api/assets/' + site
     try:
@@ -74,14 +73,21 @@ def threats():
     sites = jData['sites']
     site = request.args.get('site')
     if request.method == 'GET' and site != None:
-        return render_template('threatsbysite.html',sites=sites,selectedSite=site,apiServer=apiServer,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
-    
+        authToken = getAuthToken()
+        return render_template('threatsbysite.html',sites=sites,selectedSite=site,apiServer=apiServer,authToken=authToken,threatsBySiteURI=threatsBySiteURI,assetURI=assetURI)
+
     return render_template('threatsbysite.html',sites=sites)
 
-# Get the Auth Token from the Cookie 
+# Get the Auth Token from the Cookie
 def getAuthToken():
     authToken = request.cookies.get('X-AUTH-TOKEN')
     return authToken
+
+@app.route('/dashboard',methods=['GET'])
+def dashboard():
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('dashboard.html', apiServer=apiServer, authToken=authToken)
 
 @app.route('/userprofile',methods=['GET'])
 def userprofile():

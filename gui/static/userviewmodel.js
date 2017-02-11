@@ -1,6 +1,7 @@
 function userViewModel() {
     var self = this;
 
+    /* observables */
     self.userName = ko.observable("");
     self.firstName = ko.observable("");
     self.lastName = ko.observable("");
@@ -18,20 +19,14 @@ function userViewModel() {
 	self.updateInterval = ko.observable("");
 	self.assetscanInterval = ko.observable("");
 
-    /* $.getJSON(API_SERVER + "/api/user/mack@goflyball.com",
-            function(data) {
-		console.log(data);
-                //var parsed = JSON.parse(data);
-		//console.log(parsed);
-		self.firstName(data["firstname"]);
-		self.lastName(data["lastname"]);
-		self.email(data["email"]);
-                
-		//self.firstName(parsed.firstName);
-            }
-       );
-   */
+	self.responseJSON = ko.observable(null);
 
+	/* function for setting auth headers */
+	function setHeader(xhr) {
+        xhr.setRequestHeader('X-AUTH-TOKEN', AUTH_TOKEN);
+	}
+
+	/* get user info from api */
     $.ajax({
 	url: API_SERVER + "/api/user/mack@goflyball.com",
 	dataType: 'json',
@@ -42,76 +37,75 @@ function userViewModel() {
 			self.phone(data["phone_number"]);
 			self.alertLevel(data["notification"]["alert_type"]);
     		self.alertType(data["notification"]["notification_type"]);
-			self.companyID = data["company_id"];
+			self.companyID(data["company_id"]);
 		},
 	beforeSend: setHeader
     });
 
-    function setHeader(xhr) {
-        xhr.setRequestHeader('X-AUTH-TOKEN', AUTH_TOKEN);
-      }
-
-    self.responseJSON = ko.observable(null);
-    self.onSubmit = function(trigger)
+	// Call API, Update observable, and animate response
+	// TODO: make user / agent object passable instead of hardcoded
+    self.onSubmit = function(data, trigger)
     {
-    	var data, route;
+    	var route, payload;
     	// conditional data routing depending on trigger
 		if (trigger == 'user-profile')
 		{
-			data = JSON.stringify(
+			payload = JSON.stringify(
             {
-                firstname : self.firstName(),
-				lastname : self.lastName(),
-				email : self.email(),
-				phone : self.phone()
+                firstname : data["firstName"],
+				lastname : data["lastName"],
+				email : data["email"],
+				phone_number : data["phone"]
             });
 			route = API_SERVER + "/api/user/mack@goflyball.com"
 		}
 		else if (trigger == 'alert-settings')
 		{
-			data = JSON.stringify(
+			payload = JSON.stringify(
             {
-				notification : {"alert_type":self.alertLevel,"notification_type":self.alertType}
+				notification : {"alert_type":data["alertLevel"],"notification_type":data["alertType"]}
 			});
 			route = API_SERVER + "/api/user/mack@goflyball.com"
 		}
 		else if (trigger == 'agent-settings')
 		{
-			data = JSON.stringify(
+			payload = JSON.stringify(
             {
-            	agentMode : self.agentMode,
-				agentCmd : self.agentCmd,
-				time_setting : {"start_stop":{"start":self.startTime,"stop":self.stopTime},"interval":{"time_sync":self.timesyncInterval,"update":self.updateInterval,"discover_assets":self.assetscanInterval}}
+            	mode : data["agentMode"],
+				cmd : data["agentCmd"],
+				time_setting : {"start_stop":{"start":data["startTime"],"stop":data["stopTime"]},"interval":{"time_sync":data["timesyncInterval"],"update":data["updateInterval"],"discover_assets":data["assetscanInterval"]}}
 			});
 			route = API_SERVER + "/api/agent/D4:85:64:A3:9A:27"
 		}
 
-         // prepare request data
-        //$.patch("http://10.10.10.97:7777/api/user/mack@goflyball.com", data, function(response) // sends 'post' request
-       //{
-           // on success callback
-        //    self.responseJSON = "Updated";
-        // })
-
-		$.ajax({ headers : { 'Content-Type' : 'application/json'},
-			 url: route,
-			 type: 'PUT',
-			 data: data,
-			 success : function(response, textStatus,jqXhr) {
+		$.ajax({
+			headers: {'Content-Type' : 'application/json'},
+			url: route,
+			type: 'PUT',
+			data: payload,
+			success : function(response, textStatus,jqXhr) {
 				self.responseJSON("Updated Successfully");
 				var msgBox = document.getElementById("messagebox");
 				msgBox.className="bg-primary";
 			},
-			 error : function(response, textStatus,jqXhr) {
+			error : function(response, textStatus,jqXhr) {
 				self.responseJSON("Update Failed");
 				var msgBox = document.getElementById("messagebox");
 				msgBox.className="bg-danger";
 			},
 			beforeSend: setHeader
 		});
-    }
+    };// end of onSubmit function
 }
 
-$(document).ready(function () {
+/* custom binding function for animations */
+// ko.bindingHandlers.fadeInOut = {
+//     update: function (element) {
+// 		$(element).fadeIn(700);
+// 		$(element).fadeOut(700);
+//     }
+// };
+
+$(document).ready(function() {
     ko.applyBindings(new userViewModel());
 });
