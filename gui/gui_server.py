@@ -1,13 +1,24 @@
 from flask import Flask, render_template, request, jsonify, make_response 
 import requests
 import json
+from  util.netinterfaces import get_lan_ip
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 # Configurations
 app.config.from_object('config')
-print("API Server:" + app.config['API_SERVER_URL'])
+
+if ('API_SERVER_URL' in app.config) and len(app.config['API_SERVER_URL']) > 0:
+    API_SERVER = app.config['API_SERVER_URL']
+else: #Assume the the server is located on the local server
+    ip = get_lan_ip()
+    url = "http://{}:7777".format(ip)
+    app.config['API_SERVER_URL'] = url
+    API_SERVER = url
+
+# Print the API Server URL on the console
+print("API Server:" + API_SERVER)
 
 @app.route('/')
 def index():
@@ -19,8 +30,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        url = API_SERVER + "/api/auth/" + username + "/" + password
         apiServer = app.config['API_SERVER_URL']
-        url = apiServer + "/api/auth/" + username + "/" + password
         try:
             response = requests.get(url)
         except requests.exceptions.RequestException as e:
@@ -46,11 +57,11 @@ def logout():
 @app.route('/threats', methods=['GET'])
 def threats():
     company = "Flyball-Labs"
-    apiServer = app.config['API_SERVER_URL']
     # Grab the sites for the company
-    url =  apiServer  + '/api/company/' + company + "/sites"
+    url =  API_SERVER  + '/api/company/' + company + "/sites"
     params = request.args.items()
     site = request.args.get('site')
+    apiServer = app.config['API_SERVER_URL']
 
     if site != None:
         threatsBySiteURI =  '/api/metron/threats/' + site

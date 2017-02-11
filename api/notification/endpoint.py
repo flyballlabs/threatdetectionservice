@@ -22,6 +22,7 @@ from api.sql.models import user_data
 from api.util import time_funcs
 from api.util.decorator import async
 from api.util.parse_json import *
+import requests, base64, subprocess, os
 
 # email server config #
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
