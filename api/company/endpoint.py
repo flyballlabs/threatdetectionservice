@@ -1,3 +1,5 @@
+''' @Summary: API endpoint for accessing company data from mysql database '''
+
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py

@@ -1,7 +1,12 @@
-from api import *
-from api import db, user_data
+''' @Summary: API endpoint for accessing user data '''
+
+from flask import jsonify
 from flask_login import login_required
-from flask_restful import reqparse
+from flask_restful import reqparse, Resource
+from sqlalchemy.dialects.mssql import TINYINT
+from api import db, user_data
+from api.util.parse_json import json_encode, json_decode
+
 
 class manageUser(Resource):
     @login_required

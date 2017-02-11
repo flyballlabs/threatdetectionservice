@@ -1,20 +1,27 @@
 '''
-@summary: Handles all notifications for api, including alerts from metron.
-Note: Ensure username and password needs hidden / parsed from encrypted file.
-@author: devopsec
+@Summary: Handles all notifications for api, including alerts from metron.
+@Author: devopsec
 '''
+
+#TODO: Ensure username and password needs hidden / parsed from encrypted file.
+
+import base64
+import os
+import requests
+import subprocess
 import sys
 import traceback
-from api import app, time_funcs
-from api.util.parse_json import *
-from api.decorators import async
-from api.sql.models import user_data
-from api.company.endpoint import companyUtils
-from flask import jsonify, request, json, render_template
+
+from flask import jsonify, request
 from flask_mail import Mail, Message
 from flask_restful import Resource, reqparse
-from starbase import Connection
-import requests, base64, subprocess, os
+
+from api import app
+from api.company.endpoint import companyUtils
+from api.sql.models import user_data
+from api.util import time_funcs
+from api.util.decorator import async
+from api.util.parse_json import *
 
 # email server config #
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -126,7 +133,7 @@ class manageNotifications(Resource):
                         "ip_src_addr": args['threat_intel']['_source']['ip_src_addr'],
                         "ip_dst_addr": args['threat_intel']['_source']['ip_dst_addr'],
                         "url": args['threat_intel']['_source']['url'],
-                        "time": time_funcs.convert_epoch_ts(args['threat_intel']['_source']['timestamp'])
+                        "time": time_funcs.convert_ts(args['threat_intel']['_source']['timestamp'])
                     }
 
                     # TODO enrich threat-intel in metron with source company name

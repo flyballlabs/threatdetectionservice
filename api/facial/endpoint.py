@@ -1,11 +1,11 @@
+''' @Summary: API endpoint for accessing facial recognition services through MSFT Engine '''
+
 from flask_restful import Resource, reqparse
+from api import login_required
 from api.sql.models import *  #import all of the models from models.py
-from api import *
-from flask import send_file
-import os, uuid
-import imghdr
+from flask import send_file, request
+import os, uuid, imghdr, time
 from .MSFTFacialEngine import MSFTFacialEngine
-import time
 
 class manageFacial(Resource):
     @login_required
@@ -26,22 +26,22 @@ class manageFacialSearch(Resource):
         baseSearchDir = "/home/mack/threatdetectionservice/api/facial/images/" + _customerID_ + "/search/"
         searchDir = "/home/mack/threatdetectionservice/api/facial/images/" + _customerID_ + "/search/" + _userID_
     
-    # - Create a unique name and store the image under the customer/company ID and userid
+        # - Create a unique name and store the image under the customer/company ID and userid
         # Create the directory
         if not os.path.exists(searchDir):
             os.makedirs(searchDir)
-	
+
         # Create a filename using UUID
         filename = uuid.uuid4().hex
-       
-	# Full Filename
+
+        # Full Filename
         fullFilename = searchDir + "/" + filename
 
 
         # Save the image
         data = request.get_data()
 
-	# Figure out the type of image
+        # Figure out the type of image
         imageType = imghdr.what(None,data)
         if (imageType != None):
             fullFilename = fullFilename + "." + imageType
@@ -83,4 +83,3 @@ class manageFacialRepo(Resource):
             return send_file("/home/mack/threatdetectionservice/api/facial/images/" + _customerID_ + "/repo/" + _fileName_)
         except OSError as err:
             print("OS error: {0}".format(err))
-

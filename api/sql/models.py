@@ -1,3 +1,5 @@
+''' @Summary: Contains all database table schema for access through python '''
+
 import json, sqlalchemy, uuid
 from api import db, app
 from flask_security import RoleMixin
@@ -10,6 +12,8 @@ from sqlalchemy import null, Column
 from sqlalchemy.orm import class_mapper
 from sqlalchemy.ext import mutable
 from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR, TINYINT #, DATE, DATETIME
+
+# External module for automated HTML table conversions #
 from flask_table import Table, Col
  
 ##### classes / methods we may need #######################################

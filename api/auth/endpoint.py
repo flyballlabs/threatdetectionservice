@@ -1,7 +1,12 @@
+'''
+@Summary: Authenticates users through password or token authentication.
+Authenticated users are then logged into a session using flask_login.
+'''
+
 from flask import jsonify
+from flask_login import login_user
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
-from api import *
 
 class userAuth(Resource):
     def get(self,_username,_password):
