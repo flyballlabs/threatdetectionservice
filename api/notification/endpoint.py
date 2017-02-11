@@ -6,14 +6,13 @@ Note: Ensure username and password needs hidden / parsed from encrypted file.
 import sys
 import traceback
 from api import app, time_funcs
-from api.parse_json import *
+from api.util.parse_json import *
 from api.decorators import async
 from api.sql.models import user_data
 from api.company.endpoint import companyUtils
 from flask import jsonify, request, json, render_template
 from flask_mail import Mail, Message
 from flask_restful import Resource, reqparse
-from starbase import Connection
 import requests, base64, subprocess, os
 
 # email server config #
@@ -32,7 +31,7 @@ app.config['MAIL_DEFAULT_ADMIN'] = ['threatdetectionservice@gmail.com']
 mail = Mail(app)
 
 # define hbase vars #
-metronHBaseRestURL = "http://10.10.10.154"
+metronHBaseRestURL = "http://localhost"
 metronHbaseRestPort = 9082
 metronHBaseTable = "enrichment"
 metronHBaseCF = "assets"
@@ -141,7 +140,7 @@ class manageNotifications(Resource):
 
                     # gather contact info from company & get notification settings for each poc
                     if MASS_ALERT_FLAG == True:
-                        if response['response'] == 200:
+                        if response['status'] == 200:
                             all_poc_list = response['all_company_poc']
 
                             for co in all_poc_list:
@@ -156,11 +155,11 @@ class manageNotifications(Resource):
                                     })
                         else:  # could not get poc list
                             return jsonify(
-                                response = 400,
+                                status = 400,
                                 message = "Could not obtain POC list"
                             )
                     else:
-                        if response['response'] == 200:
+                        if response['status'] == 200:
                             poc_list = response['poc']
 
                             for poc in poc_list:
@@ -174,7 +173,7 @@ class manageNotifications(Resource):
                                 })
                         else: # could not get poc list
                             return jsonify(
-                                response = 400,
+                                status = 400,
                                 message = "Could not obtain POC list"
                             )
 
@@ -195,7 +194,7 @@ class manageNotifications(Resource):
                                          threat_data=json_encode(manageNotifications.threat_data))
 
                 return jsonify(
-                    response = 200,
+                    status = 200,
                     message = "Alert parsing successful"
                 )
 
@@ -231,7 +230,7 @@ class manageNotifications(Resource):
                            args['html_body'], args['sender'])
 
                 return jsonify(
-                        response = 200,
+                        status = 200,
                         message = 'Email delivery success'
                     )
             except Exception as e:
@@ -241,8 +240,8 @@ class manageNotifications(Resource):
         elif URL.find("api/notification/sms") > 0:
             try:
                 parser = reqparse.RequestParser()
-                parser.add_argument('to', type=int, location='json')
-                parser.add_argument('frm', type=int, location='json')
+                parser.add_argument('to', type=str, location='json')
+                parser.add_argument('frm', type=str, location='json')
                 parser.add_argument('msg', type=str, location='json')
                 args = parser.parse_args()
 
@@ -256,12 +255,13 @@ class manageNotifications(Resource):
                 send_sms(to=args['to'], frm=args['frm'], msg=args['msg'])
 
                 return jsonify(
-                    response = 200,
+                    status = 200,
                     message = 'SMS delivery success'
                 )
             except Exception as e:
                 return {'error' : str(e)} # DEBUG only (security risk : TMI)
 
+    #TODO: could be used if we store notifications in mysql db
     def get(self, threat_id):
         ''' get threat-intel data for threat notification '''
         assetFullQueryURL = assetQueryURL + "/" + threat_id
@@ -280,10 +280,10 @@ class manageNotifications(Resource):
                 columnname = base64.b64decode(cell['column']).decode('ascii')
                 value = base64.b64decode(cell['$']).decode('ascii')
                 dColumn[columnname] = value 
-            decodedList.append (dColumn) 
-<<<<<<< HEAD
+            decodedList.append (dColumn)
         return jsonify(threat_intel=decodedList)
-    
+
+#TODO: this is redundant and is accomplished in above routines
 class metronAlerts(Resource):
     def post(self):
         ''' process threat-intel and conditionally alert user as threat notification '''
@@ -297,10 +297,8 @@ class metronAlerts(Resource):
 #                     threat_data = json_decode(args['threat_data'])
 #                 )
             return jsonify(
-                    response = 200,
+                    status = 200,
                     message = 'Email delivery success'
                 )
         except Exception as e:
-            return {'response' : str(e)}
-        
-        return jsonify(threat_intel=decodedList)
+            return {'status' : str(e)}

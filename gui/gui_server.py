@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request, jsonify, make_response 
 import requests
 import json
+from  util.netinterfaces import get_lan_ip
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 # Configurations
 app.config.from_object('config')
+    
+if ('API_SERVER_URL' in app.config) and len(app.config['API_SERVER_URL']) > 0:
+    API_SERVER = app.config['API_SERVER_URL']
+else: #Assume the the server is located on the local server
+    ip = get_lan_ip()
+    url = "http://{}:7777".format(ip)
+    app.config['API_SERVER_URL'] = url
+    API_SERVER = url
 
-API_SERVER = app.config['API_SERVER_URL']
+# Print the API Server URL on the console
 print("API Server:" + API_SERVER)
 
 @app.route('/')
@@ -26,12 +35,12 @@ def login():
             response = requests.get(url)
         except requests.exceptions.RequestException as e:
             error = "Make sure the API Server is started and then try to login again"
-            return render_template('login.html',error=error);
+            return render_template('login.html',error=error)
         jData = response.json()
         if jData['authentication'] == True:
-            resp = make_response(render_template('dashboard.html',username=username)); 
-            resp.set_cookie('X-AUTH-TOKEN',jData['X-AUTH-TOKEN']);
-            return resp;
+            resp = make_response(render_template('dashboard.html',username=username))
+            resp.set_cookie('X-AUTH-TOKEN',jData['X-AUTH-TOKEN'])
+            return resp
         else:
             error = "Username or Password was not correct"
 
@@ -87,8 +96,19 @@ def getAuthToken():
 def userprofile():
     apiServer = app.config['API_SERVER_URL']
     authToken = getAuthToken()
-    return render_template('userprofile.html',apiServer=apiServer,authToken=authToken)
+    return render_template('user-profile.html', apiServer=apiServer, authToken=authToken)
 
+@app.route('/alert-settings',methods=['GET'])
+def alert_settings():
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('alert-settings.html', apiServer=apiServer, authToken=authToken)
+
+@app.route('/agent-settings',methods=['GET'])
+def agent_settings():
+    apiServer = app.config['API_SERVER_URL']
+    authToken = getAuthToken()
+    return render_template('agent-settings.html', apiServer=apiServer, authToken=authToken)
 
 @app.route('/facial-upload',methods=['GET'])
 def facial_paste():
@@ -103,7 +123,9 @@ def facial():
     return render_template('facial-paste.html',apiServer=apiServer,authToken=authToken)
 
 
+
 if __name__=='__main__':
+
     app.run(
        host = "0.0.0.0",
        port = 8888

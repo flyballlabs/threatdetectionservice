@@ -1,0 +1,42 @@
+{% extends "template.html" %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block menu %}
+  <div id="sidebar-wrapper" class="col-md-2 container" style="width:100%;">
+    <div class="navbar-collapse collapse sidebar-navbar-collapse navbar-default">
+      <ul class="nav navbar-nav" id="user-settings">
+        <li class="active" id="info"><a href="/userprofile">Basic Info</a></li>
+        <li id="alert"><a href="/alert-settings">Alerts</a></li>
+        <li id="agent"><a href="/agent-settings">Agents</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div id="main-wrapper" class="col-md-10 pull-right">
+    <div class="container center-block" style="margin-top:5px;padding-right:15%;display:block;">
+      <!-- begin main content -->
+      <form data-bind="submit: onSubmit('alert-settings')">
+        <h3>Alert settings for <span data-bind="text: firstName"></span></h3><br>
+        <p id="messagebox" data-bind="text : responseJSON"></p>
+        <br>
+        <div class="form-group">
+          <label for="alertLevel">Alert if <u>threat score</u> is atleast:</label>
+          <input type="text" class="form-control" id="alertLevel" data-bind="textInput: alertLevel" />
+          <label for="alertType">Alerts should be <u>sent</u> through:</label>
+          <input type="text" class="form-control" id="alertType" data-bind="textInput: alertType" />
+        </div>
+        <input type="submit" text="Save" value="Save" />
+      </form>
+    </div><!-- end main content  -->
+  </div><!-- end of main-wrapper -->
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  
+{% endblock %}

@@ -1,3 +1,4 @@
+from flask import jsonify
 from flask_restful import Resource, reqparse
 from api.sql.models import *  #import all of the models from models.py
 from api import *
@@ -8,7 +9,7 @@ class userAuth(Resource):
             x = user_data.query.filter_by(username=_username).first()
             if x != None:
                 if x.password == _password:
-                   login_user(x) 
+                   login_user(x)
                    retMessage = {}
                    retMessage['authentication'] = True
                    retMessage['message'] = 'Authentication success'

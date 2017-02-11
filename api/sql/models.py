@@ -1,6 +1,7 @@
-                          as Serializer, BadSignature, SignatureExpired)
-import json, sqlalchemy
-from api import database
+import json, sqlalchemy, uuid
+from api import db, app
+from flask_security import RoleMixin
+from flask_login import UserMixin
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
@@ -8,8 +9,8 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSign
 from sqlalchemy import null, Column
 from sqlalchemy.orm import class_mapper
 from sqlalchemy.ext import mutable
-from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR #, DATE, DATETIME
-from flask_table import Table, Col 
+from sqlalchemy.dialects.mysql import JSON, INTEGER, VARCHAR, TINYINT #, DATE, DATETIME
+from flask_table import Table, Col
  
 ##### classes / methods we may need #######################################
 #  from wtforms.validators import mac_address  #    mac address parsing   #
@@ -18,7 +19,7 @@ from flask_table import Table, Col
 ###########################################################################
 
 # Connect to the database and provide a handle #
-db = database.connect()
+#db = database.connect()
 
 # null constants #
 SQL_NULL = null()  # will *always* insert SQL NULL
@@ -39,7 +40,7 @@ class JsonEncodedDict(sqlalchemy.TypeDecorator): # easily iterable #
         return json.loads(value)
 mutable.MutableDict.associate_with(JsonEncodedDict) # add this datatype to table column #
 
-class user_data(db.Model):
+class user_data(db.Model, UserMixin):
     __tablename__ = 'user'
     __table_args__ = {  
         'mysql_engine': 'InnoDB',  
@@ -49,18 +50,18 @@ class user_data(db.Model):
     user_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     username = db.Column(VARCHAR(45),index=True, unique=True, nullable=False)
     firstname = db.Column(VARCHAR(45))
-    lastname = db.Column(VARCHAR(45))      ##mysql dialect table format##
-    password = db.Column(VARCHAR(45))      #Table('mytable', metadata,  #
-    email = db.Column(VARCHAR(45))         #Column('data', String(32)), #
-    company_id = db.Column(VARCHAR(45))    #mysql_engine='InnoDB',      #
-    status = db.Column(VARCHAR(45))        #mysql_charset='utf8',       #
-    phone_number = db.Column(VARCHAR(45))  #mysql_key_block_size="1024")#
-    lastlogin = db.Column(VARCHAR(45))     ##############################
+    lastname = db.Column(VARCHAR(45))               ##mysql dialect table format##
+    password = db.Column(VARCHAR(45))               #Table('mytable', metadata,  #
+    email = db.Column(VARCHAR(45))                  #Column('data', String(32)), #
+    company_id = db.Column(INTEGER, nullable=False) #mysql_engine='InnoDB',      #
+    active = db.Column(TINYINT)                     #mysql_charset='utf8',       #
+    phone_number = db.Column(VARCHAR(45))           #mysql_key_block_size="1024")#
+    lastlogin = db.Column(VARCHAR(45))              ##############################
     account_type = db.Column(VARCHAR(45))
     notification = db.Column(JSON)
-    password_hash = db.Column(db.String(64))    
+    password_hash = db.Column(db.String(64)) #TODO: do we need this??
                                            
-    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, active, lastlogin):
+    def __init__(self, user_id, username, firstname, lastname, password, email, company_id, active, phone_number, lastlogin, account_type, notification):
         self.user_id = user_id
         self.username = username
         self.firstname = firstname
@@ -69,7 +70,10 @@ class user_data(db.Model):
         self.email = email
         self.company_id = company_id
         self.active = active
+        self.phone_number = phone_number
         self.lastlogin = lastlogin
+        self.account_type = account_type
+        self.notification = notification
 
     def __repr__(self):
         return '{user: %r}' % self.user_id
@@ -147,7 +151,7 @@ class company_data(db.Model):
     authinfo =  db.Column(JSON)
     sites = db.Column(JSON)
     
-    def __init__(self, company_id, company_name, street, city, state, zip, phone_number, authinfo, sites):
+    def __init__(self, company_id, company_name, street, city, state, zip, phone_number, poc, authinfo, sites):
         self.company_id = company_id
         self.company_name = company_name
         self.street = street
@@ -172,18 +176,18 @@ class agent_data(db.Model):
     agent_id = db.Column(INTEGER, primary_key=True, unique=True, nullable=False)
     mac_address = db.Column(VARCHAR(45), unique=True, nullable=False)
     ip_address = db.Column(VARCHAR(45))
-    status = db.Column(VARCHAR(45))
-    company_id = db.Column(VARCHAR(45))
+    active = db.Column(TINYINT)
+    company_id = db.Column(INTEGER, nullable=False)
     site = db.Column(VARCHAR(45))
     mode = db.Column(VARCHAR(45))
     cmd = db.Column(VARCHAR(45))
     time_setting = db.Column(JSON) #(sqltypes.JSON)
     
-    def __init__(self, agent_id, mac_address, ip_address, status, company_id, site, mode, cmd, time_setting):
+    def __init__(self, agent_id, mac_address, ip_address, active, company_id, site, mode, cmd, time_setting):
         self.agent_id = agent_id
         self.mac_address = mac_address
         self.ip_address = ip_address
-        self.status = status
+        self.active = active
         self.company_id = company_id
         self.site = site
         self.mode = mode

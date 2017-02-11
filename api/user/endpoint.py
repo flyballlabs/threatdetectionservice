@@ -1,9 +1,10 @@
-from flask_restful import Resource, reqparse
-from api.sql.models import *  #import all of the models from models.py
 from api import *
+from api import db, user_data
+from flask_login import login_required
+from flask_restful import reqparse
 
 class manageUser(Resource):
-    @login_required    
+    @login_required
     def get(self, _username_):
         try:
             x = user_data.query.filter_by(username=_username_).first()
@@ -13,27 +14,34 @@ class manageUser(Resource):
             _email = x.email
             _company_id = x.company_id
             _active = x.active
+            _phone_number = x.phone_number
             _lastlogin = x.lastlogin
+            _account_type = x.account_type
+            _notification = x.notification
             
             if x != None:
                 return {
-                        'user_id':_user_id,
-                        'username':_username_,
-                        'firstname' : _firstname,
-                        'lastname' : _lastname,
-                        'email' : _email,
-                        'company_id' : _company_id,
-                        'active' : _active,
-                        'lastlogin' : _lastlogin,
-                        'message':'User search success'
-                       }
+                    'status' : 200,
+                    'message' : 'User search success',
+                    'user_id' : _user_id,
+                    'username' : _username_,
+                    'firstname' : _firstname,
+                    'lastname' : _lastname,
+                    'email' : _email,
+                    'company_id' : _company_id,
+                    'active' : _active,
+                    'phone_number' : _phone_number,
+                    'lastlogin' : _lastlogin,
+                    'account_type' : _account_type,
+                    'notification' : _notification
+                }
             else:
                 return {
-                        'status': 400,
-                        'message':'User search failure'
-                       }
+                    'status' : 400,
+                    'message' :'User search failure'
+                }
         except Exception as e:
-            return {'error': str(e)}
+            return {'error' : str(e)} # DEBUG only (security risk : TMI)
     
     @login_required    
     def put(self, _username_):
@@ -47,38 +55,17 @@ class manageUser(Resource):
             parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
             parser.add_argument('password', type=str, help='Password for account', location='json')
             parser.add_argument('email', type=str, help='Email for account', location='json')
-            parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('active', type=str, help='Status for account', location='json')
+            parser.add_argument('company_id', type=int, help='Company_id for account', location='json')
+            parser.add_argument('active', type=TINYINT, help='Is account active', location='json')
+            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('account_type', type=str, help='Account priveledge level', location='json')
+            parser.add_argument('notification', type=json_encode, help='Notification settings', location='json')
             
-            args = parser.parse_args()#strict=True, require=True
-            
-            #for response in args:         ############################  
-            #    if args[response] != None:# optimize in future release
-                
-            #if args['user_id'] != None:
-            #    _user_id = args['user_id']
-            #if args['username'] != None:
-            #    _username = args['username']
-            #if args['firstname'] != None:
-            #    _firstname = args['firstname']
-            #if args['lastname'] != None:
-            #    _lastname = args['lastname']
-            #if args['password'] != None:
-            #    _password = args['password']
-            #if args['email'] != None:
-            #    _email = args['email']
-            #if args['company_id'] != None:
-            #    _company_id = args['company_id']
-            #if args['active'] != None:
-            #    _active = args['active']
-            #if args['lastlogin'] != None:
-            #    _lastlogin = args['lastlogin']
-            ###################################
-            # would be faster in an array / loop
-            
+            args = parser.parse_args() #strict=True, require=True
+            curr_session = db.session  # open database session
+
             try:
-                curr_session = db.session #open database session
                 x = user_data.query.filter_by(username=_username_).first() #fetch the username to be updated
                 if args['user_id'] != None:
                     x.user_id = args['user_id']                
@@ -96,23 +83,30 @@ class manageUser(Resource):
                     x.company_id = args['company_id']
                 if args['active'] != None:
                     x.active = args['active']
+                if args['phone_number'] != None:
+                    x.phone_number = args['phone_number']
                 if args['lastlogin'] != None:
-                    x.lastlogin = args['lastlogin'] 
+                    x.lastlogin = args['lastlogin']
+                if args['account_type'] != None:
+                    x.account_type = args['account_type']
+                if args['notification'] != None:
+                    x.notification = json_decode(args['notification'])
+
                 curr_session.commit() #commit changes
                 
-                return  {
-                            'status': 200,
-                            'message':'User update successful'
-                        }
+                return {
+                    'status' : 200,
+                    'message' :'User update successful'
+                }
             except:
                 curr_session.rollback()
                 curr_session.flush() # for resetting non-commited .add()
-                return  {
-                            'status':400,
-                            'message':'User update failure'
-                        }
+                return {
+                    'status' : 400,
+                    'message' : 'User update failure'
+                }
         except Exception as e:
-            return {'error': str(e)}
+            return {'error' : str(e)} # DEBUG only (security risk : TMI)
         
     @login_required    
     def delete(self, _username_):
@@ -122,19 +116,19 @@ class manageUser(Resource):
             try:
                 db.session.delete(x)
                 db.session.commit()
-                return  {
-                            'status': 200,
-                            'message':'User delete successful'
-                        }
+                return {
+                    'status' : 200,
+                    'message' : 'User delete successful'
+                }
             except:
                 curr_session.rollback()
                 curr_session.flush() # for resetting non-commited .add()
-                return  {
-                            'status':400,
-                            'message':'User delete failure'
-                        }
+                return {
+                    'status' : 400,
+                    'message' : 'User delete failure'
+                }
         except Exception as e:
-            return {'error': str(e)}
+            return {'error' : str(e)} # DEBUG only (security risk : TMI)
 
 class manageUserList(Resource):
     @login_required    
@@ -151,7 +145,7 @@ class manageUserList(Resource):
                         'lastname' : user.lastname,
                         'email' : user.email,
                         'company_id' : user.company_id,
-                        'status' : user.status,
+                        'active' : user.active,
                         'phone_number' : user.phone_number,
                         'lastlogin' : user.lastlogin,
                         'account_type' : user.account_type,
@@ -159,17 +153,17 @@ class manageUserList(Resource):
                     } )
 
                 return jsonify(
-					response = 200,
+                    status = 200,
                     message = 'User search success',
                     users = results
                 )
             else:
                 return {
-                        'status': 400,
-                        'message':'User search failure'
-                       }
+                    'status' : 400,
+                    'message' : 'User search failure'
+                }
         except Exception as e:
-            return {'error': str(e)}
+            return {'error' : str(e)} # DEBUG only (security risk : TMI)
     
     @login_required    
     def post(self):
@@ -181,9 +175,12 @@ class manageUserList(Resource):
             parser.add_argument('lastname', type=str, help='Lastname for account', location='json')
             parser.add_argument('password', type=str, help='Password for account', location='json')
             parser.add_argument('email', type=str, help='Email for account', location='json')
-            parser.add_argument('company_id', type=str, help='Company_id for account', location='json')
-            parser.add_argument('active', type=str, help='Status for account', location='json')
+            parser.add_argument('company_id', type=int, help='Company_id for account', location='json')
+            parser.add_argument('active', type=TINYINT, help='Status for account', location='json')
+            parser.add_argument('phone_number', type=str, help='Phone Number for account', location='json')
             parser.add_argument('lastlogin', type=str, help='Lastlogin for account', location='json')
+            parser.add_argument('account_type', type=str, help='Account priveledge level', location='json')
+            parser.add_argument('notification', type=json_encode, help='Notification settings', location='json')
             args = parser.parse_args()#strict=True
 
             _user_id = args['user_id']
@@ -194,27 +191,30 @@ class manageUserList(Resource):
             _email = args['email']
             _company_id = args['company_id']
             _active = args['active']
+            _phone_number = args['phone_number']
             _lastlogin = args['lastlogin']
+            _account_type = args['account_type']
+            _notification = args['notification']
             
-            query = user_data(user_id=_user_id, username=_username, firstname=_firstname, 
-                              lastname=_lastname, password=_password, email=_email, company_id=_company_id,
-                              status=_status, phone_number=_phone_number, lastlogin=_lastlogin,
-                              account_type=_account_type, notification=json_decode(_notification))
+            query = user_data(user_id=_user_id, username=_username, firstname=_firstname, lastname=_lastname,
+                              password=_password, email=_email, company_id=_company_id, active=_active,
+                              phone_number=_phone_number, lastlogin=_lastlogin, account_type=_account_type,
+                              notification=json_decode(_notification))
 
             curr_session = db.session #open database session
             try:
                 curr_session.add(query) #add prepared statement to opened session
                 curr_session.commit() #commit changes
                 return  {
-                            'status': 200,
-                            'message':'User creation successful'
-                        }
+                    'status' : 200,
+                    'message' : 'User creation successful'
+                }
             except:
                 curr_session.rollback()
                 curr_session.flush() # for resetting non-commited .add()
                 return  {
-                            'status': 400,
-                            'message':'User creation failure'
-                        }
+                    'status' : 400,
+                    'message' : 'User creation failure'
+                }
         except Exception as e:
-            return {'error': str(e)}
+            return {'error': str(e)} # DEBUG only (security risk : TMI)

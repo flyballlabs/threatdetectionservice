@@ -16,7 +16,7 @@ assetQueryURL =metronHBaseRestURL + "/" + metronHBaseTable
 class manageAssets(Resource):
     # update a company's info #
     def get(self, _device_):
-	#Lookup Company 
+        #Lookup Company
         company = "Flyball-Labs"
         assetSearch = company + "_" + _device_ + "_*"
         assetFullQueryURL = assetQueryURL + "/" + assetSearch

@@ -1,7 +1,7 @@
 from flask import Flask, Response, make_response, jsonify 
 from flask_restful import Api, reqparse, fields 
 from flask_cors import CORS, cross_origin
-from flask_login import LoginManager, UserMixin, login_required,utils,login_user
+from flask_login import LoginManager, UserMixin, login_required, utils,login_user
 from flask_sqlalchemy import SQLAlchemy
 
 # Define the Application object

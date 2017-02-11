@@ -8,11 +8,11 @@ Note: app instantiation is at module-level within project dir : api/init.py
 '''
 
 import os
-from api import app, API, database
+from api import app, db  #,API
 from flask import make_response, jsonify #, g, url_for ,abort, request
 
-# import endpoints #
 from api.auth.endpoint import userAuth
+# import endpoints #
 from api.user.endpoint import manageUser, manageUserList
 from api.agent.endpoint import piController, manageAgent, manageAgentList
 from api.company.endpoint import manageCompany, manageCompanyList
@@ -51,6 +51,5 @@ API.add_resource(manageCompanyList, '/api/company', '/api/company/sites', '/api/
 
 if __name__ == '__main__':
     if not os.path.exists('db.mysql'):
-        db = database.connect()
         db.create_all()
     app.run(host='0.0.0.0', port=7777, debug=True)
