@@ -4,12 +4,21 @@
     <title>Threat Management Platform</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="static/site.css" rel="stylesheet" media="screen">
   </head>
   <body>
     <div class="container">
-      <h1>Welcome </h2>
-      <br>
-      <p>Click <a href="/login">here</a> to go login</p>
+	<div class="jumbotron">
+      		<h1>Threat Management Platform</h1>
+                <h3>Cyber-Security | School Lockdown | Suspicious Surveillance Alerts | Notifications</h3>
+                <button id="login" type="button" class="btn btn-primary" onclick=login()>Login</button>
+    	</div>
     </div>
   </body>
+    <script>
+    function login()
+    {
+     	window.location='/login';
+    }
+</script>
 </html>

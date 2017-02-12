@@ -190,3 +190,11 @@ background-color: #fff;
   -o-transition: visibility 2s, opacity 2s ease-out 0s;
   transition: visibility 2s, opacity 2s ease-out 0s;
 }
+
+.jumbotron {
+    margin-top: 40px;
+    height: 350px;
+    border-style: solid;
+    background-color: #ea5c12;
+    color: #ffffff;
+}
