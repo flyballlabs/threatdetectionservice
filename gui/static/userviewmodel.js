@@ -11,14 +11,6 @@ function userViewModel() {
     self.alertType = ko.observable("");
     self.companyID = ko.observable("");
 
-    self.agentMode = ko.observable("");
-	self.agentCmd =	ko.observable("");
-	self.startTime = ko.observable("");
-	self.stopTime = ko.observable("");
-	self.timesyncInterval = ko.observable("");
-	self.updateInterval = ko.observable("");
-	self.assetscanInterval = ko.observable("");
-
 	self.responseJSON = ko.observable(null);
 
 	/* function for setting auth headers */
@@ -26,11 +18,31 @@ function userViewModel() {
         xhr.setRequestHeader('X-AUTH-TOKEN', AUTH_TOKEN);
 	}
 
+	/* functions for displaying info
+	*  msg : optional msg to be displayed */
+	function displayOnSuccess(msg) {
+		if (msg === undefined) {
+			msg = "Updated Successfully";
+		}
+		self.responseJSON(msg);
+		var msgBox = document.getElementById("messagebox");
+		msgBox.className="bg-primary";
+	}
+
+	function displayOnFail(msg) {
+		if (msg === undefined) {
+			msg = "Update Failed";
+		}
+		self.responseJSON(msg);
+		var msgBox = document.getElementById("messagebox");
+		msgBox.className="bg-danger";
+    }
+
 	/* get user info from api */
     $.ajax({
-	url: API_SERVER + "/api/user/mack@goflyball.com",
-	dataType: 'json',
-	success: function(data) {
+		url: API_SERVER + "/api/user/mack@goflyball.com",
+		dataType: 'json',
+		success: function(data) {
 			self.firstName(data["firstname"]);
 			self.lastName(data["lastname"]);
 			self.email(data["email"]);
@@ -39,43 +51,48 @@ function userViewModel() {
     		self.alertType(data["notification"]["notification_type"]);
 			self.companyID(data["company_id"]);
 		},
-	beforeSend: setHeader
+		beforeSend: setHeader
     });
 
-	// Call API, Update observable, and animate response
+	/* Call API, Update observable, and animate response */
 	// TODO: make user / agent object passable instead of hardcoded
-    self.onSubmit = function(data, trigger)
-    {
-    	var route, payload;
-    	// conditional data routing depending on trigger
-		if (trigger == 'user-profile')
-		{
+    self.onSubmit = function(data, event) {
+
+    	/* Error checking for improper form submission (bug) */
+		if (data["firstName"] !== "" || data["lastName"] !== "" ||
+			data["email"] !== "" || data["phone"] !== "") { // grab calling elem and get id
+			var elem = (event.currentTarget) ? event.currentTarget : event.srcElement;
+            var trigger = elem.id;
+		} else {return;}
+
+        var payload = {};
+        var route = API_SERVER + "/api/user/mack@goflyball.com";
+
+		/* If user-profile submitted form */
+		if (trigger == "user-profile") {
 			payload = JSON.stringify(
-            {
-                firstname : data["firstName"],
-				lastname : data["lastName"],
-				email : data["email"],
-				phone_number : data["phone"]
-            });
-			route = API_SERVER + "/api/user/mack@goflyball.com"
-		}
-		else if (trigger == 'alert-settings')
-		{
-			payload = JSON.stringify(
-            {
-				notification : {"alert_type":data["alertLevel"],"notification_type":data["alertType"]}
+			{
+				"firstname" : data["firstName"](),
+				"lastname" : data["lastName"](),
+				"email" : data["email"](),
+				"phone_number" : data["phone"]()
 			});
-			route = API_SERVER + "/api/user/mack@goflyball.com"
 		}
-		else if (trigger == 'agent-settings')
-		{
+
+		/* If alert-settings submitted form */
+		else if (trigger == "alert-settings") {
 			payload = JSON.stringify(
-            {
-            	mode : data["agentMode"],
-				cmd : data["agentCmd"],
-				time_setting : {"start_stop":{"start":data["startTime"],"stop":data["stopTime"]},"interval":{"time_sync":data["timesyncInterval"],"update":data["updateInterval"],"discover_assets":data["assetscanInterval"]}}
+			{
+				"notification" : {
+					"alert_type" : data["alertLevel"](),
+					"notification_type" : data["alertType"]()
+				}
 			});
-			route = API_SERVER + "/api/agent/D4:85:64:A3:9A:27"
+		}
+
+		/* Error catching */
+		if (payload == {}) {
+			displayOnFail("Improper data input, try reformatting")
 		}
 
 		$.ajax({
@@ -83,15 +100,12 @@ function userViewModel() {
 			url: route,
 			type: 'PUT',
 			data: payload,
+			contentType: "application/json, text/javascript",
 			success : function(response, textStatus,jqXhr) {
-				self.responseJSON("Updated Successfully");
-				var msgBox = document.getElementById("messagebox");
-				msgBox.className="bg-primary";
+				displayOnSuccess();
 			},
 			error : function(response, textStatus,jqXhr) {
-				self.responseJSON("Update Failed");
-				var msgBox = document.getElementById("messagebox");
-				msgBox.className="bg-danger";
+				displayOnFail();
 			},
 			beforeSend: setHeader
 		});
@@ -107,5 +121,6 @@ function userViewModel() {
 // };
 
 $(document).ready(function() {
-    ko.applyBindings(new userViewModel());
+	var vm = new userViewModel();
+    ko.applyBindings(vm);
 });
