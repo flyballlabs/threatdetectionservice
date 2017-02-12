@@ -37,7 +37,7 @@ app.config['SECRET_KEY'] = 'flyball2016'
 app.config['TOKEN_EXPIRATION'] = 3600
 
 # Define API object based on the app object
-API = Api(app)
+api= Api(app)
 
 
 # Define COR based o the app objet
