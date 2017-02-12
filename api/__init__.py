@@ -25,8 +25,8 @@ from .asset.endpoint import *
 from .notification.endpoint import *
 from .facial.endpoint import *
 
-# Import Models
-#from .sql import models
+# Import Models - must be imported prior to starting server
+from .sql.models import *
 
 
 # Define Configurations
@@ -37,7 +37,7 @@ app.config['SECRET_KEY'] = 'flyball2016'
 app.config['TOKEN_EXPIRATION'] = 3600
 
 # Define API object based on the app object
-api = Api(app)
+API = Api(app)
 
 
 # Define COR based o the app objet

@@ -1,12 +1,12 @@
+''' @Summary: API endpoint for controlling functionality of deployed agents. '''
+
 from flask import jsonify, request
 from flask_login import login_required
 from flask_restful import Resource, reqparse
 from datetime import datetime, timezone, timedelta
-
 from api import db
 from api.sql.models import *  #import all of the models from models.py
 from api.util.parse_json import json_decode, json_encode #for json request parsing
-from api import *
 
 ## for agent-ops ##
 class piController(Resource):

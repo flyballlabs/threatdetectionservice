@@ -1,3 +1,8 @@
+'''
+@Summary: Contains methods to be applied as python decorators
+@Author: devopsec
+'''
+
 from threading import Thread
 
 def async(f):

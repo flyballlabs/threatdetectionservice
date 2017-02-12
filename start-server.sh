@@ -29,4 +29,4 @@ done
 if [ -z ${PYTHON_CMD+x} ]; then
 	isPythonInstalled
 fi
-$PYTHON_CMD rest_server.py
+$PYTHON_CMD api/rest_server.py

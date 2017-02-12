@@ -1,7 +1,8 @@
+''' @Summary: API endpoint to access asset data from hbase database '''
+
 from flask import jsonify, request, json
 from flask_restful import Resource, reqparse
-import requests
-import base64
+import base64, requests
 
 #from sql.models import *  #import all of the models from models.py
 #from app.parse_json import * #for json arg parsing

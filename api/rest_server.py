@@ -8,37 +8,34 @@ Note: app instantiation is at module-level within project dir : api/init.py
 '''
 
 import os
-from api import app, db  #,API
+from api import app, db ,API
 from flask import make_response, jsonify #, g, url_for ,abort, request
-
-from api.auth.endpoint import userAuth
+from sqlalchemy_utils import database_exists, create_database
 # import endpoints #
+from api.auth.endpoint import userAuth, userAuthToken
 from api.user.endpoint import manageUser, manageUserList
 from api.agent.endpoint import piController, manageAgent, manageAgentList
 from api.company.endpoint import manageCompany, manageCompanyList
 from api.asset.endpoint import manageAssets
 from api.metron.endpoint import metronThreats
 from api.notification.endpoint import manageNotifications
+from api.facial.endpoint import manageFacial, manageFacialRepo, manageFacialSearch
 #from api.metron_data.endpoint import asset_discovery, threat_intel
-
-@app.errorhandler(400)
-def bad_request(error):
-    return make_response(jsonify({'error': 'Bad request'}), 400)
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
 
 API.add_resource(manageNotifications, '/api/notifications/email', '/api/notifications/sms', '/api/notifications/alert')
 
 API.add_resource(metronThreats, '/api/metron/threats/<string:_device_>')
-API.add_resource(manageAssets, '/api/assets', '/api/assets/<string:_company_name_>/<string:_sites_>/<string:_asset_ip_>') #'/api/assets/<string:_company_name_>', '/api/assets/<string:_company_name_>/<string:_sites_>'
+API.add_resource(manageAssets, '/api/assets/<string:_device_>')
+#TODO: finish asset puts and deletes, determine if we want data in both db's or just hbase
+## API.add_resource(manageAssets, '/api/assets', '/api/assets/<string:_company_name_>/<string:_sites_>/<string:_asset_ip_>') #'/api/assets/<string:_company_name_>', '/api/assets/<string:_company_name_>/<string:_sites_>'
 
 API.add_resource(piController, '/api/picontroller/time', '/api/picontroller/<string:_mac_address_>')
 API.add_resource(manageAgent, '/api/agent/<string:_mac_address_>')
 API.add_resource(manageAgentList, '/api/agent/list')
 
 API.add_resource(userAuth, '/api/auth/<string:_username>/<string:_password>')
+API.add_resource(userAuthToken, '/api/auth')
+
 API.add_resource(manageUser, '/api/user/<string:_username_>')
 API.add_resource(manageUserList, '/api/user/list')
 
@@ -46,10 +43,15 @@ API.add_resource(manageCompany, '/api/company/<string:_company_name_>')
 API.add_resource(manageCompanyList, '/api/company', '/api/company/sites', '/api/company/<string:_company_name_>/sites',
 '/api/company/poc', '/api/company/<string:_company_name_>/poc')
 
+API.add_resource(manageFacial, '/api/facial')
+API.add_resource(manageFacialRepo, '/api/facial/images/<string:_customerID_>/repo/<string:_fileName_>')
+API.add_resource(manageFacialSearch, '/api/facial/search/<string:_customerID_>/<string:_userID_>', '/api/facial/search/<string:_customerID_>/<string:_userID_>/<string:_fileName_>')
+
 #api.add_resource(manageNotifications, '/api/notification', '/api/notification/<string:_username_>')
 #api.add_resource(threat_intel, '/api/metron_data/threat_intel', '/api/metron_data/threat_intel/<string:_company_name_>', '/api/metron_data/threat_intel/<string:_company_name_>/<string:_sites_>')
 
 if __name__ == '__main__':
-    if not os.path.exists('db.mysql'):
-        db.create_all()
+    if not database_exists('mysql://tmp:tmp@127.0.0.1/tmp'):
+        create_database('mysql://tmp:tmp@127.0.0.1/tmp')
+    db.create_all()
     app.run(host='0.0.0.0', port=7777, debug=True)

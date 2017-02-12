@@ -1,3 +1,8 @@
+'''
+@Summary: Contains methods for parsing json data.
+@Author: devopsec
+'''
+
 import json
 
 def json_decode(data):

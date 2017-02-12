@@ -7,6 +7,7 @@ flask-restful
 SQLAlchemy
 flask-sqlalchemy
 sqlalchemy-migrate
+sqlalchemy_utils
 flask-whooshalchemy
 flask-wtf
 flask-babel
