@@ -8,9 +8,10 @@
   <div id="sidebar-wrapper" class="col-md-2 container" style="width:100%;">
     <div class="navbar-collapse collapse sidebar-navbar-collapse navbar-default">
       <ul class="nav navbar-nav" id="user-settings">
-        <li class="active" id="info"><a href="/userprofile">Basic Info</a></li>
-        <li id="alert"><a href="/alert-settings">Alerts</a></li>
-        <li id="agent"><a href="/agent-settings">Agents</a></li>
+        <li class="active" id="info"><a href="/agent-settings">Settings<span class="sr-only">(current)</span></a></li>
+        <li id="alert"><a href="#">Deployment</a></li>
+        <li id="alert"><a href="#">Statistics</a></li>
+        <li id="alert"><a href="#">Data Management</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -20,27 +21,27 @@
   <div id="main-wrapper" class="col-md-10 pull-right">
     <div class="container center-block" style="margin-top:5px;padding-right:15%;display:block;">
       <!-- begin main content -->
-      <form data-bind="submit: onSubmit('agent-settings')">
-        <h3>Agent settings for <span data-bind="text: firstName"></span></h3><br>
+      <form id="agent-settings" data-bind="event: {'submit': onSubmit}">
+        <h3>Operational settings for Agent: <span data-bind="text: agentID"></span></h3><br>
         <p id="messagebox" data-bind="text : responseJSON"></p>
         <br>
         <div class="form-group">
           <label for="agentMode">Mode of operation</label>
-          <input type="text" class="form-control" id="agentMode" data-bind="textInput: agentMode" />
+          <input type="text" class="form-control" id="agentMode" data-bind="value: agentMode" />
           <label for="agentCmd">Command to execute</label>
-          <input type="text" class="form-control" id="agentCmd" data-bind="textInput: agentCmd" />
+          <input type="text" class="form-control" id="agentCmd" data-bind="value: agentCmd" />
           <label for="startTime">Agent start time</label>
-          <input type="text" class="form-control" id="startTime" data-bind="textInput: startTime" />
+          <input type="text" class="form-control" id="startTime" data-bind="value: startTime" />
           <label for="stopTime">Agent stop time</label>
-          <input type="text" class="form-control" id="stopTime" data-bind="textInput: stopTime" />
+          <input type="text" class="form-control" id="stopTime" data-bind="value: stopTime" />
           <label for="timesyncInterval">Intveral between time syncs</label>
-          <input type="text" class="form-control" id="timesyncInterval" data-bind="textInput: timesyncInterval" />
+          <input type="text" class="form-control" id="timesyncInterval" data-bind="value: timesyncInterval" />
           <label for="updateInterval">Intveral between agent updates</label>
-          <input type="text" class="form-control" id="updateInterval" data-bind="textInput: updateInterval" />
+          <input type="text" class="form-control" id="updateInterval" data-bind="value: updateInterval" />
           <label for="assetscanInterval">Intveral between asset scans</label>
-          <input type="text" class="form-control" id="assetscanInterval" data-bind="textInput: assetscanInterval" />
+          <input type="text" class="form-control" id="assetscanInterval" data-bind="value: assetscanInterval" />
         </div>
-        <input type="submit" text="Save" value="Save" />
+        <input type="submit" value="Save" />
       </form>
     </div><!-- end main content  -->
   </div><!-- end of main-wrapper -->
@@ -48,5 +49,7 @@
 
 {% block scripts %}
   {{ super() }}
-  
+  {% block models %}
+    <script src="static/agentviewmodel.js"></script>
+  {% endblock %}
 {% endblock %}
