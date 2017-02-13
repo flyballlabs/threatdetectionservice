@@ -5,10 +5,9 @@
 
 import requests, json
 from flask import Flask, render_template, request, jsonify, make_response
-from  api.util import dynamic # netinterfaces
+from  api.util import dynamic
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 # Configurations
 app.config.from_object('config')
@@ -165,7 +164,7 @@ def facial_paste():
     authToken = getAuthToken()
     return render_template('facial.html', username=GUI_MAN.get_user_name(), apiServer=apiServer,authToken=authToken)
 
-@app.route('/facial',methods=['GET'])
+@app.route('/facial-paste',methods=['GET'])
 def facial():
     apiServer = app.config['API_SERVER_URL']
     authToken = getAuthToken()
@@ -173,4 +172,4 @@ def facial():
 
 
 if __name__=='__main__':
-    app.run(host="0.0.0.0", port=8888)
+    app.run(host="0.0.0.0", port=8888, debug=False)

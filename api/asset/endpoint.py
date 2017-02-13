@@ -7,6 +7,9 @@ import base64, requests
 #from sql.models import *  #import all of the models from models.py
 #from app.parse_json import * #for json arg parsing
 
+#TODO: determine if we want data in both db's or just hbase
+#TODO: finish asset posts, puts and deletes functionality
+
 metronHBaseRestURL="http://10.10.10.154:9082"
 metronHBaseTable = "enrichment"
 metronHBaseCF="assets"

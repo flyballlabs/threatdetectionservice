@@ -1,5 +1,4 @@
-from ...rest_server import app #import app object
-from api.database import connect; #import db object
+from api import app, db #import app and db objects
 
 from flask import Flask
 from marketing_notifications_python import get_env
@@ -29,6 +28,5 @@ def init_app(config_name):
 
 def _configure_app(flask_app, config_name):
     app.config.from_object(config_env_files[config_name])
-    db = connect()
     set_db(db, config_name)
     flask_app.register_blueprint(construct_view_blueprint(app, db))
