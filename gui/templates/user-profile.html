@@ -8,9 +8,8 @@
   <div id="sidebar-wrapper" class="col-md-2 container" style="width:100%;">
     <div class="navbar-collapse collapse sidebar-navbar-collapse navbar-default">
       <ul class="nav navbar-nav" id="user-settings">
-        <li class="active" id="info"><a href="/userprofile">Basic Info</a></li>
+        <li class="active" id="info"><a href="/userprofile">Basic Info<span class="sr-only">(current)</span></a></li>
         <li id="alert"><a href="/alert-settings">Alerts</a></li>
-        <li id="agent"><a href="/agent-settings">Agents</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -20,19 +19,19 @@
   <div id="main-wrapper" class="col-md-10 pull-right">
     <div class="container center-block" style="margin-top:5px;padding-right:15%;display:block;">
       <!-- begin main content -->
-      <form data-bind="submit: onSubmit.bind($data, 'user-profile')">
+      <form id="user-profile" data-bind="event: {'submit': onSubmit}">
         <h3>Profile information for <span data-bind="text: firstName"></span></h3><br>
         <p id="messagebox" data-bind="text: responseJSON"></p>
         <br>
         <div class="form-group">
           <label for="firstName">Firstname</label>
-          <input type="text" class="form-control" id="firstName" data-bind="textInput: firstName">
+          <input type="text" class="form-control" id="firstName" data-bind="value: firstName">
           <label for="lastName">Lastname</label>
-          <input type="text" class="form-control" id="lastName" data-bind="textInput: lastName">
+          <input type="text" class="form-control" id="lastName" data-bind="value: lastName">
           <label for="email">Email Address</label>
-          <input type="email" class="form-control" id="email" data-bind="textInput: email">
+          <input type="email" class="form-control" id="email" data-bind="value: email">
           <label for="phone">Phone Number</label>
-          <input type="text" class="form-control" id="phone" data-bind="textInput: phone">
+          <input type="text" class="form-control" id="phone" data-bind="value: phone">
         </div>
         <input type="submit" value="Save">
       </form>
@@ -42,4 +41,7 @@
 
 {% block scripts %}
   {{ super() }}
+  {% block models %}
+    <script src="static/userviewmodel.js"></script>
+  {% endblock %}
 {% endblock %}

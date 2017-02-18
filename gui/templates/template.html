@@ -35,11 +35,11 @@
                 <ul class="dropdown-menu">
                   <li><a href="/threats">Threat Dashboard</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="#">Agent Management</a></li>
-                  <li><a href="#">Alert Management</a></li>
+                  <li><a href="/agent-settings">Agent Management</a></li>
+                  <li><a href="/alert-settings">Alert Management</a></li>
                 </ul>
               </li>
-              <li><a href="/facial">Facial Recognition<span class="sr-only">(current)</span></a></li>
+              <li><a href="/facial-paste">Facial Recognition<span class="sr-only">(current)</span></a></li>
             </ul>
             <form class="navbar-form navbar-left">
               <div class="form-group">
@@ -62,13 +62,11 @@
       </nav>
       </div>
 
-    <!-- menu container -->
-    <div id="wrapper">
-      {% block menu %}{% endblock %} <!-- dynamic menu rendering -->
-      {% block content %}{% endblock %} <!-- dynamic content rendering -->
-    </div><!-- end of main-wrapper -->
-
-  </div><!-- end of main container -->
+    <div id="wrapper">                  <!-- block menu container -->
+      {% block menu %}{% endblock %}    <!-- dynamic menu rendering -->
+      {% block content %}{% endblock %} <!-- dynamic menu content rendering -->
+    </div>                              <!-- end of block menu wrapper -->
+  </div> <!-- end of main <body> container -->
 
   <!-- Global variables passed from the controller -->
   <script>
@@ -82,7 +80,9 @@
 
   <!-- Knockout JavaScript Library -->
   <script src="static/knockout-3.4.1.js"></script>
-  <script src="static/userviewmodel.js"></script>
+
+  <!-- Put any knockout models here -->
+  {% block models %}{% endblock %}
 
   <!-- Bootstrap minified Javascript -->
   <script src="static/bootstrap.min.js"></script>
