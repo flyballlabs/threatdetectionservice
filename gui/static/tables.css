@@ -1,0 +1,391 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,300);
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  color: #4d4d4d;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+header {
+  width: 100%;
+  background-color: #212a31;
+  position: fixed;
+  text-align: right;
+  line-height: 50px;
+}
+
+header a {
+  display: inline-block;
+  width: 130px;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+#navbar {
+  width: 100%;
+  position: fixed;
+  background: #000;
+  opacity: 0.8
+}
+
+
+header #user {
+  background-color: #181f25;
+  margin: 0 30px 0 0;
+}
+
+header a:hover {
+  background-color: #0c1012;
+}
+
+aside {
+  width: 17%;
+  min-width: 150px;
+  max-width: 250px;
+  height: 100%;
+  background-color: #171616;
+  position: fixed;
+  top: 50px;
+  float: left;
+  padding: 25px 0 0 0;
+  overflow-y: visible;
+  -ms-overflow-y: visible;
+}
+
+aside a {
+  display: block;
+  line-height: 40px;
+  border-right: 4px solid transparent;
+  cursor: pointer;
+  transition: background-color .3s linear, border-right-color .3s linear, color .3s linear;
+  color: gray;
+  padding: 0 0 0 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+aside a:hover,
+aside a.current {
+  background-color: #1d1b1b;
+  border-right-color: #fdcc1c;
+  color: white;
+}
+
+#main {
+  margin-top: 50px;
+  position: absolute;
+  width: 100%;
+  float: left;
+  overflow-x: hidden;
+  -ms-overflow-x: hidden;
+  /*overflow-y: visible;*/
+  /*-ms-overflow-y: visible;*/
+}
+
+.wrapper {
+  position: absolute;
+  /*overflow-y: visible;*/
+  /*-ms-overflow-y: visible;*/
+}
+.sub {
+  width: 100%;
+  background-color: #ebebeb;
+  overflow-x: hidden;
+  -ms-overflow-x: hidden;
+  padding: 28px 0 0 20px;
+}
+
+.sub a {
+  display: inline-block;
+  min-width: 110px;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  border-radius: 3px 3px 0 0;
+  transition: background-color .5s, color .5s;
+  color: #cccccc;
+  padding: 2px 0 0 0;
+  line-height: 35px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sub a:hover,
+.sub a.current {
+  color: gray;
+  background-color: white;
+}
+
+/* Table settings */
+table {
+  border-color: gray;
+  line-height: 20px;
+  overflow-y: visible;
+  -ms-overflow-y: visible;
+}
+
+.sp-table {
+  height: auto;
+  overflow-y: visible;
+  width: 98%;
+  margin: 15px;
+}
+
+.sp-table th {
+  width: 98%;
+  text-align: center;
+  font-weight: 600;
+  /* 3d text */
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+}
+
+
+.sp-table thead.stay {
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+}
+
+.sp-table th,
+.sp-table td {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px 8px;
+}
+
+/* Striped */
+.sp-table-striped tbody tr:nth-of-type(odd) td {
+  background-color: #fafafa;
+}
+
+/* Hover */
+.sp-table-hover tbody tr:hover td {
+  background-color: #ededed;
+}
+
+.opacity {
+  opacity: 0;
+}
+
+/*    delete button with confirmation     */
+.confirmation {
+  position: absolute;
+  float: right;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  outline: 0;
+  overflow: hidden;
+}
+button .icon {
+  position: relative;
+  background: #1D242B;
+  line-height: 30px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  -webkit-transition: .2s color;
+  transition: .2s color;
+  border-radius: 2px;
+}
+button .icon .fa {
+  width: 30px;
+  -webkit-transition: .2s all;
+  transition: .2s all;
+}
+button .icon .fa-check {
+  color: #38B87C;
+}
+button .icon .fa-question {
+  color: #2492FF;
+}
+button .icon:after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  background: #1D242B;
+  top: 12px;
+  right: 1px;
+  -webkit-transition: .2s right;
+  transition: .2s right;
+  z-index: 1;
+}
+button .text {
+  position: relative;
+  width: 0;
+  height: 30px;
+  overflow: hidden;
+  font-family: "Roboto", sans-serif;
+  background: #F34541;
+  text-align: center;
+  line-height: 30px;
+  color: #fff;
+  font-weight: 300;
+  -webkit-transition: .2s all;
+  transition: .2s all;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+button .text span {
+  width: 100%;
+  opacity: 0;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  -webkit-transition: .3s all;
+  transition: .3s all;
+}
+button:hover .icon {
+  color: #F34541;
+  border-radius: 0;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+button:hover .icon:after {
+  right: -2px;
+}
+button:hover .text {
+  width: 120px;
+}
+button:hover .text span {
+  opacity: 1;
+  top: 0;
+}
+button.confirm .icon {
+  border-radius: 0;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+button.confirm .icon .fa {
+  -webkit-transform: translateY(-30px);
+          transform: translateY(-30px);
+}
+button.confirm .icon:after {
+  right: -2px;
+}
+button.confirm .text {
+  background: #2492FF;
+  width: 120px;
+}
+button.confirm .text span {
+  opacity: 1;
+  top: 0;
+}
+button.done .icon {
+  border-radius: 0;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+button.done .icon .fa {
+  -webkit-transform: translateY(-60px);
+          transform: translateY(-60px);
+}
+button.done .icon:after {
+  right: -2px;
+}
+button.done .text {
+  background: #38B87C;
+  width: 120px;
+}
+button.done .text span {
+  opacity: 1;
+  top: 0;
+}
+
+@-webkit-keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.7);
+            transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.7);
+            transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+} /* end of delete button style */
+
+/* css styles from site.css */
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 5px;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+/*          Animations        */
+.visible { /* Fade-In Effect */
+  visibility: visible;
+  -webkit-opacity: 0.90;
+  -moz-opacity: 0.90;
+  opacity: 0.90;
+  -webkit-transition: visibility 2s, ease-in 1s;
+  -moz-transition: visibility 2s, ease-in 1s;
+  -ms-transition: visibility 2s, ease-in 1s;
+  -o-transition: visibility 2s, ease-in 1s;
+  transition: visibility 2s, ease-in 1s;
+}
+
+.hidden { /* Fade-Out Effect */
+  visibility: hidden;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  opacity: 0;
+  -webkit-transition: visibility 2s, opacity 2s ease-out 0s;
+  -moz-transition: visibility 2s, opacity 2s ease-out 0s;
+  -ms-transition: visibility 2s, opacity 2s ease-out 0s;
+  -o-transition: visibility 2s, opacity 2s ease-out 0s;
+  transition: visibility 2s, opacity 2s ease-out 0s;
+}

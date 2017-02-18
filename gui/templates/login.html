@@ -1,23 +1,34 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Threat Management Platform - Login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div class="container">
+
+<head>
+  <title>Threat Management Platform - Login page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="static/login.css" rel="stylesheet" media="screen">
+</head>
+
+<body>
+  <div class="container" id="main-container">
+
+    <div class="container" id="login-container">
       <h1>Please login</h1>
-      <br>
-      <form action="/login" method="post">
+      <br><br>
+      <form action="/login" method="post" id="login-form">
         <input type="text" placeholder="Username" name="username" value="{{
           request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
+        <br><br><br>
+        <input type="password" placeholder="Password" name="password" value="{{
           request.form.password }}">
-        <input class="btn btn-default" type="submit" value="Login">
+        <br><br><br>
+        <input class="btn" type="submit" value="Login">
       </form>
+      <!-- TODO: add register form -->
       {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
+      <p class="error"><strong>Error:</strong> {{ error }} </p>
       {% endif %}
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

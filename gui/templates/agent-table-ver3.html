@@ -1,0 +1,111 @@
+{% extends "template.html" %}
+
+{% block head %}
+    <title>Threat Management Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/tables.css" media="screen">
+{% endblock %}
+
+<header>
+  {% block navheader %}
+    {{  super() }}
+  {% endblock %}
+</header>
+
+{% block menu %}
+  <aside>
+    <a class="current">Home</a>
+    <a>Search</a>
+    <a>Filter</a>
+    <a>Save Response</a>
+    <a>Load Query</a>
+    <a>Advanced Search</a>
+  </aside>
+{% endblock %}
+
+{% block content %}
+  <div id="main">
+
+    <div class="sub">
+      <a class="current">Tab1</a>
+      <a>Tab2</a>
+      <a>Tab3</a>
+      <a>Tab4</a>
+      <a>tab5</a>
+    </div>
+
+    <table class="sp-table sp-table-striped sp-table-hover">
+    <p id="messagebox" data-bind="text: responseJSON"></p>
+      <!-- ko foreach: agents -->
+        <thead>
+          <tr>
+            <th colspan="2">
+              <a href="#" data-bind="click: editAgent" id="{{ agent_id }}">Agent ID#
+                <span data-bind="value: agentID"></span></a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mac Address</strong></td>
+            <td data-bind="value: macAddress"></td>
+          </tr>
+          <tr>
+            <td><strong>Ip Address</strong></td>
+            <td data-bind="value: ipAddress"></td>
+          </tr>
+          <tr>
+            <td><strong>Active</strong></td>
+            <td data-bind="value: active"></td>
+          </tr>
+          <tr>
+            <td><strong>Company ID</strong></td>
+            <td data-bind="value: companyID"></td>
+          </tr>
+          <tr>
+            <td><strong>Site</strong></td>
+            <td data-bind="value: site"></td>
+          </tr>
+          <tr>
+            <td><strong>Mode</strong></td>
+            <td data-bind="value: mode"></td>
+          </tr>
+          <tr>
+            <td><strong>Current Cmd</strong></td>
+            <td data-bind="value: cmd"></td>
+          </tr>
+          <tr>
+            <td><strong>Discover Assets</strong></td>
+            <td data-bind="value: assetscanInterval"></td>
+          </tr>
+          <tr>
+            <td><strong>Time Synchronization</strong></td>
+            <td data-bind="value: timesyncInterval"></td>
+          </tr>
+          <tr>
+            <td><strong>Update Interval</strong></td>
+            <td data-bind="value: updateInterval"></td>
+          </tr>
+          <tr>
+            <td><strong>Start Time</strong></td>
+            <td data-bind="value: startTime"></td>
+          </tr>
+          <tr>
+            <td><strong>Stop Time</strong></td>
+            <td data-bind="value: stopTime"></td>
+          </tr>
+        </tbody>
+      <!-- /ko -->
+    </table>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script>var COMPANY_AGENTS = "{{ agents }}";</script>
+  <script src="static/knockout-3.4.1.js"></script>
+  <script src="static/tables.js"></script>
+{% endblock %}
