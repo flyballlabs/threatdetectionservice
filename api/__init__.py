@@ -36,6 +36,9 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'flyball2016'
 app.config['TOKEN_EXPIRATION'] = 3600
 
+# DEBUG: show path app is initialized at
+# print("root path: {}\ninstance path: {}".format(app.root_path, app.instance_path))
+
 # Define API object based on the app object
 api= Api(app)
 
