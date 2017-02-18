@@ -49,8 +49,8 @@ class piController(Resource):
         else:
             return {'status' : 404}
 
-    @login_required
-    def post(self, _mac_address_): # update ip / status
+    # update ip / active
+    def post(self, _mac_address_):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('ip_address', type=str, location='json')
@@ -192,41 +192,93 @@ class manageAgent(Resource):
             return {'status' : 400}
 
 class manageAgentList(Resource):
-    @login_required
-    def get(self):
-        try:
-            x = agent_data.query.all()
-            if x != None:
-                results = []
-                for agent in x:
-                    results.append( {
-                        'agent_id' : agent.agent_id,
-                        'mac_address' : agent.mac_address,
-                        'ip_address' : agent.ip_address,
-                        'active' : agent.active,
-                        'company_id' : agent.company_id,
-                        'site' : agent.site,
-                        'mode' : agent.mode,
-                        'cmd' : agent.cmd,
-                        'time_setting' : agent.time_setting #json_encode() / jsonify()
-                    } )
+    '''contains methods for accessing resource lists from agent table in mysql'''
 
-                return jsonify(
-                    status = 200,
-                    message = 'Agent search success!',
-                    agent_list = results
-                )
-            else:
-                return {
-                    'status' : 400,
-                    'message' : 'Agent search failure'
-                }
-        except Exception as e:
-            return {'status' : 400}
+    @login_required
+    def get(self, _company_name_=None): # _company_name_ is optional param #
+        # get a list of all agents #
+        if _company_name_ == None:
+            try:
+                x = agent_data.query.all()
+                if x != None:
+                    results = []
+                    for agent in x:
+                        results.append( {
+                            'agent_id' : agent.agent_id,
+                            'mac_address' : agent.mac_address,
+                            'ip_address' : agent.ip_address,
+                            'active' : agent.active,
+                            'company_id' : agent.company_id,
+                            'site' : agent.site,
+                            'mode' : agent.mode,
+                            'cmd' : agent.cmd,
+                            'time_setting' : agent.time_setting
+                        } )
+
+                    return jsonify(
+                        status = 200,
+                        message = 'Agent search success!',
+                        agent_list = results
+                    )
+                else:
+                    return {
+                        'status' : 400,
+                        'message' : 'Agent search failure'
+                    }
+            except Exception as e:
+                return {'status' : 400}
+
+        # get a list of agents for specified company #
+        elif _company_name_ != None:
+            try:
+                co = company_data.query.filter_by(company_name=_company_name_).first()
+                if co == None:
+                    return {
+                        'status': 400,
+                        'message': 'Agent search failure'
+                    }
+                co_id = co.company_id  # grab id
+
+                x = agent_data.query.all()
+                if x != None:
+                    results = []
+                    for agent in x: # check for agents that match
+                        if agent.company_id == co_id:
+                            results.append({
+                                'agent_id': agent.agent_id,
+                                'mac_address': agent.mac_address,
+                                'ip_address': agent.ip_address,
+                                'active': agent.active,
+                                'company_id': agent.company_id,
+                                'site': agent.site,
+                                'mode': agent.mode,
+                                'cmd': agent.cmd,
+                                'time_setting': agent.time_setting
+                            })
+
+                    return jsonify(
+                        status=200,
+                        message='Agent search success!',
+                        agent_list=results
+                    )
+                else:
+                    return {
+                        'status': 400,
+                        'message': 'Agent search failure'
+                    }
+            except Exception as e:
+                return {'status': 400,
+                        'error' : str(e)}
+
+        else:
+            return {
+                'status': 404,
+                'message': 'Redirection error, route is not available'
+            }
 
     @login_required
     def post(self):
-        try:
+        try:    # create an agent #
             parser = reqparse.RequestParser()
 
             parser.add_argument('agent_id', type=int, help='Agent_id for agent', location='json')
@@ -238,7 +290,7 @@ class manageAgentList(Resource):
             parser.add_argument('mode', type=str, help='Mode agent is operating in', location='json')
             parser.add_argument('cmd', type=str, help='Current cmd selection for agent', location='json')
             parser.add_argument('time_setting', type=json_encode, help='Time settings for the agent', location='json')
-            args = parser.parse_args()#strict=True
+            args = parser.parse_args()
 
             _agent_id = args['agent_id']
             _mac_address = args['mac_address']

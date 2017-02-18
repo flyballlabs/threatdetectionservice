@@ -2,15 +2,19 @@ function agentViewModel() {
     var self = this;
 
     /* observables */
-    self.companyID = ko.observable("");
     self.agentID = ko.observable("");
-    self.agentMode = ko.observable("");
-	self.agentCmd =	ko.observable("");
-	self.startTime = ko.observable("");
-	self.stopTime = ko.observable("");
-	self.timesyncInterval = ko.observable("");
-	self.updateInterval = ko.observable("");
-	self.assetscanInterval = ko.observable("");
+    self.macAddress = ko.observable(AGENT);
+    self.ipAddress = ko.observable("");
+    self.active = ko.observable("");
+    self.companyID = ko.observable("");
+    self.site = ko.observable("");
+    self.mode = ko.observable("");
+    self.cmd = ko.observable("");
+    self.assetscanInterval = ko.observable("");
+    self.timesyncInterval = ko.observable("");
+    self.updateInterval = ko.observable("");
+    self.startTime = ko.observable("");
+    self.stopTime = ko.observable("");
 
 	self.responseJSON = ko.observable(null);
 
@@ -39,40 +43,51 @@ function agentViewModel() {
 		msgBox.className="bg-danger";
     }
 
-	/* get agent info from api */
-    $.ajax({
-		url: API_SERVER + "/api/agent/D4:85:64:A3:9A:27",
+    route = API_SERVER + "/api/agent/" + AGENT;
+	$.ajax({ /* get agent info from api using passed in mac_address */
+		url: route,
 		dataType: 'json',
+		contentType: "application/json, text/javascript",
+		headers: {'Accept' : 'application/json'},
 		success: function(data) {
 			self.agentID(data["agent_id"]);
+			self.ipAddress(data["ip_address"]);
+			self.active(data["active"]);
 			self.companyID(data["company_id"]);
-            self.agentMode(data["mode"]);
-            self.agentCmd(data["cmd"]);
-            self.startTime(data["time_setting"]["start_stop"]["start"]);
-            self.stopTime(data["time_setting"]["start_stop"]["stop"]);
-            self.timesyncInterval(data["time_setting"]["interval"]["time_sync"]);
-            self.updateInterval(data["time_setting"]["interval"]["update"]);
-            self.assetscanInterval(data["time_setting"]["interval"]["discover_assets"]);
+			self.site(data["site"]);
+			self.mode(data["mode"]);
+			self.cmd(data["cmd"]);
+			self.startTime(data["time_setting"]["start_stop"]["start"]);
+			self.stopTime(data["time_setting"]["start_stop"]["stop"]);
+			self.timesyncInterval(data["time_setting"]["interval"]["time_sync"]);
+			self.updateInterval(data["time_setting"]["interval"]["update"]);
+			self.assetscanInterval(data["time_setting"]["interval"]["discover_assets"]);
 		},
 		beforeSend: setHeader
-    });
+	});
 
 	// Call API, Update observable, and animate response
-	// TODO: make user / agent object passable instead of hardcoded
     self.onSubmit = function(data) {
 
     	/* Error checking for improper form submission (bug) */
-		if (data["agentMode"] !== "" || data["agentCmd"] !== "" ||
-			data["startTime"] !== "" || data["stopTime"] !== "" ||
-			data["timesyncInterval"] !== "" || data["updateInterval"] !== "" ||
-			data["assetscanInterval"] !== "" ) {/*   pass   */}
-		else {return;}
+		if (data["agentMode"] !== undefined || data["agentCmd"] !== undefined ||
+			data["startTime"] !== undefined || data["stopTime"] !== undefined ||
+			data["timesyncInterval"] !== undefined || data["updateInterval"] !== undefined ||
+			data["assetscanInterval"] !== undefined || data["companyID"] !== undefined ||
+			data["ipAddress"] !== undefined || data["active"] !== undefined) {/*   pass   */}
+		else { return; }
 
-    	var route = API_SERVER + "/api/agent/D4:85:64:A3:9A:27";
+    	var route = API_SERVER + "/api/agent/" + AGENT;
     	var payload = JSON.stringify(
         {
-            "mode" : data["agentMode"](),
-            "cmd" : data["agentCmd"](),
+        	"agent_id" : data["agentID"](),
+			"mac_address" : self.macAddress(),
+			"ip_address" : data["ipAddress"](),
+			"active" : data["active"](),
+			"company_id" : data["companyID"](),
+			"site" : data["site"](),
+            "mode" : data["mode"](),
+            "cmd" : data["cmd"](),
             "time_setting" : {"start_stop":{"start":data["startTime"](),"stop":data["stopTime"]()},"interval":{"time_sync":data["timesyncInterval"](),"update":data["updateInterval"](),"discover_assets":data["assetscanInterval"]()}}
         });
 
@@ -82,7 +97,8 @@ function agentViewModel() {
 		}
 
 		$.ajax({
-			headers: {'Content-Type' : 'application/json'},
+			headers: {'Content-Type' : 'application/json',
+					  		'Accept' : 'application/json'},
 			url: route,
 			type: 'PUT',
 			data: payload,

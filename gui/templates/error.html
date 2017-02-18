@@ -4,10 +4,14 @@
   {{ super() }}
 {% endblock %}
 
+{% block navheader %}
+  {{  super() }}
+{% endblock %}
+
 {% block content %}
   <div class="container">
     {% if error %}
-      <p class="error"><strong>Error:</strong> {{ error }}
+      <p class="error"><strong>Error:</strong> {{ error }}</p>
     {% endif %}
   </div>
 {% endblock %}

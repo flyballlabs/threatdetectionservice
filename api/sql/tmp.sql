@@ -49,7 +49,8 @@ CREATE TABLE `agent` (
 
 LOCK TABLES `agent` WRITE;
 /*!40000 ALTER TABLE `agent` DISABLE KEYS */;
-INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1',1,1,'glazer','replay','start','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17',1,2,'loving','live','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:15:00","update":"06:00:00","discover_assets":"12:00:00"}}');
+INSERT INTO `agent` VALUES (1,'4A:1D:70:CD:54:A3','10.0.0.1',1,1,'glazer','replay','start','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(2,'D4:85:64:A3:9A:27','10.0.0.17',1,2,'loving','live','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:15:00","update":"06:00:00","discover_assets":"12:00:00"}}'),(3,'7B:36:99:63:4B:22','67.33.29.42',NULL,1,'glazer','replay','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),
+  (4,'A4:B9:E3:8A:FD:C9','67.33.29.42',NULL,1,'glazer','replay','stop','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}'),(5,'BB:2B:E6:0E:23:4E','76.196.195.58',NULL,1,'glazer','replay','provision','{"start_stop":{"start":"08:00:00","stop":"16:00:00"},"interval":{"time_sync":"00:05:00","update":"04:00:00","discover_assets":"24:00:00"}}');
 /*!40000 ALTER TABLE `agent` ENABLE KEYS */;
 UNLOCK TABLES;
 

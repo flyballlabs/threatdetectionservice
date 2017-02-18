@@ -52,11 +52,28 @@ class companyUtils:
         except Exception as e:
             return {'status' : 400}
 
+    @staticmethod
+    def get_company_info(_company_name_):
+        if type(_company_name_).__name__ == 'int':
+            x = company_data.query.filter_by(company_id=_company_name_).first()
+            return x
+        elif type(_company_name_).__name__ == 'str':
+            try:
+                name = int(_company_name_)
+                x = company_data.query.filter_by(company_id=name).first()
+            except ValueError as e:
+                x = company_data.query.filter_by(company_name=_company_name_).first()
+            return x
+        else:
+            return None
+
 class manageCompany(Resource):
     @login_required    
     def get(self, _company_name_): # get all info about a company #
+        ''' _company_name_ can be either the name or id of the company '''
         try:
-            x = company_data.query.filter_by(company_name=_company_name_).first()
+            x = companyUtils.get_company_info(_company_name_) # id == int, name == str
+
             _company_id = x.company_id
             _company_name = x.company_name
             _street = x.street
@@ -111,7 +128,7 @@ class manageCompany(Resource):
             curr_session = db.session  # open database session
 
             try:
-                x = company_data.query.filter_by(company_name=_company_name_).first() #fetch the name to be updated
+                x = companyUtils.get_company_info(_company_name_) #fetch the name to be updated
 
                 if args['company_id'] != None:
                     x.company_id = args['company_id']
@@ -154,7 +171,7 @@ class manageCompany(Resource):
     def delete(self, _company_name_): # delete a company #
         try:
             curr_session = db.session #open database session
-            x = company_data.query.filter_by(company_name=_company_name_).first()
+            x = companyUtils.get_company_info(_company_name_)
             try:
                 db.session.delete(x)
                 db.session.commit()
@@ -180,8 +197,8 @@ class manageCompanyList(Resource):
         URL = request.url
         # get a list of sites for specified company #
         if URL.find("api/company") > 0 and URL.find("sites") > 0 and _company_name_ != None:
-            try: 
-                x = company_data.query.filter_by(company_name=_company_name_).first()
+            try:
+                x = companyUtils.get_company_info(_company_name_)
                 if x != None:
                     return jsonify(
                         status = 200,

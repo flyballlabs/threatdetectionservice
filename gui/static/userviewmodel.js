@@ -40,7 +40,7 @@ function userViewModel() {
 
 	/* get user info from api */
     $.ajax({
-		url: API_SERVER + "/api/user/mack@goflyball.com",
+		url: API_SERVER + "/api/user/" + USER_NAME,
 		dataType: 'json',
 		success: function(data) {
 			self.firstName(data["firstname"]);
@@ -55,7 +55,6 @@ function userViewModel() {
     });
 
 	/* Call API, Update observable, and animate response */
-	// TODO: make user / agent object passable instead of hardcoded
     self.onSubmit = function(data, event) {
 
     	/* Error checking for improper form submission (bug) */
@@ -66,7 +65,7 @@ function userViewModel() {
 		} else {return;}
 
         var payload = {};
-        var route = API_SERVER + "/api/user/mack@goflyball.com";
+        var route = API_SERVER + "/api/user/" + USER_NAME;
 
 		/* If user-profile submitted form */
 		if (trigger == "user-profile") {

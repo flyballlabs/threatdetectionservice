@@ -4,7 +4,7 @@ from sqlalchemy_utils import database_exists, create_database
 # Setup API routes and start the server
 
 api.add_resource(manageAgent, '/api/agent/<string:_mac_address_>')
-api.add_resource(manageAgentList, '/api/agent')
+api.add_resource(manageAgentList, '/api/agent', '/api/<_company_name_>/agent')
 
 api.add_resource(piController, '/api/picontroller/time', '/api/picontroller/<string:_mac_address_>')
 
